@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -10,7 +9,6 @@
 <body>
 
 <!-- TITLE -->
-
 <div id="titleScreen" class="screen">
   <h1>DINO DAVI</h1>
   <h2>HEROIS COMBAT</h2>
@@ -27,7 +25,6 @@
 </div>
 
 <!-- SELECT -->
-
 <div id="selectScreen" class="screen hidden">
   <h3>ESCOLHA SEU LUTADOR</h3>
   <div class="sel-sub" id="selSub">HEROI vs VILAO CPU</div>
@@ -50,27 +47,46 @@
 </div>
 
 <!-- FIGHT -->
-
 <div id="fightScreen" class="screen hidden">
   <div id="hud">
-    <div class="hp-group" id="hudL"></div>
+    <!-- Adicionado IDs internos para as barras de HP funcionarem -->
+    <div class="hp-group" id="hudL">
+        <div class="hp-name" id="p1Name">P1</div>
+        <div class="hp-bg"><div id="p1hp" class="hp-fill" style="width:100%"></div></div>
+    </div>
     <div id="hudVS">VS</div>
-    <div class="hp-group" id="hudR"></div>
+    <div class="hp-group" id="hudR">
+        <div class="hp-name right" id="p2Name">CPU</div>
+        <div class="hp-bg"><div id="p2hp" class="hp-fill" style="width:100%"></div></div>
+    </div>
   </div>
+  
   <div id="spbars">
-    <div class="sp-strip" id="sp1"></div>
-    <div class="sp-strip right" id="sp2"></div>
+    <div class="sp-strip" id="sp1">
+        <div class="sp-track"><div id="p1sp" class="sp-fill" style="width:0%"></div></div>
+    </div>
+    <div class="sp-strip right" id="sp2">
+        <div class="sp-track"><div id="p2sp" class="sp-fill" style="width:0%"></div></div>
+    </div>
   </div>
+
   <canvas id="gameCanvas"></canvas>
+
   <div id="controls">
-    <div class="ctrl-side" id="ctrlL"></div>
+    <div class="ctrl-side" id="ctrlL">
+        <!-- IDs para os botões de toque funcionarem -->
+        <button id="btnJump1" class="act-btn btn-jump">PULAR</button>
+        <button id="btnAtk1" class="act-btn btn-atk">ATACAR</button>
+    </div>
     <div class="ctrl-mid" id="ctrlMid">CPU</div>
-    <div class="ctrl-side right" id="ctrlR"></div>
+    <div class="ctrl-side right" id="ctrlR">
+        <button id="btnJump2" class="act-btn btn-jump">PULAR</button>
+        <button id="btnAtk2" class="act-btn btn-atk">ATACAR</button>
+    </div>
   </div>
 </div>
 
 <!-- RESULT -->
-
 <div id="resultScreen" class="screen hidden">
   <canvas id="beams"></canvas>
   <div id="rCard">
