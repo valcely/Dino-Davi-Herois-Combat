@@ -1218,4 +1218,23 @@ cv.height=Math.max(fs.clientHeight-used, 100);
 // ============================================================
 //  BOOT
 // ============================================================
-goTitle();
+goTitle(); document.addEventListener("DOMContentLoaded", function() {
+
+  const btn1 = document.getElementById("btn1p");
+  const btn2 = document.getElementById("btn2p");
+
+  if (btn1) {
+    btn1.addEventListener("click", () => {
+      document.getElementById("titleScreen").classList.add("hidden");
+      document.getElementById("selectScreen").classList.remove("hidden");
+    });
+  }
+
+  if (btn2) {
+    btn2.addEventListener("click", () => {
+      document.getElementById("titleScreen").classList.add("hidden");
+      document.getElementById("selectScreen").classList.remove("hidden");
+    });
+  }
+
+});
