@@ -1,108 +1,91 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Dino Davi Herois Combat</title>
-
-<!-- CSS CORRETO -->
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DINO-INVINCIBLE: GUERRA JURÁSSICA</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<!-- TITLE -->
-<div id="titleScreen" class="screen">
-  <h1>DINO DAVI</h1>
-  <h2>HEROIS COMBAT</h2>
-  <p>EDICAO JURASSIC — 8 DINOSSAUROS</p>
-  <canvas id="titlePreview" width="340" height="100"></canvas>
-  <div class="title-btns">
-    <button id="btn1p">🎮 1 JOGADOR vs VILAO</button>
-    <button id="btn2p">👥 2 JOGADORES</button>
-  </div>
-  <div class="title-hint">
-    PC P1: A/D mover | ESPACO pular | F atacar | E especial<br>
-    PC P2: Setas | ArrowUp pular | K atacar | L especial
-  </div>
-</div>
-
-<!-- SELECT -->
-<div id="selectScreen" class="screen hidden">
-  <h3>ESCOLHA SEU LUTADOR</h3>
-  <div class="sel-sub" id="selSub">HEROI vs VILAO CPU</div>
-  <div class="sel-cols" id="selCols"></div>
-  <div class="vs-row">
-    <div>
-      <canvas id="vsC1" width="80" height="70"></canvas>
-      <div class="vs-name" id="vsN1" style="color:#22c55e">P1</div>
-    </div>
-    <div class="vs-label">VS</div>
-    <div>
-      <canvas id="vsC2" width="80" height="70"></canvas>
-      <div class="vs-name" id="vsN2" style="color:#ef4444">CPU</div>
-    </div>
-  </div>
-  <div class="sel-btns">
-    <button id="btnBack">VOLTAR</button>
-    <button id="btnFight">LUTAR!</button>
-  </div>
-</div>
-
-<!-- FIGHT -->
-<div id="fightScreen" class="screen hidden">
-  <div id="hud">
-    <div class="hp-group" id="hudL"></div>
-    <div id="hudVS">VS</div>
-    <div class="hp-group" id="hudR"></div>
-  </div>
-
-  <div id="spbars">
-    <div class="sp-strip" id="sp1"></div>
-    <div class="sp-strip right" id="sp2"></div>
-  </div>
-
-  <!-- CANVAS COM TAMANHO DEFINIDO -->
-  <canvas id="gameCanvas" width="900" height="500"></canvas>
-
-  <div id="controls">
-    <div class="ctrl-side" id="ctrlL"></div>
-    <div class="ctrl-mid" id="ctrlMid">CPU</div>
-    <div class="ctrl-side right" id="ctrlR"></div>
-  </div>
-</div>
-
-<!-- RESULT -->
-<div id="resultScreen" class="screen hidden">
-  <canvas id="beams"></canvas>
-  <div id="rCard">
-    <div class="r-masthead" id="rMast">
-      <span>DINO DAVI COMBAT</span>
-      <span>VITORIA</span>
-    </div>
-    <div class="r-role" id="rRole"></div>
-    <div class="r-name" id="rName"></div>
-    <div class="r-day" id="rDay">O HEROI DO DIA!</div>
-    <canvas id="rDinoCanvas" width="120" height="100"></canvas>
-
-    <div class="r-plate" id="rPlate">
-      <div class="dn" id="rDN"></div>
-      <div class="dd" id="rDD"></div>
+    <!-- TELA INICIAL -->
+    <div id="titleScreen" class="screen">
+        <h1>OMNI-REX</h1>
+        <h2>GUERRA INVENCÍVEL</h2>
+        <div class="title-btns">
+            <button id="btn1p">1 JOGADOR (VS CPU)</button>
+            <button id="btn2p">2 JOGADORES (LOCAL)</button>
+        </div>
+        <p>AGÊNCIA DE DEFESA GLOBAL - SETOR JURÁSSICO</p>
     </div>
 
-    <div class="r-stars">⭐⭐⭐⭐⭐</div>
+    <!-- TELA DE SELEÇÃO -->
+    <div id="selectScreen" class="screen hidden">
+        <h3 class="comic-title">ESCOLHA SEU CAMPEÃO</h3>
+        <div class="sel-sub">SELECIONE O DINOSSAURO PARA A BATALHA</div>
+        
+        <div class="sel-cols" id="selCols">
+            <!-- Os cards são gerados automaticamente pelo Script.js -->
+        </div>
 
-    <button id="btnAgain">JOGAR NOVAMENTE</button>
+        <div class="vs-row">
+            <div class="vs-box">
+                <div id="vsN1" class="vs-name">HERÓI</div>
+                <div class="vs-label">VS</div>
+                <div id="vsN2" class="vs-name">VILÃO</div>
+            </div>
+        </div>
 
-    <div class="r-row">
-      <button id="btnNewChar">NOVO LUTADOR</button>
-      <button id="btnHome">INICIO</button>
+        <div class="sel-btns">
+            <button id="btnBack">VOLTAR</button>
+            <button id="btnFight">LUTAR!</button>
+        </div>
     </div>
-  </div>
-</div>
 
-<!-- JS COM DEFER (IMPORTANTE) -->
-<script src="script.js" defer></script>
+    <!-- TELA DE LUTA (ARENA JURASSIC PARK) -->
+    <div id="fightScreen" class="screen hidden">
+        <div id="hud">
+            <div class="hp-group">
+                <div class="hp-name" id="p1NameDisplay">PLAYER 1</div>
+                <div class="hp-bg"><div id="p1hp" class="hp-fill" style="width: 100%;"></div></div>
+            </div>
+            
+            <div id="hudVS">VS</div>
 
+            <div class="hp-group">
+                <div class="hp-name right" id="p2NameDisplay">VILÃO</div>
+                <div class="hp-bg"><div id="p2hp" class="hp-fill" style="width: 100%;"></div></div>
+            </div>
+        </div>
+
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- CONTROLES ESTILO ARCADE HQ -->
+        <div id="controls">
+            <div class="ctrl-side">
+                <button class="act-btn btn-jump">PULAR</button>
+                <button class="act-btn btn-atk">ATACAR</button>
+            </div>
+            
+            <div class="ctrl-mid">INVINCIBLE<br>BATTLE</div>
+
+            <div class="ctrl-side right">
+                <button class="act-btn btn-sp">PODER<br>ESPECIAL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TELA DE RESULTADO -->
+    <div id="resultScreen" class="screen hidden">
+        <div id="rCard">
+            <h1 class="r-name" id="winnerName">VITÓRIA!</h1>
+            <div class="r-row">
+                <button id="btnAgain">REVANCHE</button>
+                <button id="btnHome" onclick="location.reload()">MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
