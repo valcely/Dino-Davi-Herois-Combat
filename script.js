@@ -1,131 +1,115 @@
-const UI = {
-    nav(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id + 'Screen').classList.add('active');
-        if(id === 'fight') initGameLoop();
-    }
-};
-
-// Configuração dos Heróis
+// 1. Definição dos Heróis e Vilões (18 no total)
 const HEROES = [
-    { name: 'BAT-DINO', color: '#1a1a1a', power: 'Bumerangue' },
-    { name: 'SUPER-DINO', color: '#1e40af', power: 'Laser' },
-    { name: 'SPIDER-DINO', color: '#dc2626', power: 'Teia' },
-    { name: 'HULK-DINO', color: '#16a34a', power: 'Esmagar' },
-    { name: 'IRON-DINO', color: '#facc15', power: 'Raio' }
+    { id: 1, name: 'Spider-Davi', icon: '🕷️', type: 'Hero' },
+    { id: 2, name: 'Iron-Mamãe', icon: '🚀', type: 'Hero' },
+    { id: 3, name: 'Hulk-Papai', icon: '👊', type: 'Hero' },
+    { id: 4, name: 'Wonder-Vovó', icon: '👑', type: 'Hero' },
+    { id: 5, name: 'Bat-Vovô', icon: '🦇', type: 'Hero' },
+    { id: 6, name: 'Panther-Tobby', icon: '🐾', type: 'Hero' },
+    { id: 7, name: 'Wolve-Atena', icon: '🐺', type: 'Hero' },
+    { id: 8, name: 'Cap-Titiagio', icon: '🛡️', type: 'Hero' },
+    { id: 9, name: 'Marvel-Titiatina', icon: '🌟', type: 'Hero' },
+    // 9 Vilões Dinossauros
+    { id: 10, name: 'T-Rex Malvado', icon: '🦖', type: 'Villain' },
+    { id: 11, name: 'Raptor Veloz', icon: '🏃', type: 'Villain' },
+    { id: 12, name: 'Spino Sombrio', icon: '🐊', type: 'Villain' },
+    { id: 13, name: 'Giga Terror', icon: '👹', type: 'Villain' },
+    { id: 14, name: 'Carno Chifrudo', icon: '🐂', type: 'Villain' },
+    { id: 15, name: 'Ptera Alado', icon: '🦅', type: 'Villain' },
+    { id: 16, name: 'Mossa Gigante', icon: '🌊', type: 'Villain' },
+    { id: 17, name: 'Dilop Veneno', icon: '🐍', type: 'Villain' },
+    { id: 18, name: 'Indominus Rex', icon: '💀', type: 'Villain' }
 ];
 
-// Estado do Jogo
-let player = { x: 50, y: 150, w: 40, h: 60, dy: 0, color: 'blue', hp: 100, jumping: false };
-let enemy = { x: 450, y: 150, w: 40, h: 60, color: 'red', hp: 100 };
-let keys = { a: false, s: false };
-let projectiles = [];
+let cards = [];
+let flippedCards = [];
+let matchedPairs = 0;
+let lockBoard = false;
 
-// Seleção de Personagem
-function setupSelect() {
-    const container = document.getElementById('dinoSelector');
-    HEROES.forEach(h => {
-        const div = document.createElement('div');
-        div.className = 'btn-card';
-        div.style.background = h.color;
-        div.innerHTML = `<span>🦖</span><br>${h.name}`;
-        div.onclick = () => { 
-            player.color = h.color; 
-            player.name = h.name;
-            UI.nav('fight'); 
-        };
-        container.appendChild(div);
+// 2. Inicialização do Jogo
+function initMemory() {
+    nav('gameArea');
+    matchedPairs = 0;
+    document.getElementById('pair-count').innerText = "0";
+    
+    // Criar pares (18 heróis/vilões x 2 = 36 cards)
+    const gameIcons = [...HEROES, ...HEROES];
+    // Embaralhar
+    gameIcons.sort(() => Math.random() - 0.5);
+    
+    const grid = document.getElementById('memory-grid');
+    grid.innerHTML = '';
+    
+    gameIcons.forEach((item, index) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.heroId = item.id;
+        card.innerHTML = `
+            <div class="card-back">?</div>
+            <div class="card-front">
+                <span>${item.icon}</span>
+                <div class="hero-label">${item.name}</div>
+            </div>
+        `;
+        card.onclick = () => flipCard(card);
+        grid.appendChild(card);
     });
 }
 
-// Input de Teclado (PC)
-window.addEventListener('keydown', e => {
-    if(e.code === 'KeyA') keys.a = true;
-    if(e.code === 'KeyS') keys.s = true;
-    if(e.code === 'Space') playerJump();
-    if(e.code === 'KeyL') playerAttack('hit');
-    if(e.code === 'KeyK') playerAttack('power');
-});
-window.addEventListener('keyup', e => {
-    if(e.code === 'KeyA') keys.a = false;
-    if(e.code === 'KeyS') keys.s = false;
-});
+// 3. Lógica do Clique (UX Infantil: Trava de clique enquanto anima)
+function flipCard(card) {
+    if (lockBoard || card.classList.contains('flipped') || flippedCards.includes(card)) return;
 
-function playerJump() {
-    if(!player.jumping) {
-        player.dy = -12;
-        player.jumping = true;
+    card.classList.add('flipped');
+    flippedCards.push(card);
+
+    if (flippedCards.length === 2) {
+        checkMatch();
     }
 }
 
-function playerAttack(type) {
-    if(type === 'hit' && Math.abs(player.x - enemy.x) < 60) {
-        enemy.hp -= 5;
-    } else if(type === 'power') {
-        projectiles.push({ x: player.x + 20, y: player.y + 20, speed: 7 });
+// 4. Verificação de Pares e Sons
+function checkMatch() {
+    lockBoard = true;
+    const [card1, card2] = flippedCards;
+    const isMatch = card1.dataset.heroId === card2.dataset.heroId;
+
+    if (isMatch) {
+        playSound('rugido'); // Gatilho para Rugido
+        matchedPairs++;
+        document.getElementById('pair-count').innerText = matchedPairs;
+        resetTurn();
+        if (matchedPairs === HEROES.length) {
+            setTimeout(() => alert("PARABÉNS PEQUENO CIENTISTA! VOCÊ SALVOU O PARQUE!"), 500);
+        }
+    } else {
+        playSound('erro'); // Som lúdico
+        setTimeout(() => {
+            card1.classList.remove('flipped');
+            card2.classList.remove('flipped');
+            resetTurn();
+        }, 1200); // Tempo maior para a criança processar o erro
     }
-    updateUI();
 }
 
-function updateUI() {
-    document.getElementById('hp-player').style.width = player.hp + '%';
-    document.getElementById('hp-enemy').style.width = enemy.hp + '%';
-    if(enemy.hp <= 0) { alert("VITÓRIA!"); location.reload(); }
-    if(player.hp <= 0) { alert("DERROTA!"); location.reload(); }
+function resetTurn() {
+    flippedCards = [];
+    lockBoard = false;
 }
 
-function initGameLoop() {
-    const canvas = document.getElementById('fightCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 600; canvas.height = 250;
-
-    function loop() {
-        if(!document.getElementById('fightScreen').classList.contains('active')) return;
-        
-        // Física Movimento
-        if(keys.a && player.x > 0) player.x -= 5;
-        if(keys.s && player.x < 560) player.x += 5;
-        
-        // Gravidade
-        player.y += player.dy;
-        if(player.y < 150) player.dy += 0.8;
-        else { player.y = 150; player.dy = 0; player.jumping = false; }
-
-        // Desenho
-        ctx.clearRect(0, 0, 600, 250);
-        
-        // Chão
-        ctx.fillStyle = '#1a4d2e';
-        ctx.fillRect(0, 210, 600, 40);
-
-        // Player
-        ctx.fillStyle = player.color;
-        ctx.fillRect(player.x, player.y, player.w, player.h);
-        
-        // Inimigo (IA simples que segue)
-        ctx.fillStyle = '#555';
-        ctx.fillRect(enemy.x, enemy.y, enemy.w, enemy.h);
-        if(enemy.x > player.x + 50) enemy.x -= 1;
-
-        // Projéteis
-        projectiles.forEach((p, i) => {
-            p.x += p.speed;
-            ctx.fillStyle = 'orange';
-            ctx.beginPath(); ctx.arc(p.x, p.y, 5, 0, Math.PI*2); ctx.fill();
-            if(p.x > enemy.x && p.x < enemy.x + 40 && p.y > enemy.y) {
-                enemy.hp -= 10;
-                projectiles.splice(i, 1);
-                updateUI();
-            }
-        });
-
-        requestAnimationFrame(loop);
-    }
-    loop();
+// 5. Navegação Simples
+function nav(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
 }
 
-// Iniciar
-window.onload = () => {
-    setupSelect();
-    UI.nav('title');
-};
+// 6. Sistema de Áudio (Preparado)
+function playSound(type) {
+    // Para implementar, basta adicionar os arquivos .mp3 na pasta
+    const audio = new Audio();
+    if (type === 'rugido') audio.src = 'roar.mp3';
+    if (type === 'erro') audio.src = 'bubble.mp3';
+    
+    // audio.play().catch(() => {}); // Comentado para evitar erro de falta de arquivo
+    console.log("Som ativado: " + type);
+}
