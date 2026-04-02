@@ -1,132 +1,130 @@
 const UI = {
-    screens: document.querySelectorAll('.screen'),
     nav(id) {
-        this.screens.forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id + 'Screen').classList.add('active');
-        playSound('click');
+        if(id === 'fight') initGameLoop();
     }
 };
 
-// --- Sistema de Som Melhorado ---
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function playSound(type) {
-    const osc = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    osc.connect(g); g.connect(audioCtx.destination);
-    
-    if(type === 'click') {
-        osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-    } else if(type === 'hit') {
-        osc.type = 'square';
-        osc.frequency.setValueAtTime(100, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.2);
-        g.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.2);
-    }
-}
-
-// --- Lógica da Luta ---
-let playerHP = 100, enemyHP = 100;
-let fightContext, fightCanvas;
-
-function initFight(color) {
-    UI.nav('fight');
-    fightCanvas = document.getElementById('fightCanvas');
-    fightContext = fightCanvas.getContext('2d');
-    fightCanvas.width = 600; fightCanvas.height = 300;
-    playerHP = 100; enemyHP = 100;
-    updateHP();
-    requestAnimationFrame(renderFight);
-}
-
-function updateHP() {
-    document.getElementById('hp-player').style.width = playerHP + '%';
-    document.getElementById('hp-enemy').style.width = enemyHP + '%';
-}
-
-function playerAttack() {
-    if(enemyHP <= 0) return;
-    playSound('hit');
-    enemyHP -= 15;
-    updateHP();
-    if(enemyHP <= 0) {
-        setTimeout(() => { alert("VOCÊ VENCEU! 🏆"); UI.nav('title'); }, 500);
-    }
-}
-
-function renderFight() {
-    if(!document.getElementById('fightScreen').classList.contains('active')) return;
-    const ctx = fightContext;
-    ctx.clearRect(0,0,600,300);
-    
-    // Desenho Simples dos Personagens (Representação)
-    ctx.fillStyle = '#22c55e'; // Jogador
-    ctx.fillRect(100, 150, 80, 80); 
-    
-    ctx.fillStyle = '#ef4444'; // Inimigo
-    ctx.fillRect(420, 150, 80, 80);
-    
-    requestAnimationFrame(renderFight);
-}
-
-// --- Seleção de Dino ---
-const dinos = [
-    { name: 'VERDINHO', color: '#22c55e' },
-    { name: 'AZULÃO', color: '#3b82f6' },
-    { name: 'ROXINHO', color: '#a855f7' }
+// Configuração dos Heróis
+const HEROES = [
+    { name: 'BAT-DINO', color: '#1a1a1a', power: 'Bumerangue' },
+    { name: 'SUPER-DINO', color: '#1e40af', power: 'Laser' },
+    { name: 'SPIDER-DINO', color: '#dc2626', power: 'Teia' },
+    { name: 'HULK-DINO', color: '#16a34a', power: 'Esmagar' },
+    { name: 'IRON-DINO', color: '#facc15', power: 'Raio' }
 ];
 
+// Estado do Jogo
+let player = { x: 50, y: 150, w: 40, h: 60, dy: 0, color: 'blue', hp: 100, jumping: false };
+let enemy = { x: 450, y: 150, w: 40, h: 60, color: 'red', hp: 100 };
+let keys = { a: false, s: false };
+let projectiles = [];
+
+// Seleção de Personagem
 function setupSelect() {
     const container = document.getElementById('dinoSelector');
-    dinos.forEach(d => {
+    HEROES.forEach(h => {
         const div = document.createElement('div');
         div.className = 'btn-card';
-        div.style.backgroundColor = d.color;
-        div.innerHTML = `<span style="font-size:3rem">🦖</span><span>${d.name}</span>`;
-        div.onclick = () => initFight(d.color);
+        div.style.background = h.color;
+        div.innerHTML = `<span>🦖</span><br>${h.name}`;
+        div.onclick = () => { 
+            player.color = h.color; 
+            player.name = h.name;
+            UI.nav('fight'); 
+        };
         container.appendChild(div);
     });
 }
 
-// --- Mini Jogo: Memória ---
-function initMemory() {
-    UI.nav('gameArea');
-    document.getElementById('gameTitle').innerText = "CADÊ O PAR?";
-    const content = document.getElementById('minigameContent');
-    content.innerHTML = '<div class="memory-grid" id="grid"></div>';
-    const grid = document.getElementById('grid');
-    const icons = ['🍎', '🍌', '🍇', '🍓', '🍒', '🍍', '🥝', '🍉'];
-    const cards = [...icons, ...icons].sort(() => Math.random() - 0.5);
-    
-    let flipped = [];
-    cards.forEach(icon => {
-        const c = document.createElement('div');
-        c.className = 'card';
-        c.onclick = () => {
-            if(flipped.length < 2 && !c.classList.contains('flipped')) {
-                c.innerText = icon;
-                c.classList.add('flipped');
-                flipped.push(c);
-                if(flipped.length === 2) {
-                    if(flipped[0].innerText === flipped[1].innerText) {
-                        flipped = [];
-                    } else {
-                        setTimeout(() => {
-                            flipped.forEach(i => { i.innerText = ''; i.classList.remove('flipped'); });
-                            flipped = [];
-                        }, 800);
-                    }
-                }
-            }
-        };
-        grid.appendChild(c);
-    });
+// Input de Teclado (PC)
+window.addEventListener('keydown', e => {
+    if(e.code === 'KeyA') keys.a = true;
+    if(e.code === 'KeyS') keys.s = true;
+    if(e.code === 'Space') playerJump();
+    if(e.code === 'KeyL') playerAttack('hit');
+    if(e.code === 'KeyK') playerAttack('power');
+});
+window.addEventListener('keyup', e => {
+    if(e.code === 'KeyA') keys.a = false;
+    if(e.code === 'KeyS') keys.s = false;
+});
+
+function playerJump() {
+    if(!player.jumping) {
+        player.dy = -12;
+        player.jumping = true;
+    }
 }
 
-// Funções de Navegação Global
-window.nav = (id) => UI.nav(id);
+function playerAttack(type) {
+    if(type === 'hit' && Math.abs(player.x - enemy.x) < 60) {
+        enemy.hp -= 5;
+    } else if(type === 'power') {
+        projectiles.push({ x: player.x + 20, y: player.y + 20, speed: 7 });
+    }
+    updateUI();
+}
+
+function updateUI() {
+    document.getElementById('hp-player').style.width = player.hp + '%';
+    document.getElementById('hp-enemy').style.width = enemy.hp + '%';
+    if(enemy.hp <= 0) { alert("VITÓRIA!"); location.reload(); }
+    if(player.hp <= 0) { alert("DERROTA!"); location.reload(); }
+}
+
+function initGameLoop() {
+    const canvas = document.getElementById('fightCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 600; canvas.height = 250;
+
+    function loop() {
+        if(!document.getElementById('fightScreen').classList.contains('active')) return;
+        
+        // Física Movimento
+        if(keys.a && player.x > 0) player.x -= 5;
+        if(keys.s && player.x < 560) player.x += 5;
+        
+        // Gravidade
+        player.y += player.dy;
+        if(player.y < 150) player.dy += 0.8;
+        else { player.y = 150; player.dy = 0; player.jumping = false; }
+
+        // Desenho
+        ctx.clearRect(0, 0, 600, 250);
+        
+        // Chão
+        ctx.fillStyle = '#1a4d2e';
+        ctx.fillRect(0, 210, 600, 40);
+
+        // Player
+        ctx.fillStyle = player.color;
+        ctx.fillRect(player.x, player.y, player.w, player.h);
+        
+        // Inimigo (IA simples que segue)
+        ctx.fillStyle = '#555';
+        ctx.fillRect(enemy.x, enemy.y, enemy.w, enemy.h);
+        if(enemy.x > player.x + 50) enemy.x -= 1;
+
+        // Projéteis
+        projectiles.forEach((p, i) => {
+            p.x += p.speed;
+            ctx.fillStyle = 'orange';
+            ctx.beginPath(); ctx.arc(p.x, p.y, 5, 0, Math.PI*2); ctx.fill();
+            if(p.x > enemy.x && p.x < enemy.x + 40 && p.y > enemy.y) {
+                enemy.hp -= 10;
+                projectiles.splice(i, 1);
+                updateUI();
+            }
+        });
+
+        requestAnimationFrame(loop);
+    }
+    loop();
+}
+
+// Iniciar
 window.onload = () => {
     setupSelect();
     UI.nav('title');
