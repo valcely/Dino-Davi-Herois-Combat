@@ -3,35 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dino Davi</title>
+    <title>Dino Davi: 18 Heroes</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="bg" class="scientist-bg">
-        <span>🦖</span><span>🦴</span><span>🦕</span><span>🐾</span><span>🦖</span><span>🦴</span><span>🦕</span><span>🐾</span>
-        <span>🦖</span><span>🦴</span><span>🦕</span><span>🐾</span><span>🦖</span><span>🦴</span><span>🦕</span><span>🐾</span>
-        <span>🦖</span><span>🦴</span><span>🦕</span><span>🐾</span><span>🦖</span><span>🦴</span><span>🦕</span><span>🐾</span>
-    </div>
+    <div class="scientist-bg" id="bgIcons"></div>
 
     <section id="titleScreen" class="screen active">
         <h1 class="game-title">DINO DAVI</h1>
-        <p style="color: var(--j-accent); letter-spacing: 5px; font-weight: bold;">JURASSIC HEROES</p>
-        <button class="btn-main" onclick="initHeroSelect()">🦖 COMBATE</button>
-        <button class="btn-main" onclick="initMemory()">🧩 JOGO DA MEMÓRIA</button>
-        <button class="btn-main" onclick="initPuzzle()">🖼️ QUEBRA-CABEÇA</button>
+        <p style="color: var(--j-accent); letter-spacing: 3px;">18 SUPER DINOS</p>
+        <button class="btn-main" style="padding:15px; width:250px; background:gold; border-radius:20px; font-weight:bold; margin-top:10px" onclick="initHeroSelect()">🦖 ESCOLHER HERÓI</button>
+        <button class="btn-main" style="padding:15px; width:250px; background:white; border-radius:20px; font-weight:bold; margin-top:10px" onclick="initMemory()">🧩 MEMÓRIA</button>
     </section>
 
     <section id="selectScreen" class="screen">
-        <h2 style="color: gold;">QUEM É VOCÊ?</h2>
-        <div id="heroList" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;"></div>
-        <button class="btn-main" style="width: 150px; margin-top: 20px;" onclick="location.reload()">VOLTAR</button>
+        <h2 style="color: gold; margin-bottom: 10px;">SELECIONE (18 OPÇÕES)</h2>
+        <div id="heroList"></div>
+        <button onclick="location.reload()" style="margin-top:10px; padding:10px">VOLTAR</button>
     </section>
 
-    <section id="gameScreen" class="screen">
-        <button class="btn-main" style="width:100px; position:absolute; top:10px; left:10px;" onclick="location.reload()">MENU</button>
-        <h2 id="gameTitle" style="color: gold; margin-top: 50px;"></h2>
-        <div id="puzzle-board"></div> <div id="minigameContent"></div>
-        <div id="puzzle-pieces-area"></div> </section>
+    <section id="fightScreen" class="screen">
+        <div style="display:flex; width:100%; justify-content:space-between; margin-bottom:10px">
+            <div style="width:40%; border:2px solid #fff; height:20px"><div id="hp1" class="hp-fill"></div></div>
+            <div style="width:40%; border:2px solid #fff; height:20px"><div id="hp2" class="hp-fill"></div></div>
+        </div>
+        <canvas id="fightCanvas"></canvas>
+        <div style="display:flex; gap:20px; margin-top:15px">
+            <button onclick="atacar()" style="width:80px; height:80px; border-radius:50%; background:red; color:white; font-weight:bold">SOCO</button>
+            <button onclick="especial()" style="width:80px; height:80px; border-radius:50%; background:blue; color:white; font-weight:bold">PODER</button>
+        </div>
+    </section>
 
     <script src="script.js"></script>
 </body>
