@@ -1,241 +1,205 @@
-// --- CONFIGURAÇÃO DE ÁUDIO ---
+// --- SISTEMA DE ÁUDIO ---
+let audioReady = false;
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function playSound(type) {
+
+function playSfx(freq, type = 'sine', duration = 0.1) {
+    if(!audioReady) return;
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-    osc.connect(gain); gain.connect(audioCtx.destination);
-
-    if(type === 'click') {
-        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-        osc.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-    } else if(type === 'roar') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
-        osc.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 0.4);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.4);
-    } else if(type === 'win') {
-        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-        osc.frequency.linearRampToValueAtTime(800, audioCtx.currentTime + 0.3);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
-    }
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
 }
 
-// --- DESENHO DOS DINOSSAUROS ---
-function drawDino(ctx, x, y, color, side, frame, action) {
+// --- ENGINE GRÁFICA SIMPLES ---
+const State = {
+    currentScreen: 'bootScreen',
+    playerColor: '#4ade80',
+    playerHP: 100,
+    enemyHP: 100
+};
+
+function initGame() {
+    audioReady = true;
+    audioCtx.resume();
+    showScreen('titleScreen');
+    animateMenuBg();
+}
+
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    State.currentScreen = id;
+}
+
+function goTitle() {
+    playSfx(400);
+    showScreen('titleScreen');
+}
+
+// --- FUNDO ANIMADO DO MENU ---
+function animateMenuBg() {
+    const canvas = document.getElementById('skyBg');
+    const ctx = canvas.getContext('2d');
+    let frame = 0;
+
+    function render() {
+        if(State.currentScreen !== 'titleScreen') return;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        ctx.fillStyle = '#1a2e1a';
+        ctx.fillRect(0,0,canvas.width, canvas.height);
+        
+        // Nuvens/Moitas estilizadas
+        for(let i=0; i<10; i++) {
+            ctx.fillStyle = '#2d5a27';
+            let x = (Math.sin(frame * 0.005 + i) * 100) + (canvas.width/10 * i*2);
+            ctx.beginPath();
+            ctx.arc(x % canvas.width, 100 + (i*50), 60, 0, Math.PI*2);
+            ctx.fill();
+        }
+        frame++;
+        requestAnimationFrame(render);
+    }
+    render();
+}
+
+// --- MODO LUTINHA ---
+function goSelect() {
+    playSfx(600);
+    showScreen('selectScreen');
+    const container = document.getElementById('selCols');
+    container.innerHTML = '';
+    ['#4ade80', '#60a5fa', '#f87171', '#fbbf24'].forEach(color => {
+        const d = document.createElement('div');
+        d.className = 'dino-card';
+        d.style.background = color;
+        d.style.width = '100px'; d.style.height = '100px'; d.style.borderRadius = '20px';
+        d.style.margin = '10px'; d.style.border = '5px solid white';
+        d.onclick = () => startFight(color);
+        container.appendChild(d);
+    });
+}
+
+function startFight(color) {
+    State.playerColor = color;
+    State.playerHP = 100;
+    State.enemyHP = 100;
+    showScreen('fightScreen');
+    
+    const canvas = document.getElementById('fightCanvas');
+    const ctx = canvas.getContext('2d');
+    let frame = 0;
+    let shake = 0;
+
+    function gameLoop() {
+        if(State.currentScreen !== 'fightScreen') return;
+        canvas.width = window.innerWidth;
+        canvas.height = 300;
+        
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        if(shake > 0) { ctx.translate(Math.random()*5, Math.random()*5); shake--; }
+
+        // Desenhar Chão
+        ctx.fillStyle = '#3e2723';
+        ctx.fillRect(0, 250, canvas.width, 50);
+
+        // Desenhar Dinos (Versão Melhorada)
+        drawDino(ctx, canvas.width * 0.25, 250, State.playerColor, false, frame);
+        drawDino(ctx, canvas.width * 0.75, 250, '#ef4444', true, frame);
+
+        document.querySelector('#hpL .hp-fill').style.width = State.playerHP + '%';
+        document.querySelector('#hpR .hp-fill').style.width = State.enemyHP + '%';
+
+        frame++;
+        requestAnimationFrame(gameLoop);
+    }
+
+    document.getElementById('btnAtk').onclick = () => {
+        if(State.enemyHP <= 0) return;
+        playSfx(150, 'sawtooth', 0.3);
+        State.enemyHP -= 10;
+        shake = 10;
+        if(State.enemyHP <= 0) {
+            setTimeout(() => { alert("DAVI VENCEU!"); goTitle(); }, 500);
+        }
+    };
+
+    gameLoop();
+}
+
+function drawDino(ctx, x, y, color, flip, frame) {
     ctx.save();
     ctx.translate(x, y);
-    if(side === 'left') ctx.scale(-1, 1);
-    
-    let bob = Math.sin(frame * 0.1) * 5;
-    let mouth = (action === 'attack') ? Math.sin(frame * 0.5) * 15 : 0;
+    if(flip) ctx.scale(-1, 1);
+
+    const bounce = Math.sin(frame * 0.15) * 8;
+
+    // Sombra
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.beginPath(); ctx.ellipse(0, 0, 40, 10, 0, 0, Math.PI*2); ctx.fill();
 
     // Corpo
     ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.ellipse(0, 0 + bob, 40, 25, 0, 0, Math.PI*2);
+    ctx.ellipse(0, -30 + bounce, 45, 30, 0, 0, Math.PI*2);
     ctx.fill();
 
-    // Pescoço e Cabeça
+    // Cabeça
     ctx.beginPath();
-    ctx.quadraticCurveTo(-30, -40 + bob, -50, -40 + bob - mouth);
-    ctx.lineWidth = 15; ctx.strokeStyle = color; ctx.stroke();
-    
+    ctx.roundRect(-60, -80 + bounce, 50, 40, 10);
+    ctx.fill();
+
     // Olho
-    ctx.fillStyle = "white";
-    ctx.beginPath(); ctx.arc(-50, -45 + bob - mouth, 5, 0, Math.PI*2); ctx.fill();
-    
+    ctx.fillStyle = 'white';
+    ctx.beginPath(); ctx.arc(-45, -65 + bounce, 6, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = 'black';
+    ctx.beginPath(); ctx.arc(-47, -65 + bounce, 3, 0, Math.PI*2); ctx.fill();
+
     ctx.restore();
 }
 
-// --- FUNDO ANIMADO ---
-let forestFrame = 0;
-function drawForest() {
-    const canvas = document.getElementById('forestBg');
-    if(!canvas || document.getElementById('titleScreen').classList.contains('hidden')) return;
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    
-    forestFrame++;
-    ctx.fillStyle = '#0d2b14'; ctx.fillRect(0,0,canvas.width, canvas.height);
-    
-    for(let i=0; i<20; i++) {
-        let bx = (i * 120) % canvas.width;
-        let by = (i * 80) % canvas.height;
-        let wave = Math.sin(forestFrame * 0.03 + i) * 15;
-        ctx.fillStyle = '#166534';
-        ctx.beginPath();
-        ctx.ellipse(bx + wave, by, 50, 25, Math.PI/4, 0, Math.PI*2);
-        ctx.fill();
-    }
-    requestAnimationFrame(drawForest);
-}
-
-// --- NAVEGAÇÃO ---
-function hideAll() {
-    document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
-}
-
-function goTitle() {
-    playSound('click'); hideAll();
-    document.getElementById('titleScreen').classList.remove('hidden');
-    drawForest();
-}
-
-// --- MINI JOGO: MEMÓRIA ---
+// --- JOGO DE MEMÓRIA (REFEITO) ---
 function startMemoryGame() {
-    playSound('click'); hideAll();
-    document.getElementById('memoryScreen').classList.remove('hidden');
-    const grid = document.getElementById('memoryGrid');
-    grid.innerHTML = '';
-    const icons = ['🦖', '🦕', '🐊', '🦴', '🌋', '🌳', '🥚', '🌞'];
-    let deck = [...icons, ...icons].sort(() => Math.random() - 0.5);
+    playSfx(500);
+    showScreen('gameContainer');
+    const content = document.getElementById('gameContent');
+    content.innerHTML = '<h2 style="text-align:center">ACHE OS PARES!</h2><div id="memGrid" class="memory-grid"></div>';
     
+    const icons = ['🦖','🦕','🌋','🦴','🌳','🥚','🌞','💎'];
+    const deck = [...icons, ...icons].sort(() => Math.random() - 0.5);
     let flipped = [];
-    deck.forEach((icon, idx) => {
+
+    deck.forEach(icon => {
         const card = document.createElement('div');
         card.className = 'memory-card';
-        card.dataset.icon = icon;
+        card.dataset.val = icon;
         card.onclick = () => {
             if(flipped.length < 2 && !card.innerText) {
-                playSound('click');
                 card.innerText = icon;
+                playSfx(800);
                 flipped.push(card);
                 if(flipped.length === 2) {
-                    if(flipped[0].dataset.icon === flipped[1].dataset.icon) {
-                        playSound('win'); flipped = [];
+                    if(flipped[0].dataset.val === flipped[1].dataset.val) {
+                        playSfx(1200, 'sine', 0.4);
+                        flipped = [];
                     } else {
-                        setTimeout(() => { flipped.forEach(c => c.innerText = ''); flipped = []; }, 1000);
+                        setTimeout(() => { flipped.forEach(c => c.innerText = ''); flipped = []; }, 800);
                     }
                 }
             }
         };
-        grid.appendChild(card);
+        document.getElementById('memGrid').appendChild(card);
     });
 }
 
-// --- MINI JOGO: CORES ---
-const colors = ['#ef4444', '#3b82f6', '#22c55e', '#fbbf24', '#a855f7', '#f472b6'];
-function startColorsGame() {
-    playSound('click'); hideAll();
-    document.getElementById('colorsScreen').classList.remove('hidden');
-    const target = document.getElementById('colorTarget');
-    const options = document.getElementById('colorOptions');
-    
-    const correctColor = colors[Math.floor(Math.random() * colors.length)];
-    target.style.backgroundColor = correctColor;
-    options.innerHTML = '';
-    
-    colors.forEach(c => {
-        const btn = document.createElement('div');
-        btn.className = 'color-circle';
-        btn.style.backgroundColor = c;
-        btn.onclick = () => {
-            if(c === correctColor) { playSound('win'); startColorsGame(); }
-            else { playSound('click'); btn.style.opacity = '0.3'; }
-        };
-        options.appendChild(btn);
-    });
-}
-
-// --- MINI JOGO: MONTAR (STACKER) ---
-let stackPieces = [];
-let currentStackX = 50;
-let stackDir = 2;
-let stackLevel = 1;
-function startStackGame() {
-    playSound('click'); hideAll();
-    document.getElementById('stackScreen').classList.remove('hidden');
-    const canvas = document.getElementById('stackCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 300; canvas.height = 400;
-    stackPieces = []; stackLevel = 1;
-    
-    function loop() {
-        if(document.getElementById('stackScreen').classList.contains('hidden')) return;
-        ctx.clearRect(0,0,300,400);
-        ctx.fillStyle = '#333'; ctx.fillRect(0, 380, 300, 20); // Chão
-        
-        // Peça atual se movendo
-        currentStackX += stackDir * (1 + stackLevel * 0.5);
-        if(currentStackX > 250 || currentStackX < 0) stackDir *= -1;
-        
-        ctx.fillStyle = '#fbbf24';
-        ctx.fillRect(currentStackX, 50, 50, 30);
-        
-        // Peças já caídas
-        stackPieces.forEach(p => {
-            ctx.fillStyle = '#ef4444';
-            ctx.fillRect(p.x, p.y, 50, 30);
-        });
-        requestAnimationFrame(loop);
-    }
-    loop();
-}
-
-document.getElementById('btnDrop').onclick = () => {
-    playSound('roar');
-    let targetY = 380 - (stackPieces.length + 1) * 30;
-    stackPieces.push({x: currentStackX, y: targetY});
-    stackLevel++;
-    document.getElementById('stackLevel').innerText = stackLevel;
-    if(stackPieces.length > 10) { playSound('win'); stackPieces = []; stackLevel = 1; }
+// Inicialização segura
+window.onload = () => {
+    console.log("Dino Davi pronto!");
 };
-
-// --- MODO LUTINHA ---
-let playerHP = 100, enemyHP = 100;
-function goSelect() {
-    playSound('click'); hideAll();
-    document.getElementById('selectScreen').classList.remove('hidden');
-    const sel = document.getElementById('selCols');
-    sel.innerHTML = '';
-    ['#22c55e', '#ef4444', '#3b82f6'].forEach(color => {
-        const btn = document.createElement('div');
-        btn.style.width = "80px"; btn.style.height = "80px";
-        btn.style.background = color; btn.style.borderRadius = "20px";
-        btn.onclick = () => startFight(color);
-        sel.appendChild(btn);
-    });
-}
-
-function startFight(pColor) {
-    playSound('click'); hideAll();
-    document.getElementById('fightScreen').classList.remove('hidden');
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = 300;
-    playerHP = 100; enemyHP = 100;
-    let frame = 0, atkTimer = 0;
-
-    function fightLoop() {
-        if(document.getElementById('fightScreen').classList.contains('hidden')) return;
-        frame++;
-        ctx.clearRect(0,0,canvas.width, canvas.height);
-        
-        let action = (atkTimer > 0) ? 'attack' : 'idle';
-        if(atkTimer > 0) atkTimer--;
-
-        drawDino(ctx, canvas.width*0.2, 200, pColor, 'right', frame, action);
-        drawDino(ctx, canvas.width*0.8, 200, '#ef4444', 'left', frame, 'idle');
-        
-        document.querySelector('#hpL div').style.width = playerHP + '%';
-        document.querySelector('#hpR div').style.width = enemyHP + '%';
-        
-        requestAnimationFrame(fightLoop);
-    }
-    
-    document.getElementById('btnAtk').onclick = () => {
-        playSound('roar');
-        atkTimer = 20;
-        enemyHP -= 10;
-        if(enemyHP <= 0) { playSound('win'); goTitle(); }
-    };
-    
-    fightLoop();
-}
-
-// Iniciar
-window.onload = goTitle;
