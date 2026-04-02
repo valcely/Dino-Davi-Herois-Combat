@@ -1,71 +1,51 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dino Davi Pro - Kids Adventure</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
-</head>
-<body>
-
-    <div id="game-container">
-        <section id="titleScreen" class="screen active">
-            <div class="overlay"></div>
-            <div class="main-content">
-                <div class="logo-area">
-                    <h1 class="game-title">DINO DAVI</h1>
-                    <span class="game-subtitle">KIDS ADVENTURE</span>
-                </div>
-                
-                <div class="menu-grid">
-                    <button class="btn-card b-green" onclick="nav('select')">
-                        <span class="icon">🦖</span> <span class="label">LUTINHA</span>
-                    </button>
-                    <button class="btn-card b-blue" onclick="initMemory()">
-                        <span class="icon">🃏</span> <span class="label">MEMÓRIA</span>
-                    </button>
-                    <button class="btn-card b-purple" onclick="initColors()">
-                        <span class="icon">🎨</span> <span class="label">CORES</span>
-                    </button>
-                    <button class="btn-card b-orange" onclick="initStack()">
-                        <span class="icon">🏗️</span> <span class="label">MONTAR</span>
-                    </button>
-                </div>
+<div id="game-container">
+    <section id="titleScreen" class="screen active">
+        <div class="main-content">
+            <h1 class="game-title">DINO DAVI</h1>
+            <span class="game-subtitle">HEROES COMBAT</span>
+            <div class="menu-grid">
+                <button class="btn-card b-green" onclick="nav('select')">1 PLAYER</button>
+                <button class="btn-card b-blue" onclick="initMemory()">MEMÓRIA</button>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="selectScreen" class="screen">
-            <button class="back-btn" onclick="nav('title')">⬅</button>
-            <h2 class="section-title">ESCOLHA SEU HERÓI</h2>
-            <div id="dinoSelector" class="dino-row"></div>
-        </section>
+    <section id="selectScreen" class="screen">
+        <button class="back-btn" onclick="nav('title')">⬅</button>
+        <h2 class="section-title">CHOOSE YOUR HERO</h2>
+        <div id="dinoSelector" class="dino-row"></div>
+    </section>
 
-        <section id="fightScreen" class="screen">
-            <div class="fight-hud">
-                <div class="player-info">
-                    <div class="hp-container"><div id="hp-player" class="hp-fill"></div></div>
-                    <span id="p-name">DAVI</span>
-                </div>
-                <div class="vs-circle">VS</div>
-                <div class="player-info">
-                    <div class="hp-container"><div id="hp-enemy" class="hp-fill"></div></div>
-                    <span>T-REX MAL</span>
-                </div>
+    <section id="fightScreen" class="screen">
+        <div class="fight-hud">
+            <div class="hp-box">
+                <div id="hp-player" class="hp-fill"></div>
+                <span id="p1-label">PLAYER</span>
             </div>
-            <canvas id="fightCanvas"></canvas>
-            <div class="fight-ui">
-                <button class="attack-btn" onmousedown="playerAttack()">MORDIDA ÉPICA!</button>
+            <div class="vs-badge">VS</div>
+            <div class="hp-box">
+                <div id="hp-enemy" class="hp-fill"></div>
+                <span id="p2-label">T-REX VILLAIN</span>
             </div>
-        </section>
+        </div>
 
-        <section id="gameArea" class="screen">
-            <button class="back-btn" onclick="nav('title')">🏠</button>
-            <h2 id="gameTitle" class="section-title"></h2>
-            <div id="minigameContent"></div>
-        </section>
-    </div>
+        <canvas id="fightCanvas"></canvas>
 
-    <script src="script.js"></script>
-</body>
-</html>
+        <div class="mobile-controls">
+            <div class="d-pad">
+                <button class="ctrl-btn" onmousedown="keys.a=true" onmouseup="keys.a=false">⬅</button>
+                <button class="ctrl-btn" onmousedown="keys.s=true" onmouseup="keys.s=false">➡</button>
+            </div>
+            <div class="action-btns">
+                <button class="ctrl-btn b-orange" onclick="playerJump()">PULAR</button>
+                <button class="ctrl-btn b-purple" onclick="playerAttack('power')">PODER(K)</button>
+                <button class="ctrl-btn b-red" onclick="playerAttack('hit')">SOCO(L)</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="gameArea" class="screen">
+        <button class="back-btn" onclick="nav('title')">🏠</button>
+        <div id="minigameContent"></div>
+    </section>
+</div>
