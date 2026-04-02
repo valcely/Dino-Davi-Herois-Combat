@@ -1,73 +1,65 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Dino Davi - Kids Edition</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Dino Davi - Kids Adventure</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <div id="titleScreen" class="screen">
-    <canvas id="forestBg"></canvas>
-    <div class="content-overlay">
-        <h1>DINO DAVI</h1>
-        <h2>KIDS ADVENTURE</h2>
-        
-        <div class="main-menu-grid">
-            <button class="menu-btn lutar" id="btnGoSelect">🦖 MODO LUTINHA</button>
-            <button class="menu-btn memoria" id="btnGoMemory">🃏 JOGO DA MEMÓRIA</button>
-            <button class="menu-btn cores" id="btnGoColors">🎨 MUNDO DAS CORES</button>
-            <button class="menu-btn montar" id="btnGoStack">🏗️ JOGO DE MONTAR</button>
+    <div id="titleScreen" class="screen">
+        <canvas id="forestBg"></canvas>
+        <div class="content-overlay">
+            <h1 class="bounce">DINO DAVI</h1>
+            <div class="main-menu-grid">
+                <button class="menu-btn lutar" onclick="goSelect()">🦖 LUTINHA</button>
+                <button class="menu-btn memoria" onclick="startMemoryGame()">🃏 MEMÓRIA</button>
+                <button class="menu-btn cores" onclick="startColorGame()">🎨 CORES</button>
+                <button class="menu-btn montar" onclick="startStackGame()">🏗️ MONTAR</button>
+            </div>
         </div>
     </div>
-  </div>
 
-  <div id="selectScreen" class="screen hidden">
-    <h3>QUEM VAI LUTAR?</h3>
-    <div class="sel-cols" id="selCols"></div>
-    <div class="sel-btns">
-      <button id="btnBack">VOLTAR</button>
-      <button id="btnFight">COMEÇAR!</button>
+    <div id="selectScreen" class="screen hidden">
+        <h2 class="title-kids">ESCOLHA SEU DINO!</h2>
+        <div id="selCols" class="sel-container"></div>
+        <button class="btn-back" onclick="goTitle()">VOLTAR</button>
     </div>
-  </div>
 
-  <div id="fightScreen" class="screen hidden">
-    <div id="hud">
-      <div class="hp-group" id="hudL"></div>
-      <div id="hudVS">VS</div>
-      <div class="hp-group" id="hudR"></div>
+    <div id="fightScreen" class="screen hidden">
+        <div class="hud-kids">
+            <div id="hpL" class="hp-bar"><div></div></div>
+            <div class="vs-bubble">VS</div>
+            <div id="hpR" class="hp-bar"><div></div></div>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+        <div class="fight-controls">
+            <button class="btn-atk" onpointerdown="doAttack()">BATER! 🦖</button>
+        </div>
+        <button class="btn-home-corner" onclick="goTitle()">🏠</button>
     </div>
-    <canvas id="gameCanvas"></canvas>
-    <div id="controls">
-      <div class="ctrl-side" id="ctrlL"></div>
-      <div class="ctrl-mid" id="ctrlMid"></div>
-      <div class="ctrl-side right" id="ctrlR"></div>
+
+    <div id="memoryScreen" class="screen hidden">
+        <button class="btn-home-corner" onclick="goTitle()">🏠</button>
+        <h2 class="title-kids">PARES IGUAIS</h2>
+        <div id="memoryGrid" class="memory-grid"></div>
     </div>
-  </div>
 
-  <div id="memoryScreen" class="screen hidden">
-    <button class="btn-home-corner" onclick="goTitle()">🏠</button>
-    <h3>JOGO DA MEMÓRIA</h3>
-    <div id="memoryGrid" class="memory-grid"></div>
-  </div>
-
-  <div id="stackScreen" class="screen hidden">
-    <button class="btn-home-corner" onclick="goTitle()">🏠</button>
-    <div id="stackInfo">NÍVEL: <span id="stackLevel">1</span></div>
-    <canvas id="stackCanvas"></canvas>
-    <button id="btnDrop" class="large-action-btn">SOLTAR PEÇA!</button>
-  </div>
-
-  <div id="resultScreen" class="screen hidden">
-    <canvas id="beams"></canvas>
-    <div id="rCard">
-      <div id="rName">VITÓRIA!</div>
-      <canvas id="rDinoCanvas" width="120" height="100"></canvas>
-      <button id="btnHome">VOLTAR AO INÍCIO</button>
+    <div id="colorScreen" class="screen hidden">
+        <button class="btn-home-corner" onclick="goTitle()">🏠</button>
+        <h2 class="title-kids">PINTE O DINO!</h2>
+        <div id="colorTarget" class="color-target">🦖</div>
+        <div id="colorPalette" class="palette"></div>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+    <div id="stackScreen" class="screen hidden">
+        <button class="btn-home-corner" onclick="goTitle()">🏠</button>
+        <div class="stack-hud">NÍVEL: <span id="stackLevel">1</span></div>
+        <canvas id="stackCanvas"></canvas>
+        <button id="btnDrop" class="btn-drop" onpointerdown="dropPiece()">SOLTAR PEÇA!</button>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
