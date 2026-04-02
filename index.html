@@ -13,24 +13,37 @@
     <section id="menu" class="screen active">
         <h1 class="game-title">DINO DAVI</h1>
         <button class="hero-card" style="width: 280px; margin-top: 50px;" onclick="initSelection()">
-            <img src="https://cdn-icons-png.flaticon.com/512/2591/2591933.png">
+            <img src="https://cdn-icons-png.flaticon.com/512/2591/2591933.png" alt="Jogar">
             <p>JOGAR AGORA!</p>
         </button>
     </section>
 
     <section id="selection" class="screen">
-        <h2 style="color: gold; font-size: 2rem;">QUEM É VOCÊ?</h2>
+        <h2 style="color: gold; font-size: 2rem; text-align: center;">QUEM É VOCÊ?</h2>
         <div id="heroList" class="hero-grid"></div>
     </section>
 
     <section id="fight" class="screen">
-        <div class="life-bar-wrap"><div id="hp2" class="life-fill"></div></div>
+        
+        <div class="hud" style="display: flex; justify-content: space-between; padding: 10px;">
+            <div class="player-hud">
+                <h3 id="p1-name" style="color: white; margin: 0;">Jogador</h3>
+                <div class="life-bar-wrap"><div id="hp1" class="life-fill"></div></div>
+            </div>
+            
+            <div class="enemy-hud" style="text-align: right;">
+                <h3 id="p2-name" style="color: white; margin: 0;">Inimigo</h3>
+                <div class="life-bar-wrap"><div id="hp2" class="life-fill"></div></div>
+            </div>
+        </div>
+
         <div class="fight-container">
             <div id="p1-dino" class="dino-fighter"></div>
             <div id="p2-dino" class="dino-fighter"></div>
         </div>
-        <div class="action-area">
-            <button class="btn-punch" onclick="ataqueP1()">💥</button>
+
+        <div class="action-area" style="text-align: center; margin-top: 20px;">
+            <button class="btn-punch" onclick="ataqueP1()" style="font-size: 3rem;">💥</button>
         </div>
     </section>
 
