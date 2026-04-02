@@ -24,7 +24,7 @@ body {
     content: "🦖 🦕 🦴 🐾 🦖 🦕 🦴 🐾";
     position: absolute; width: 200%; height: 200%;
     top: -50%; left: -50%; display: flex; flex-wrap: wrap;
-    justify-content: space-around; font-size: 1.8rem; opacity: 0.12;
+    justify-content: space-around; font-size: 2rem; opacity: 0.15;
     gap: 100px; transform: rotate(-15deg);
     animation: starMove 40s linear infinite;
 }
@@ -44,7 +44,6 @@ body {
 
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-/* Título Profissional Animado */
 .game-title { 
     font-size: clamp(3.5rem, 15vw, 6rem); 
     background: linear-gradient(to bottom, #ffcc00, #ff9900);
@@ -70,13 +69,21 @@ body {
 .hp-bar { width: 45%; height: 30px; background: #222; border: 3px solid #fff; border-radius: 15px; overflow: hidden; }
 .hp-fill { height: 100%; width: 100%; background: #ff4444; transition: 0.4s; }
 
-/* Grid de Jogos */
+/* Grid de Jogos com Imagens */
 #minigameContent { display: grid; gap: 15px; padding: 20px; width: 100%; max-width: 600px; }
 .card, .puzzle-piece { 
     background: var(--j-gold); border-radius: 15px; border: 4px solid #fff;
     display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: 0.3s; aspect-ratio: 1/1; font-size: 0;
+    cursor: pointer; transition: 0.3s; aspect-ratio: 1/1; 
+    overflow: hidden;
 }
 
-.card.flipped { font-size: 3rem; background: #fff; transform: rotateY(180deg); }
-.puzzle-piece { font-size: 1.5rem; color: #000; text-align: center; padding: 5px; }
+.card img, .puzzle-piece img {
+    width: 80%; height: 80%; object-fit: contain;
+    display: none; /* Escondido até virar a carta */
+}
+
+.card.flipped { background: #fff; transform: rotateY(180deg); }
+.card.flipped img { display: block; }
+
+.puzzle-piece img { display: block; width: 100%; height: 100%; object-fit: cover; }
