@@ -3,73 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dino Davi - Kids Adventure</title>
+    <title>Dino Davi Pro - Kids Adventure</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div id="bootScreen" class="screen">
-        <button class="play-mega-btn" onclick="initGame()">JOGAR!</button>
-    </div>
-
-    <div id="titleScreen" class="screen hidden">
-        <canvas id="skyBg"></canvas>
-        <div class="ui-layer">
-            <div class="logo-container">
-                <h1 class="main-title">DINO DAVI</h1>
-                <span class="badge">KIDS ADVENTURE</span>
+    <div id="game-container">
+        <section id="titleScreen" class="screen active">
+            <div class="overlay"></div>
+            <div class="main-content">
+                <div class="logo-area">
+                    <h1 class="game-title">DINO DAVI</h1>
+                    <span class="game-subtitle">KIDS ADVENTURE</span>
+                </div>
+                
+                <div class="menu-grid">
+                    <button class="btn-card b-green" onclick="nav('select')">
+                        <span class="icon">🦖</span> <span class="label">LUTINHA</span>
+                    </button>
+                    <button class="btn-card b-blue" onclick="initMemory()">
+                        <span class="icon">🃏</span> <span class="label">MEMÓRIA</span>
+                    </button>
+                    <button class="btn-card b-purple" onclick="initColors()">
+                        <span class="icon">🎨</span> <span class="label">CORES</span>
+                    </button>
+                    <button class="btn-card b-orange" onclick="initStack()">
+                        <span class="icon">🏗️</span> <span class="label">MONTAR</span>
+                    </button>
+                </div>
             </div>
-            
-            <div class="menu-grid">
-                <button class="card-btn b-lutar" onclick="goSelect()">
-                    <div class="icon">🦖</div>
-                    <span>LUTINHA</span>
-                </button>
-                <button class="card-btn b-memoria" onclick="startMemoryGame()">
-                    <div class="icon">🃏</div>
-                    <span>MEMÓRIA</span>
-                </button>
-                <button class="card-btn b-cores" onclick="startColorsGame()">
-                    <div class="icon">🎨</div>
-                    <span>CORES</span>
-                </button>
-                <button class="card-btn b-montar" onclick="startStackGame()">
-                    <div class="icon">🏗️</div>
-                    <span>MONTAR</span>
-                </button>
-            </div>
-        </div>
-    </div>
+        </section>
 
-    <div id="selectScreen" class="screen hidden">
-        <h2 class="screen-title">ESCOLHA SEU DINO</h2>
-        <div class="dino-selector" id="selCols"></div>
-        <button class="btn-back" onclick="goTitle()">VOLTAR</button>
-    </div>
+        <section id="selectScreen" class="screen">
+            <button class="back-btn" onclick="nav('title')">⬅</button>
+            <h2 class="section-title">ESCOLHA SEU HERÓI</h2>
+            <div id="dinoSelector" class="dino-row"></div>
+        </section>
 
-    <div id="fightScreen" class="screen hidden">
-        <div class="fight-hud">
-            <div class="hp-container">
-                <div class="hp-label">DAVI</div>
-                <div id="hpL" class="hp-bar-outer"><div class="hp-fill"></div></div>
+        <section id="fightScreen" class="screen">
+            <div class="fight-hud">
+                <div class="player-info">
+                    <div class="hp-container"><div id="hp-player" class="hp-fill"></div></div>
+                    <span id="p-name">DAVI</span>
+                </div>
+                <div class="vs-circle">VS</div>
+                <div class="player-info">
+                    <div class="hp-container"><div id="hp-enemy" class="hp-fill"></div></div>
+                    <span>T-REX MAL</span>
+                </div>
             </div>
-            <div class="vs-circle">VS</div>
-            <div class="hp-container">
-                <div class="hp-label">T-REX</div>
-                <div id="hpR" class="hp-bar-outer"><div class="hp-fill"></div></div>
+            <canvas id="fightCanvas"></canvas>
+            <div class="fight-ui">
+                <button class="attack-btn" onmousedown="playerAttack()">MORDIDA ÉPICA!</button>
             </div>
-        </div>
-        <canvas id="fightCanvas"></canvas>
-        <div class="fight-ui">
-            <button id="btnAtk" class="action-btn-battle">MORDIDA! 🦖</button>
-        </div>
-        <button class="btn-home-corner" onclick="goTitle()">🏠</button>
-    </div>
+        </section>
 
-    <div id="gameContainer" class="screen hidden">
-        <button class="btn-home-corner" onclick="goTitle()">🏠</button>
-        <div id="gameContent"></div>
+        <section id="gameArea" class="screen">
+            <button class="back-btn" onclick="nav('title')">🏠</button>
+            <h2 id="gameTitle" class="section-title"></h2>
+            <div id="minigameContent"></div>
+        </section>
     </div>
 
     <script src="script.js"></script>
