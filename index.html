@@ -3,93 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dino Davi: Jurassic Heroes</title>
+    <title>Dino Davi</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="main-background" class="scientist-bg"></div>
+    <div id="bg" class="scientist-bg"></div>
 
-    <section id="titleScreen" class="screen active">
-        <header class="game-header">
-            <h1 class="game-title">DINO DAVI</h1>
-            <p class="game-subtitle">JURASSIC HEROES League</p>
-        </header>
-        
-        <nav class="menu-navigation">
-            <button class="btn-universal pulse" onclick="initHeroSelect()">
-                <span class="icon">🦖</span> COMBATE DOS HERÓIS
-            </button>
-            <button class="btn-universal" onclick="initMemory()">
-                <span class="icon">🧩</span> JOGO DA MEMÓRIA
-            </button>
-            <button class="btn-universal" onclick="initPuzzle()">
-                <span class="icon">🖼️</span> QUEBRA-CABEÇA
-            </button>
-        </nav>
+    <section id="menu" class="screen active">
+        <h1 class="game-title">DINO DAVI</h1>
+        <button class="hero-card" style="width: 280px; margin-top: 50px;" onclick="initSelection()">
+            <img src="https://cdn-icons-png.flaticon.com/512/2591/2591933.png">
+            <p>JOGAR AGORA!</p>
+        </button>
     </section>
 
-    <section id="selectScreen" class="screen">
-        <div class="top-bar">
-            <button class="btn-icon-back" onclick="goToMenu()">🏠</button>
-            <h2 class="title-select">ESCOLHA SEU CAMPEÃO</h2>
-        </div>
-        
-        <div id="heroList" class="hero-selection-grid"></div>
+    <section id="selection" class="screen">
+        <h2 style="color: gold; font-size: 2rem;">QUEM É VOCÊ?</h2>
+        <div id="heroList" class="hero-grid"></div>
     </section>
 
-    <section id="fightScreen" class="screen">
-        <div class="hud-battle">
-            <div class="hp-container p1-side">
-                <div class="hp-label" id="name-p1">DAVI-SPIDER</div>
-                <div class="hp-bar-outer">
-                    <div id="hp1" class="hp-bar-inner"></div>
-                </div>
-            </div>
-            
-            <div class="vs-circle">VS</div>
-            
-            <div class="hp-container p2-side">
-                <div class="hp-label" id="name-p2">VILÃO</div>
-                <div class="hp-bar-outer">
-                    <div id="hp2" class="hp-fill-enemy"></div>
-                </div>
-            </div>
+    <section id="fight" class="screen">
+        <div class="life-bar-wrap"><div id="hp2" class="life-fill"></div></div>
+        <div class="fight-container">
+            <div id="p1-dino" class="dino-fighter"></div>
+            <div id="p2-dino" class="dino-fighter"></div>
         </div>
-
-        <div class="battle-stage">
-            <div id="player-dino" class="dino-character"></div>
-            <div id="enemy-dino" class="dino-character enemy"></div>
-            <div class="stage-floor"></div>
-        </div>
-
-        <footer class="battle-footer">
-            <button class="btn-action btn-attack" onclick="handleAttack()">
-                💥 ATAQUE
-            </button>
-            <button class="btn-action btn-special" onclick="handleSpecial()">
-                🔥 ESPECIAL
-            </button>
-        </footer>
-    </section>
-
-    <section id="minigameScreen" class="screen">
-        <div class="top-bar">
-            <button class="btn-icon-back" onclick="goToMenu()">🏠 MENU</button>
-            <h2 id="current-game-title" class="title-select">JOGANDO</h2>
-        </div>
-
-        <div id="memory-game-wrap" class="game-container" style="display:none;">
-            <div id="memory-grid" class="memory-layout"></div>
-        </div>
-
-        <div id="puzzle-game-wrap" class="game-container" style="display:none;">
-            <div class="puzzle-area">
-                <div id="puzzle-target-box" class="target-box">
-                    <div id="puzzle-shadow-guide" class="shadow-guide"></div>
-                </div>
-                <div id="puzzle-pieces-tray" class="pieces-tray"></div>
-            </div>
+        <div class="action-area">
+            <button class="btn-punch" onclick="ataqueP1()">💥</button>
         </div>
     </section>
 
