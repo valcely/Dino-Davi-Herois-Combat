@@ -3,37 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dino Davi: Jurassic World</title>
+    <title>Dino Davi</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="scientist-bg"></div>
+    <div id="bg" class="scientist-bg">
+        <span>🦖</span><span>🦴</span><span>🦕</span><span>🐾</span><span>🦖</span><span>🦴</span><span>🦕</span><span>🐾</span>
+        <span>🦖</span><span>🦴</span><span>🦕</span><span>🐾</span><span>🦖</span><span>🦴</span><span>🦕</span><span>🐾</span>
+        <span>🦖</span><span>🦴</span><span>🦕</span><span>🐾</span><span>🦖</span><span>🦴</span><span>🦕</span><span>🐾</span>
+    </div>
+
     <section id="titleScreen" class="screen active">
         <h1 class="game-title">DINO DAVI</h1>
-        <p style="color: var(--j-accent); letter-spacing: 8px; font-weight: bold;">IMAGENS REAIS</p>
-        <div style="display: flex; gap: 10px;">
-            <button class="btn-main" style="width: 150px;" onclick="startFight(1)">1 JOGADOR</button>
-            <button class="btn-main" style="width: 150px; background: var(--j-accent);" onclick="startFight(2)">2 PLAYERS</button>
-        </div>
+        <p style="color: var(--j-accent); letter-spacing: 5px; font-weight: bold;">JURASSIC HEROES</p>
+        <button class="btn-main" onclick="initHeroSelect()">🦖 COMBATE</button>
         <button class="btn-main" onclick="initMemory()">🧩 JOGO DA MEMÓRIA</button>
         <button class="btn-main" onclick="initPuzzle()">🖼️ QUEBRA-CABEÇA</button>
     </section>
-    <section id="fightScreen" class="screen">
-        <div class="fight-hud">
-            <div class="hp-bar"><div id="hp1" class="hp-fill"></div></div>
-            <div style="font-size: 1.5rem; font-weight: bold; color: gold;">VS</div>
-            <div class="hp-bar"><div id="hp2" class="hp-fill"></div></div>
-        </div>
-        <canvas id="fightCanvas"></canvas>
-        <button class="btn-main" style="width:150px; margin-top: 30px;" onclick="location.reload()">🏠 SAIR</button>
+
+    <section id="selectScreen" class="screen">
+        <h2 style="color: gold;">QUEM É VOCÊ?</h2>
+        <div id="heroList" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;"></div>
+        <button class="btn-main" style="width: 150px; margin-top: 20px;" onclick="location.reload()">VOLTAR</button>
     </section>
+
     <section id="gameScreen" class="screen">
-        <div style="width: 100%; padding: 20px; display: flex; justify-content: space-between;">
-            <button class="btn-main" style="width:100px; padding: 10px; font-size: 0.8rem;" onclick="location.reload()">🏠 MENU</button>
-            <h2 id="gameTitle" style="color: gold;">CARREGANDO...</h2>
-        </div>
-        <div id="minigameContent"></div>
-    </section>
+        <button class="btn-main" style="width:100px; position:absolute; top:10px; left:10px;" onclick="location.reload()">MENU</button>
+        <h2 id="gameTitle" style="color: gold; margin-top: 50px;"></h2>
+        <div id="puzzle-board"></div> <div id="minigameContent"></div>
+        <div id="puzzle-pieces-area"></div> </section>
+
     <script src="script.js"></script>
 </body>
 </html>
