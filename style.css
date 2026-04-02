@@ -5,73 +5,54 @@
     --j-accent: #4ade80;
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; touch-action: none; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; margin: 0; padding: 0; }
 
 body { 
-    margin: 0; font-family: 'Arial Rounded MT Bold', sans-serif; 
+    font-family: 'Arial Rounded MT Bold', sans-serif; 
     background: var(--j-dark); color: white; overflow: hidden;
     width: 100vw; height: 100vh;
 }
 
-/* FUNDO TOTAL COM DINOS E OSSOS */
+/* FUNDO TOTAL - COBRE TUDO */
 .scientist-bg {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: radial-gradient(circle, var(--j-green) 0%, var(--j-dark) 100%);
-    z-index: -1; display: flex; flex-wrap: wrap; justify-content: space-around;
-    align-content: space-around; padding: 20px; opacity: 0.15;
-    animation: floatBg 20s linear infinite;
-}
-
-@keyframes floatBg {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-30px); }
-    100% { transform: translateY(0); }
+    z-index: -1; display: grid; 
+    grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(6, 1fr);
+    justify-items: center; align-items: center; opacity: 0.12; pointer-events: none;
 }
 
 .screen { 
     display: none; width: 100%; height: 100%; 
     flex-direction: column; align-items: center; justify-content: center;
-    position: absolute; top: 0; left: 0;
+    position: absolute; top: 0; left: 0; padding: 20px;
 }
 
-.screen.active { display: flex; }
+.screen.active { display: flex; animation: fadeIn 0.4s ease; }
+
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
 .game-title { 
-    font-size: clamp(3.5rem, 15vw, 5.5rem); 
+    font-size: clamp(2.5rem, 10vw, 4.5rem); 
     background: linear-gradient(to bottom, #ffcc00, #ff9900);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    margin: 0; filter: drop-shadow(5px 5px 0px rgba(0,0,0,0.6));
+    text-align: center; filter: drop-shadow(4px 4px 0px #000);
 }
 
-.btn-main {
-    background: var(--j-gold); border: 4px solid #fff; border-radius: 30px;
-    padding: 18px; margin: 10px; font-size: 1.2rem; font-weight: bold;
-    color: #000; cursor: pointer; box-shadow: 0 6px 0 #b8860b; width: 280px;
+/* GRID DE 18 PERSONAGENS */
+#heroList {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    max-height: 60vh; overflow-y: auto; width: 100%; padding: 10px;
 }
 
-/* ESTILO DO QUEBRA-CABEÇA */
-#puzzle-board {
-    width: 300px; height: 300px; border: 4px dashed rgba(255,255,255,0.3);
-    margin-bottom: 20px; position: relative; background: rgba(0,0,0,0.2);
+.hero-card {
+    background: rgba(255,255,255,0.1); border: 3px solid var(--j-gold);
+    border-radius: 15px; padding: 10px; text-align: center; cursor: pointer;
 }
 
-#puzzle-pieces-area {
-    display: flex; gap: 10px; padding: 10px; background: rgba(255,255,255,0.1);
-    border-radius: 15px; width: 90%; justify-content: center;
-}
+.hero-card img { width: 60px; height: 60px; object-fit: contain; }
+.hero-card p { font-size: 0.7rem; margin-top: 5px; font-weight: bold; color: var(--j-accent); }
 
-.puzzle-piece {
-    width: 80px; height: 80px; border: 2px solid white; cursor: grab;
-    background-size: cover; background-position: center;
-}
-
-/* JOGO DA MEMÓRIA */
-#minigameContent { display: grid; gap: 10px; padding: 10px; }
-.card { 
-    width: 75px; height: 75px; background: var(--j-gold); border-radius: 12px; 
-    border: 3px solid #fff; display: flex; align-items: center; justify-content: center;
-    cursor: pointer;
-}
-.card img { width: 80%; height: 80%; display: none; pointer-events: none; }
-.card.flipped { background: #fff; }
-.card.flipped img { display: block; }
+/* CONTROLES DE LUTA */
+#fightCanvas { background: rgba(0,0,0,0.4); border-radius: 20px; width: 100%; height: 280px; }
+.hp-fill { height: 100%; background: #ff4444; width: 100%; transition: 0.3s; }
