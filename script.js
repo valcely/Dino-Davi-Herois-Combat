@@ -5,81 +5,80 @@ const UI = {
     }
 };
 
-// --- IMAGENS DOS DINOSSAUROS ---
-const DINO_IMAGES = [
-    'https://cdn-icons-png.flaticon.com/512/2591/2591933.png', // T-Rex
-    'https://cdn-icons-png.flaticon.com/512/2591/2591942.png', // Triceratops
-    'https://cdn-icons-png.flaticon.com/512/2591/2591946.png', // Pterodáctilo
-    'https://cdn-icons-png.flaticon.com/512/2591/2591937.png', // Brontossauro
-    'https://cdn-icons-png.flaticon.com/512/2591/2591931.png', // Estegossauro
-    'https://cdn-icons-png.flaticon.com/512/2591/2591939.png'  // Velociraptor
+const DINOS = [
+    { name: 'T-REX', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591933.png' },
+    { name: 'TRICERA', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591942.png' },
+    { name: 'PTERO', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591946.png' },
+    { name: 'BRONTO', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591937.png' }
 ];
 
-// --- COMBATE ---
-let p1Img = new Image(); p1Img.src = DINO_IMAGES[0];
-let p2Img = new Image(); p2Img.src = DINO_IMAGES[1];
-
-function startFight(mode) {
-    UI.nav('fightScreen');
-    const canvas = document.getElementById('fightCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    let x1 = 100, x2 = canvas.width - 200;
-
-    function gameLoop() {
-        if(!document.getElementById('fightScreen').classList.contains('active')) return;
-        ctx.clearRect(0,0, canvas.width, canvas.height);
-        
-        // Desenha as imagens em vez de texto
-        ctx.drawImage(p1Img, x1, 150, 120, 120);
-        ctx.drawImage(p2Img, x2, 150, 120, 120);
-
-        if(mode === 1 && x2 > x1 + 100) x2 -= 1; // IA caminha
-        requestAnimationFrame(gameLoop);
-    }
-    gameLoop();
+// --- SELEÇÃO DE HERÓI ---
+function initHeroSelect() {
+    UI.nav('selectScreen');
+    const list = document.getElementById('heroList');
+    list.innerHTML = '';
+    DINOS.forEach(dino => {
+        const div = document.createElement('div');
+        div.style.textAlign = 'center';
+        div.innerHTML = `<img src="${dino.img}" width="80"><p>${dino.name}</p>`;
+        div.onclick = () => alert("Heroi " + dino.name + " selecionado! Preparar luta...");
+        list.appendChild(div);
+    });
 }
 
-// --- JOGO DA MEMÓRIA COM IMAGENS ---
+// --- JOGO DA MEMÓRIA (SEMPRE EMBARALHADO) ---
 function initMemory() {
     UI.nav('gameScreen');
     document.getElementById('gameTitle').innerText = "MEMÓRIA";
+    document.getElementById('puzzle-board').style.display = 'none';
+    document.getElementById('puzzle-pieces-area').style.display = 'none';
+    
     const grid = document.getElementById('minigameContent');
+    grid.style.display = 'grid';
     grid.style.gridTemplateColumns = "repeat(4, 1fr)";
     grid.innerHTML = '';
-    
-    let deck = [...DINO_IMAGES.slice(0,6), ...DINO_IMAGES.slice(0,6)].sort(() => Math.random() - 0.5);
 
-    deck.forEach(url => {
+    // Embaralha sempre ao iniciar
+    const deck = [...DINOS, ...DINOS].sort(() => Math.random() - 0.5);
+
+    deck.forEach(dino => {
         const card = document.createElement('div');
         card.className = 'card';
-        const img = document.createElement('img');
-        img.src = url;
-        card.appendChild(img);
+        card.innerHTML = `<img src="${dino.img}">`;
         card.onclick = () => card.classList.toggle('flipped');
         grid.appendChild(card);
     });
 }
 
-// --- QUEBRA-CABEÇA COM IMAGENS ---
+// --- QUEBRA-CABEÇA SIMPLES ---
 function initPuzzle() {
     UI.nav('gameScreen');
-    document.getElementById('gameTitle').innerText = "MONTAR DINO";
-    const grid = document.getElementById('minigameContent');
-    grid.style.gridTemplateColumns = "repeat(3, 1fr)";
-    grid.innerHTML = '';
+    document.getElementById('gameTitle').innerText = "MONTE O DINO";
+    document.getElementById('minigameContent').style.display = 'none';
     
-    // Mostra várias fotos de dinos para o Davi clicar e "coletar"
-    DINO_IMAGES.forEach(url => {
-        const piece = document.createElement('div');
-        piece.className = 'puzzle-piece';
-        const img = document.createElement('img');
-        img.src = url;
-        piece.appendChild(img);
-        piece.onclick = () => {
-            piece.style.borderColor = "#4ade80";
-            piece.style.transform = "scale(0.9)";
+    const board = document.getElementById('puzzle-board');
+    const piecesArea = document.getElementById('puzzle-pieces-area');
+    board.style.display = 'block';
+    piecesArea.style.display = 'flex';
+    board.innerHTML = ''; piecesArea.innerHTML = '';
+
+    // Escolhe um dino para montar
+    const targetDino = DINOS[0].img;
+    board.style.backgroundImage = `url(${targetDino})`;
+    board.style.backgroundSize = 'contain';
+    board.style.backgroundRepeat = 'no-repeat';
+    board.style.opacity = '0.3'; // Fica clarinho para o Davi saber onde colocar
+
+    // Cria peças para "arrastar" (clicar e aparecer)
+    for(let i=0; i<3; i++) {
+        const p = document.createElement('div');
+        p.className = 'puzzle-piece';
+        p.style.backgroundImage = `url(${targetDino})`;
+        p.onclick = () => {
+            p.style.display = 'none';
+            board.style.opacity = '1'; // "Montou"
+            alert("Parabéns Davi! Você montou!");
         };
-        grid.appendChild(piece);
-    });
+        piecesArea.appendChild(p);
+    }
 }
