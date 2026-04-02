@@ -3,34 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dino Davi: 18 Heroes</title>
+    <title>Dino Davi: Jurassic Heroes</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="scientist-bg" id="bgIcons"></div>
+
+    <div id="main-background" class="scientist-bg"></div>
 
     <section id="titleScreen" class="screen active">
-        <h1 class="game-title">DINO DAVI</h1>
-        <p style="color: var(--j-accent); letter-spacing: 3px;">18 SUPER DINOS</p>
-        <button class="btn-main" style="padding:15px; width:250px; background:gold; border-radius:20px; font-weight:bold; margin-top:10px" onclick="initHeroSelect()">🦖 ESCOLHER HERÓI</button>
-        <button class="btn-main" style="padding:15px; width:250px; background:white; border-radius:20px; font-weight:bold; margin-top:10px" onclick="initMemory()">🧩 MEMÓRIA</button>
+        <header class="game-header">
+            <h1 class="game-title">DINO DAVI</h1>
+            <p class="game-subtitle">JURASSIC HEROES League</p>
+        </header>
+        
+        <nav class="menu-navigation">
+            <button class="btn-universal pulse" onclick="initHeroSelect()">
+                <span class="icon">🦖</span> COMBATE DOS HERÓIS
+            </button>
+            <button class="btn-universal" onclick="initMemory()">
+                <span class="icon">🧩</span> JOGO DA MEMÓRIA
+            </button>
+            <button class="btn-universal" onclick="initPuzzle()">
+                <span class="icon">🖼️</span> QUEBRA-CABEÇA
+            </button>
+        </nav>
     </section>
 
     <section id="selectScreen" class="screen">
-        <h2 style="color: gold; margin-bottom: 10px;">SELECIONE (18 OPÇÕES)</h2>
-        <div id="heroList"></div>
-        <button onclick="location.reload()" style="margin-top:10px; padding:10px">VOLTAR</button>
+        <div class="top-bar">
+            <button class="btn-icon-back" onclick="goToMenu()">🏠</button>
+            <h2 class="title-select">ESCOLHA SEU CAMPEÃO</h2>
+        </div>
+        
+        <div id="heroList" class="hero-selection-grid"></div>
     </section>
 
     <section id="fightScreen" class="screen">
-        <div style="display:flex; width:100%; justify-content:space-between; margin-bottom:10px">
-            <div style="width:40%; border:2px solid #fff; height:20px"><div id="hp1" class="hp-fill"></div></div>
-            <div style="width:40%; border:2px solid #fff; height:20px"><div id="hp2" class="hp-fill"></div></div>
+        <div class="hud-battle">
+            <div class="hp-container p1-side">
+                <div class="hp-label" id="name-p1">DAVI-SPIDER</div>
+                <div class="hp-bar-outer">
+                    <div id="hp1" class="hp-bar-inner"></div>
+                </div>
+            </div>
+            
+            <div class="vs-circle">VS</div>
+            
+            <div class="hp-container p2-side">
+                <div class="hp-label" id="name-p2">VILÃO</div>
+                <div class="hp-bar-outer">
+                    <div id="hp2" class="hp-fill-enemy"></div>
+                </div>
+            </div>
         </div>
-        <canvas id="fightCanvas"></canvas>
-        <div style="display:flex; gap:20px; margin-top:15px">
-            <button onclick="atacar()" style="width:80px; height:80px; border-radius:50%; background:red; color:white; font-weight:bold">SOCO</button>
-            <button onclick="especial()" style="width:80px; height:80px; border-radius:50%; background:blue; color:white; font-weight:bold">PODER</button>
+
+        <div class="battle-stage">
+            <div id="player-dino" class="dino-character"></div>
+            <div id="enemy-dino" class="dino-character enemy"></div>
+            <div class="stage-floor"></div>
+        </div>
+
+        <footer class="battle-footer">
+            <button class="btn-action btn-attack" onclick="handleAttack()">
+                💥 ATAQUE
+            </button>
+            <button class="btn-action btn-special" onclick="handleSpecial()">
+                🔥 ESPECIAL
+            </button>
+        </footer>
+    </section>
+
+    <section id="minigameScreen" class="screen">
+        <div class="top-bar">
+            <button class="btn-icon-back" onclick="goToMenu()">🏠 MENU</button>
+            <h2 id="current-game-title" class="title-select">JOGANDO</h2>
+        </div>
+
+        <div id="memory-game-wrap" class="game-container" style="display:none;">
+            <div id="memory-grid" class="memory-layout"></div>
+        </div>
+
+        <div id="puzzle-game-wrap" class="game-container" style="display:none;">
+            <div class="puzzle-area">
+                <div id="puzzle-target-box" class="target-box">
+                    <div id="puzzle-shadow-guide" class="shadow-guide"></div>
+                </div>
+                <div id="puzzle-pieces-tray" class="pieces-tray"></div>
+            </div>
         </div>
     </section>
 
