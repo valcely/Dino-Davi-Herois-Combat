@@ -1,60 +1,92 @@
 :root {
-    --green: #22c55e; --blue: #3b82f6; --purple: #a855f7; --orange: #f59e0b;
+    --primary: #fbbf24;
+    --green: #4ade80;
+    --blue: #60a5fa;
+    --red: #f87171;
+    --purple: #a78bfa;
+    --dark: #1a2e1a;
 }
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body { 
-    margin: 0; overflow: hidden; background: #051005; 
-    font-family: 'Comic Sans MS', sans-serif; touch-action: none; 
+    margin: 0; padding: 0; 
+    font-family: 'Luckiest Guy', cursive; 
+    background: var(--dark);
+    color: white; overflow: hidden;
+    user-select: none;
 }
 
-.screen { 
-    position: fixed; inset: 0; display: flex; flex-direction: column; 
-    align-items: center; justify-content: center; background: radial-gradient(#1a4d2e, #051005);
+.screen {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: radial-gradient(circle, #2d5a27 0%, #1a2e1a 100%);
+    transition: opacity 0.3s;
 }
+
 .hidden { display: none !important; }
 
+/* Botão de Início */
+.play-mega-btn {
+    padding: 30px 60px; font-size: 3rem;
+    background: var(--green); border: 8px solid white;
+    border-radius: 50px; color: white; cursor: pointer;
+    box-shadow: 0 15px 0 #166534;
+    animation: pulse 1.5s infinite;
+}
+
 /* Menu Principal */
-.bounce-text { 
-    font-size: 3rem; color: #fbbf24; text-shadow: 4px 4px 0 #b45309; 
-    margin: 0; animation: bounce 2s infinite; 
+.logo-container { text-align: center; margin-bottom: 40px; }
+.main-title { 
+    font-size: 5rem; margin: 0; color: var(--primary);
+    text-shadow: 6px 6px 0 #b45309; letter-spacing: 4px;
 }
-.sub-title { color: white; margin-bottom: 30px; letter-spacing: 2px; }
+.badge { background: #ef4444; padding: 5px 15px; border-radius: 10px; font-size: 1.2rem; }
 
-.main-menu-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 25px; padding: 20px;
+.menu-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+    width: 90%; max-width: 600px;
 }
 
-.menu-btn {
-    padding: 30px 20px; border-radius: 25px; border: 5px solid rgba(255,255,255,0.4);
-    font-size: 1.2rem; color: white; font-weight: bold; cursor: pointer;
-    box-shadow: 0 10px 0 rgba(0,0,0,0.3); transition: 0.1s;
+.card-btn {
+    aspect-ratio: 1; border-radius: 30px; border: 6px solid rgba(255,255,255,0.3);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    cursor: pointer; transition: transform 0.1s;
 }
-.menu-btn:active { transform: translateY(6px); box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
 
-.lutar { background: var(--green); }
-.memoria { background: var(--blue); }
-.cores { background: var(--purple); }
-.montar { background: var(--orange); }
+.card-btn:active { transform: scale(0.9); }
+.card-btn .icon { font-size: 3.5rem; margin-bottom: 10px; }
+.card-btn span { font-size: 1.4rem; }
+
+.b-lutar { background: var(--green); box-shadow: 0 10px 0 #166534; }
+.b-memoria { background: var(--blue); box-shadow: 0 10px 0 #1e40af; }
+.b-cores { background: var(--purple); box-shadow: 0 10px 0 #6b21a8; }
+.b-montar { background: var(--primary); box-shadow: 0 10px 0 #92400e; }
 
 /* HUD de Luta */
-#hud { position: absolute; top: 20px; display: flex; align-items: center; gap: 15px; }
-.hp-bar { width: 120px; height: 20px; background: #444; border-radius: 10px; overflow: hidden; border: 3px solid white; }
-.hp-bar div { height: 100%; background: #ef4444; width: 100%; transition: 0.3s; }
-.vs-badge { background: white; padding: 5px 10px; border-radius: 50%; font-weight: bold; }
+.fight-hud {
+    position: absolute; top: 20px; width: 95%;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.hp-container { width: 40%; }
+.hp-bar-outer { height: 25px; background: #333; border: 4px solid white; border-radius: 15px; overflow: hidden; }
+.hp-fill { height: 100%; width: 100%; background: #ef4444; transition: width 0.3s ease-out; }
+.vs-circle { background: white; color: black; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-/* Jogos */
-.memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-.memory-card { 
-    width: 70px; height: 70px; background: #1e40af; border-radius: 15px; 
-    display: flex; align-items: center; justify-content: center; font-size: 2rem;
-    border: 3px solid white; cursor: pointer;
+.action-btn-battle {
+    padding: 20px 50px; font-size: 2rem; border-radius: 50px;
+    background: #ef4444; color: white; border: 6px solid white;
+    box-shadow: 0 8px 0 #991b1b; cursor: pointer;
 }
 
-.color-box { width: 150px; height: 150px; border-radius: 20px; margin-bottom: 30px; border: 8px solid white; }
-.color-options-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
-.color-circle { width: 80px; height: 80px; border-radius: 50%; border: 4px solid white; cursor: pointer; }
+.btn-home-corner { position: absolute; top: 15px; left: 15px; font-size: 1.5rem; background: white; border: none; padding: 10px; border-radius: 12px; z-index: 100; }
 
-.btn-home-corner { position: absolute; top: 20px; left: 20px; font-size: 1.5rem; padding: 10px; border-radius: 15px; border: none; background: white; }
-.large-action-btn { padding: 20px 40px; font-size: 1.5rem; border-radius: 40px; background: #ef4444; color: white; border: none; margin-top: 20px; }
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
 
-@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+/* Estilos de Jogos Internos */
+.memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 10px; }
+.memory-card { width: 75px; height: 75px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #000; }
