@@ -3,81 +3,218 @@
     --j-dark: #072210;
     --j-gold: #ffcc00;
     --j-accent: #4ade80;
+    --j-white: #ffffff;
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+* { 
+    box-sizing: border-box; 
+    -webkit-tap-highlight-color: transparent; 
+    user-select: none; 
+    touch-action: manipulation; /* Melhora o toque no celular */
+}
 
 body { 
-    margin: 0; font-family: 'Arial Rounded MT Bold', sans-serif; 
-    background: var(--j-dark); color: white; overflow: hidden;
+    margin: 0; 
+    font-family: 'Arial Rounded MT Bold', sans-serif; 
+    background: var(--j-dark); 
+    color: white; 
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
 }
 
-#game-container { width: 100vw; height: 100vh; position: relative; }
+#game-container { 
+    width: 100%; 
+    height: 100%; 
+    position: relative; 
+}
 
 .screen { 
-    display: none; width: 100%; height: 100%; 
-    flex-direction: column; align-items: center; 
+    display: none; 
+    position: absolute; /* Garante que uma tela fique sobre a outra */
+    top: 0; left: 0;
+    width: 100%; 
+    height: 100%; 
+    flex-direction: column; 
+    align-items: center; 
     background: linear-gradient(180deg, var(--j-dark) 0%, var(--j-green) 100%);
-    animation: fadeIn 0.5s ease;
+    z-index: 1;
 }
 
-.screen.active { display: flex; }
+.screen.active { 
+    display: flex; 
+    animation: fadeIn 0.4s ease-out;
+    z-index: 10;
+}
 
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+@keyframes fadeIn { 
+    from { opacity: 0; transform: scale(0.95); } 
+    to { opacity: 1; transform: scale(1); } 
+}
 
-/* Elementos Cientistas (Background) */
+/* Background Temático */
 .scientist-bg::before {
     content: "🧪 🧬 🔬 🥼";
-    position: absolute; top: 10%; width: 100%;
-    text-align: center; font-size: 2rem; opacity: 0.2; animation: float 6s infinite ease-in-out;
+    position: absolute; 
+    top: 10%; 
+    width: 100%;
+    text-align: center; 
+    font-size: 2rem; 
+    opacity: 0.15; 
+    animation: float 6s infinite ease-in-out;
+    pointer-events: none; /* Importante: não deixa o fundo atrapalhar o clique */
 }
 
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+@keyframes float { 
+    0%, 100% { transform: translateY(0); } 
+    50% { transform: translateY(-20px); } 
+}
 
-.game-title { font-size: 3.5rem; color: var(--j-gold); margin-bottom: 0; text-shadow: 3px 3px 0px #000; }
-.game-subtitle { font-size: 1.2rem; letter-spacing: 4px; color: var(--j-accent); }
+.game-title { 
+    font-size: clamp(2.5rem, 8vw, 4rem); 
+    color: var(--j-gold); 
+    margin: 20px 0 0 0; 
+    text-shadow: 3px 3px 0px #000; 
+}
 
-/* Botões Grandes para Crianças */
+.game-subtitle { 
+    font-size: 1rem; 
+    letter-spacing: 3px; 
+    color: var(--j-accent); 
+    margin-bottom: 20px;
+}
+
+/* Botões Grandes */
 .btn-main {
-    background: var(--j-gold); border: 4px solid #fff; border-radius: 20px;
-    padding: 20px 40px; margin: 10px; font-size: 1.5rem; font-weight: bold;
-    cursor: pointer; box-shadow: 0 6px 0 #b8860b; transition: 0.1s;
+    background: var(--j-gold); 
+    border: 4px solid #fff; 
+    border-radius: 20px;
+    padding: 15px 30px; 
+    margin: 10px; 
+    font-size: 1.3rem; 
+    font-weight: bold;
+    color: #000;
+    cursor: pointer; 
+    box-shadow: 0 6px 0 #b8860b; 
+    transition: 0.1s;
 }
+
 .btn-main:active { transform: translateY(4px); box-shadow: 0 2px 0 #b8860b; }
 
-/* Grid de Seleção */
-.dino-row { 
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; 
-    padding: 20px; overflow-y: auto; width: 100%;
+/* Grid de Seleção de Dinos */
+#dinoSelector {
+    display: grid; 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 12px; 
+    padding: 15px; 
+    width: 95%;
+    max-width: 600px;
+    overflow-y: auto;
 }
 
 .hero-card {
-    background: rgba(255,255,255,0.1); border-radius: 15px; padding: 15px;
-    text-align: center; border: 3px solid transparent;
+    background: rgba(255,255,255,0.1); 
+    border-radius: 15px; 
+    padding: 10px;
+    text-align: center; 
+    border: 3px solid transparent;
+    cursor: pointer;
 }
 .hero-card:active { border-color: var(--j-gold); background: rgba(255,255,255,0.2); }
-.hero-card span { font-size: 3rem; }
+.hero-card span { font-size: 2.5rem; display: block; }
+.hero-card p { margin: 5px 0 0 0; font-size: 0.8rem; font-weight: bold; }
 
-/* HUD Luta */
-.fight-hud { display: flex; width: 95%; justify-content: space-between; margin-top: 10px; }
-.hp-box { width: 40%; background: #222; border: 3px solid #fff; height: 30px; border-radius: 15px; overflow: hidden; position: relative; }
-.hp-fill { height: 100%; background: #ff4444; width: 100%; transition: 0.3s; }
-.hp-box span { position: absolute; width: 100%; text-align: center; font-size: 0.7rem; top: 5px; color: white; font-weight: bold; }
+/* Luta e Canvas */
+#fightCanvas {
+    background: rgba(0,0,0,0.3);
+    border-bottom: 5px solid var(--j-gold);
+    width: 100%;
+}
 
-/* Controles Mobile */
-.mobile-controls { position: absolute; bottom: 20px; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; }
-.ctrl-btn { width: 80px; height: 80px; border-radius: 50%; border: 4px solid white; font-size: 1rem; font-weight: bold; color: white; }
-.move-btn { background: rgba(255,255,255,0.3); font-size: 2rem; }
-.b-red { background: #ef4444; } .b-orange { background: #f97316; } .b-purple { background: #a855f7; }
+.fight-hud { 
+    display: flex; 
+    width: 95%; 
+    justify-content: space-between; 
+    margin: 10px 0; 
+}
 
-/* Memória Grid */
+.hp-box { 
+    width: 45%; 
+    background: #222; 
+    border: 2px solid #fff; 
+    height: 25px; 
+    border-radius: 12px; 
+    overflow: hidden; 
+    position: relative; 
+}
+
+.hp-fill { height: 100%; background: #ff4444; width: 100%; transition: 0.3s ease; }
+.hp-box span { 
+    position: absolute; 
+    width: 100%; 
+    text-align: center; 
+    font-size: 0.65rem; 
+    top: 4px; 
+    color: white; 
+    font-weight: bold; 
+    text-shadow: 1px 1px 1px #000;
+}
+
+/* Controles Luta */
+.mobile-controls { 
+    position: absolute; 
+    bottom: 15px; 
+    width: 100%; 
+    display: flex; 
+    justify-content: space-around; 
+    padding: 0 10px;
+    z-index: 100;
+}
+
+.ctrl-btn { 
+    width: 70px; 
+    height: 70px; 
+    border-radius: 50%; 
+    border: 4px solid white; 
+    font-size: 0.8rem; 
+    font-weight: bold; 
+    color: white; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.move-btn { background: rgba(255,255,255,0.3); font-size: 1.8rem; }
+.b-red { background: #ef4444; box-shadow: 0 4px 0 #991b1b; } 
+.b-orange { background: #f97316; box-shadow: 0 4px 0 #9a3412; } 
+.b-purple { background: #a855f7; box-shadow: 0 4px 0 #7e22ce; }
+
+/* Jogo da Memória */
 #minigameContent { 
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; 
-    padding: 20px; width: 100%; max-width: 500px;
+    display: grid; 
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 8px; 
+    padding: 10px; 
+    width: 95%; 
+    max-width: 450px;
 }
+
 .memory-card { 
-    aspect-ratio: 1; background: var(--j-gold); border-radius: 10px; 
-    display: flex; align-items: center; justify-content: center; font-size: 2rem;
-    cursor: pointer; transform-style: preserve-3d; transition: transform 0.4s;
+    aspect-ratio: 1; 
+    background: var(--j-gold); 
+    border-radius: 10px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 0; /* Esconde o ícone quando não virada */
+    cursor: pointer; 
+    border: 3px solid #fff;
+    transition: 0.3s;
 }
-.memory-card.flipped { transform: rotateY(180deg); background: #fff; }
+
+.memory-card.flipped { 
+    background: #fff; 
+    font-size: 2rem; /* Mostra o ícone ao virar */
+    transform: rotateY(180deg);
+}
