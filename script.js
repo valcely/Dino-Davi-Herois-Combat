@@ -1,4 +1,3 @@
-// --- SISTEMA DE NAVEGAÇÃO ---
 const UI = {
     nav(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -6,38 +5,42 @@ const UI = {
     }
 };
 
-// --- COMBATE DINOSSAURO (1 OU 2 PLAYERS) ---
-let fightMode = 1;
-let p1 = { x: 100, y: 220, hp: 100, icon: '🦖' };
-let p2 = { x: 500, y: 220, hp: 100, icon: '🦕' };
+// --- IMAGENS DOS DINOSSAUROS ---
+const DINO_IMAGES = [
+    'https://cdn-icons-png.flaticon.com/512/2591/2591933.png', // T-Rex
+    'https://cdn-icons-png.flaticon.com/512/2591/2591942.png', // Triceratops
+    'https://cdn-icons-png.flaticon.com/512/2591/2591946.png', // Pterodáctilo
+    'https://cdn-icons-png.flaticon.com/512/2591/2591937.png', // Brontossauro
+    'https://cdn-icons-png.flaticon.com/512/2591/2591931.png', // Estegossauro
+    'https://cdn-icons-png.flaticon.com/512/2591/2591939.png'  // Velociraptor
+];
+
+// --- COMBATE ---
+let p1Img = new Image(); p1Img.src = DINO_IMAGES[0];
+let p2Img = new Image(); p2Img.src = DINO_IMAGES[1];
 
 function startFight(mode) {
-    fightMode = mode;
     UI.nav('fightScreen');
     const canvas = document.getElementById('fightCanvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
+    let x1 = 100, x2 = canvas.width - 200;
 
     function gameLoop() {
         if(!document.getElementById('fightScreen').classList.contains('active')) return;
         ctx.clearRect(0,0, canvas.width, canvas.height);
         
-        ctx.font = "80px Arial";
-        ctx.fillText(p1.icon, p1.x, p1.y); // Player 1
-        ctx.fillText(p2.icon, p2.x, p2.y); // Player 2 ou CPU
+        // Desenha as imagens em vez de texto
+        ctx.drawImage(p1Img, x1, 150, 120, 120);
+        ctx.drawImage(p2Img, x2, 150, 120, 120);
 
-        // IA Simples para 1 Jogador: O Dino 2 persegue o Dino 1
-        if(fightMode === 1) {
-            if(p2.x > p1.x + 80) p2.x -= 1.5;
-            if(p2.x < p1.x - 80) p2.x += 1.5;
-        }
-
+        if(mode === 1 && x2 > x1 + 100) x2 -= 1; // IA caminha
         requestAnimationFrame(gameLoop);
     }
     gameLoop();
 }
 
-// --- JOGO DA MEMÓRIA (DINOS, FRUTAS, NATUREZA) ---
+// --- JOGO DA MEMÓRIA COM IMAGENS ---
 function initMemory() {
     UI.nav('gameScreen');
     document.getElementById('gameTitle').innerText = "MEMÓRIA";
@@ -45,38 +48,37 @@ function initMemory() {
     grid.style.gridTemplateColumns = "repeat(4, 1fr)";
     grid.innerHTML = '';
     
-    const items = ['🦖', '🦕', '🍎', '🍌', '🌴', '🌿', '🌋', '🍗'];
-    const deck = [...items, ...items].sort(() => Math.random() - 0.5);
+    let deck = [...DINO_IMAGES.slice(0,6), ...DINO_IMAGES.slice(0,6)].sort(() => Math.random() - 0.5);
 
-    deck.forEach(item => {
+    deck.forEach(url => {
         const card = document.createElement('div');
         card.className = 'card';
-        card.innerHTML = item;
-        card.onclick = () => {
-            card.classList.toggle('flipped');
-        };
+        const img = document.createElement('img');
+        img.src = url;
+        card.appendChild(img);
+        card.onclick = () => card.classList.toggle('flipped');
         grid.appendChild(card);
     });
 }
 
-// --- QUEBRA-CABEÇA (MONTAR O ESQUELETO) ---
+// --- QUEBRA-CABEÇA COM IMAGENS ---
 function initPuzzle() {
     UI.nav('gameScreen');
-    document.getElementById('gameTitle').innerText = "QUEBRA-CABEÇA";
+    document.getElementById('gameTitle').innerText = "MONTAR DINO";
     const grid = document.getElementById('minigameContent');
     grid.style.gridTemplateColumns = "repeat(3, 1fr)";
     grid.innerHTML = '';
     
-    // Peças lúdicas para montar o Dino
-    const pieces = ['🦴 CABEÇA', '🦴 CORPO', '🦴 CAUDA', '🦴 PERNA D', '🦴 PERNA E', '🦴 GARRA', '🦴 PESCOÇO', '🦴 COSTAS', '🦴 DENTE'];
-    
-    pieces.sort(() => Math.random() - 0.5).forEach(text => {
+    // Mostra várias fotos de dinos para o Davi clicar e "coletar"
+    DINO_IMAGES.forEach(url => {
         const piece = document.createElement('div');
         piece.className = 'puzzle-piece';
-        piece.innerHTML = text;
+        const img = document.createElement('img');
+        img.src = url;
+        piece.appendChild(img);
         piece.onclick = () => {
-            piece.style.background = "#4ade80"; // Fica verde ao "encaixar"
-            piece.style.color = "#fff";
+            piece.style.borderColor = "#4ade80";
+            piece.style.transform = "scale(0.9)";
         };
         grid.appendChild(piece);
     });
