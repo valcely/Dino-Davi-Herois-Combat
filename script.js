@@ -19,30 +19,40 @@ const VILLAINS = [
     { name: 'BRONTO-STOMP', icon: '👣' }
 ];
 
-// Audio Mock (Gatilhos de som)
 const playSound = (type) => {
-    const sounds = {
-        'hit': '🔊 Rugido!', 'miss': '🎵 Blip', 'win': '🎉 Vitória!', 'click': '🖱️ Click'
-    };
+    const sounds = { 'hit': '🔊 Rugido!', 'miss': '🎵 Blip', 'win': '🎉 Vitória!', 'click': '🖱️ Click' };
     console.log("Som ativado:", sounds[type]);
-    // Aqui você integraria: new Audio('path/to/sound.mp3').play();
 };
 
 let currentPlayerHero = HEROES[0];
 let currentEnemy = VILLAINS[0];
+let fightActive = false;
+let projectiles = [];
+let player = { x: 50, y: 180, hp: 100, dy: 0, jumping: false };
+let enemy = { x: 450, y: 180, hp: 100 };
+let keys = { a: false, s: false };
 
 const UI = {
     nav(id) {
+        const target = document.getElementById(id + 'Screen');
+        if (!target) return console.error("Tela não encontrada: " + id + 'Screen');
+        
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id + 'Screen').classList.add('active');
+        target.classList.add('active');
         playSound('click');
-        if(id === 'fight') initFight();
+        
+        if(id === 'fight') {
+            initFight();
+        } else {
+            fightActive = false; // Para o loop se sair da luta
+        }
     }
 };
 
-// --- LOGICA DE SELEÇÃO ---
 function setupSelect() {
     const container = document.getElementById('dinoSelector');
+    if (!container) return;
+    container.innerHTML = '';
     HEROES.forEach(h => {
         const div = document.createElement('div');
         div.className = 'hero-card';
@@ -55,86 +65,112 @@ function setupSelect() {
     });
 }
 
-// --- JOGO DE LUTA (CANVAS) ---
-let fightActive = false;
-let player = { x: 50, y: 150, hp: 100, dy: 0, jumping: false };
-let enemy = { x: 450, y: 150, hp: 100 };
-let keys = { a: false, s: false };
-let projectiles = [];
-
 function initFight() {
     fightActive = true;
     player.hp = 100; enemy.hp = 100;
+    player.x = 50; enemy.x = 450;
+    projectiles = [];
     currentEnemy = VILLAINS[Math.floor(Math.random() * VILLAINS.length)];
-    document.getElementById('enemy-name').innerText = currentEnemy.name;
+    
+    const enemyTitle = document.getElementById('enemy-name');
+    if (enemyTitle) enemyTitle.innerText = currentEnemy.name;
+    
     updateFightUI();
-    requestAnimationFrame(gameLoop);
+    gameLoop();
 }
 
-function playerJump() { if(!player.jumping) { player.dy = -15; player.jumping = true; playSound('miss'); } }
+// Movimentação por teclado
+window.addEventListener('keydown', e => {
+    if(e.key.toLowerCase() === 'a') keys.a = true;
+    if(e.key.toLowerCase() === 's') keys.s = true;
+    if(e.key === ' ') { e.preventDefault(); playerJump(); }
+    if(e.key.toLowerCase() === 'f') playerAttack('power');
+});
+window.addEventListener('keyup', e => {
+    if(e.key.toLowerCase() === 'a') keys.a = false;
+    if(e.key.toLowerCase() === 's') keys.s = false;
+});
+
+function playerJump() { 
+    if(!player.jumping) { player.dy = -15; player.jumping = true; playSound('click'); } 
+}
 
 function playerAttack(type) {
-    if(type === 'hit' && Math.abs(player.x - enemy.x) < 70) {
-        enemy.hp -= 10; playSound('hit');
-    } else if(type === 'power') {
+    if(type === 'power') {
         projectiles.push({ x: player.x + 40, y: player.y + 20, speed: 8 });
         playSound('hit');
     }
-    updateFightUI();
 }
 
 function updateFightUI() {
-    document.getElementById('hp-player').style.width = player.hp + '%';
-    document.getElementById('hp-enemy').style.width = enemy.hp + '%';
-    if(enemy.hp <= 0) { alert("VOCÊ VENCEU!"); UI.nav('title'); }
+    const pBar = document.getElementById('hp-player');
+    const eBar = document.getElementById('hp-enemy');
+    if(pBar) pBar.style.width = player.hp + '%';
+    if(eBar) eBar.style.width = enemy.hp + '%';
+    
+    if(enemy.hp <= 0 && fightActive) { 
+        fightActive = false;
+        alert("VITÓRIA! VOCÊ VENCEU O " + currentEnemy.name); 
+        UI.nav('title'); 
+    }
 }
 
 function gameLoop() {
-    if(!fightActive || document.getElementById('fightScreen').classList.contains('active') === false) return;
-    const canvas = document.getElementById('fightCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = 300;
+    if(!fightActive) return;
 
+    const canvas = document.getElementById('fightCanvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
     // Movimento
     if(keys.a && player.x > 0) player.x -= 5;
     if(keys.s && player.x < canvas.width - 60) player.x += 5;
+    
     player.y += player.dy;
-    if(player.y < 180) player.dy += 0.8; else { player.y = 180; player.dy = 0; player.jumping = false; }
+    if(player.y < 180) {
+        player.dy += 0.8; 
+    } else { 
+        player.y = 180; player.dy = 0; player.jumping = false; 
+    }
 
     // Desenho
     ctx.clearRect(0,0, canvas.width, canvas.height);
-    
-    // Player (Herói)
     ctx.font = "50px Arial";
     ctx.fillText(currentPlayerHero.icon, player.x, player.y);
-    
-    // Inimigo (Vilão)
     ctx.fillText(currentEnemy.icon, enemy.x, enemy.y);
-    if(enemy.x > player.x + 60) enemy.x -= 1.5; // IA Simples
+    
+    // IA do Inimigo
+    if(enemy.x > player.x + 60) enemy.x -= 1;
 
     // Projéteis
     projectiles.forEach((p, i) => {
         p.x += p.speed;
         ctx.fillStyle = "gold";
-        ctx.beginPath(); ctx.arc(p.x, p.y, 10, 0, Math.PI*2); ctx.fill();
-        if(p.x > enemy.x && p.x < enemy.x + 50) { enemy.hp -= 5; projectiles.splice(i, 1); updateFightUI(); }
+        ctx.beginPath(); ctx.arc(p.x, p.y, 8, 0, Math.PI*2); ctx.fill();
+        
+        if(p.x > enemy.x && p.x < enemy.x + 50 && Math.abs(p.y - enemy.y) < 50) { 
+            enemy.hp -= 5; 
+            projectiles.splice(i, 1); 
+            updateFightUI(); 
+        }
     });
 
     requestAnimationFrame(gameLoop);
 }
 
-// --- JOGO DA MEMÓRIA ---
+// Jogo da Memória funcionando
 function initMemory() {
     UI.nav('gameArea');
     const container = document.getElementById('minigameContent');
-    container.style.gridTemplateColumns = "repeat(4, 1fr)";
+    if(!container) return;
     container.innerHTML = '';
     
-    let cards = [...HEROES, ...HEROES].sort(() => Math.random() - 0.5);
+    let cards = [...HEROES].slice(0, 8); // Pega 8 heróis para fazer 16 cartas
+    let deck = [...cards, ...cards].sort(() => Math.random() - 0.5);
     let flipped = [];
     let lock = false;
 
-    cards.forEach((card, index) => {
+    deck.forEach(card => {
         const el = document.createElement('div');
         el.className = 'memory-card';
         el.dataset.id = card.id;
@@ -155,29 +191,11 @@ function initMemory() {
                         flipped.forEach(c => { c.classList.remove('flipped'); c.innerHTML = ''; });
                         flipped = [];
                         lock = false;
-                        playSound('miss');
                     }, 800);
                 }
             }
         };
         container.appendChild(el);
-    });
-}
-
-// --- QUEBRA-CABEÇA (VERSÃO SIMPLIFICADA PARA 3+) ---
-function initPuzzle() {
-    UI.nav('gameArea');
-    const container = document.getElementById('minigameContent');
-    container.innerHTML = '<h3 style="grid-column: span 4">Arraste as peças!</h3>';
-    // Lógica simplificada: Pareamento de ícones (UX 3+ foca em arrastar e soltar)
-    const items = [...HEROES].slice(0, 4);
-    items.forEach(item => {
-        const slot = document.createElement('div');
-        slot.className = 'memory-card';
-        slot.style.border = "2px dashed #fff";
-        slot.innerHTML = "?";
-        slot.onclick = () => { slot.innerHTML = item.icon; playSound('win'); };
-        container.appendChild(slot);
     });
 }
 
