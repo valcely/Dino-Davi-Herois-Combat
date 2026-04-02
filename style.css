@@ -1,86 +1,40 @@
-:root {
-    --primary: #fbbf24;
-    --danger: #ef4444;
-    --safe: #22c55e;
-    --info: #3b82f6;
-    --accent: #a855f7;
+/* Ajustes de Layout */
+.screen { padding: 10px; justify-content: center; overflow: hidden; }
+
+.game-title { 
+    font-size: clamp(2rem, 8vw, 4rem); 
+    line-height: 1; text-align: center;
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+/* HUD de Luta Otimizado */
+.fight-hud { 
+    display: flex; width: 100%; justify-content: space-around; 
+    position: absolute; top: 10px; z-index: 10;
+}
+.hp-box { width: 40%; background: #333; border: 2px solid #fff; border-radius: 5px; height: 20px; position: relative; }
+.hp-fill { height: 100%; background: #ef4444; width: 100%; transition: width 0.2s; }
+.hp-box span { position: absolute; top: 22px; left: 0; font-size: 0.8rem; }
 
-body {
-    margin: 0; background: #111; overflow: hidden;
-    font-family: 'Luckiest Guy', cursive; color: white;
+/* Canvas ajustado para não vazar a tela */
+#fightCanvas { 
+    width: 100%; height: 50vh; background: rgba(0,0,0,0.2); 
+    border-bottom: 4px solid #4ade80; margin-top: 20px;
 }
 
-#game-container {
-    width: 100vw; height: 100vh; position: relative;
-    background: linear-gradient(to bottom, #1a4d2e, #051005);
+/* Botões de Controle na tela */
+.mobile-controls {
+    display: flex; width: 100%; justify-content: space-between;
+    padding: 10px; position: absolute; bottom: 10px;
 }
-
-.screen {
-    position: absolute; inset: 0; display: none;
-    flex-direction: column; align-items: center; padding: 20px;
-    opacity: 0; transition: opacity 0.4s;
+.ctrl-btn {
+    width: 60px; height: 60px; border-radius: 50%; border: none;
+    background: rgba(255,255,255,0.2); color: white; font-weight: bold;
+    font-family: inherit; font-size: 0.7rem; margin: 2px;
 }
-.screen.active { display: flex; opacity: 1; }
+.b-red { background: var(--danger); }
+.b-orange { background: #f97316; }
+.b-purple { background: #a855f7; }
 
-/* Menu Principal */
-.game-title {
-    font-size: clamp(3rem, 10vw, 5rem); color: var(--primary);
-    text-shadow: 6px 6px 0 #b45309; margin: 0;
-    animation: floating 3s ease-in-out infinite;
-}
-
-.menu-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 500px;
-}
-
-.btn-card {
-    border: none; border-radius: 20px; padding: 20px;
-    display: flex; flex-direction: column; align-items: center;
-    cursor: pointer; box-shadow: 0 8px 0 rgba(0,0,0,0.3);
-    transition: transform 0.1s, box-shadow 0.1s;
-}
-.btn-card:active { transform: translateY(4px); box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
-
-.btn-card .icon { font-size: 2.5rem; }
-.btn-card .label { font-size: 1.2rem; margin-top: 10px; color: white; }
-
-.b-green { background: var(--safe); border: 4px solid #16a34a; }
-.b-blue { background: var(--info); border: 4px solid #2563eb; }
-.b-purple { background: var(--accent); border: 4px solid #9333ea; }
-.b-orange { background: #f97316; border: 4px solid #ea580c; }
-
-/* HUD Luta */
-.fight-hud {
-    display: flex; justify-content: space-between; width: 90%;
-    margin-top: 40px; align-items: center;
-}
-.hp-container {
-    width: 120px; height: 25px; background: #333; border: 3px solid #fff;
-    border-radius: 15px; overflow: hidden;
-}
-.hp-fill { height: 100%; background: var(--danger); width: 100%; transition: width 0.3s; }
-.vs-circle { background: #fff; color: #333; padding: 10px; border-radius: 50%; }
-
-/* Canvas Area */
-canvas { width: 100%; height: 300px; max-width: 600px; }
-
-/* Utilitários */
-.back-btn { position: absolute; top: 20px; left: 20px; font-size: 2rem; background: none; border: none; color: white; cursor: pointer; }
-.section-title { font-size: 2rem; color: var(--primary); text-shadow: 2px 2px 0 #000; }
-
-@keyframes floating {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
-}
-
-/* Memória */
-.memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 400px; }
-.card {
-    width: 70px; height: 70px; background: var(--info); border-radius: 10px;
-    display: flex; align-items: center; justify-content: center; font-size: 2rem;
-    cursor: pointer; border-bottom: 5px solid #1e40af;
-}
-.card.flipped { background: white; }
+/* Grid de seleção menor para caber tudo */
+.dino-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.btn-card { padding: 10px; font-size: 0.8rem; }
