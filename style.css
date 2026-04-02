@@ -1,40 +1,113 @@
-/* Ajustes de Layout */
-.screen { padding: 10px; justify-content: center; overflow: hidden; }
-
-.game-title { 
-    font-size: clamp(2rem, 8vw, 4rem); 
-    line-height: 1; text-align: center;
+:root {
+    --primary: #064e3b;
+    --gold: #fbbf24;
+    --accent: #10b981;
+    --text: #ffffff;
 }
 
-/* HUD de Luta Otimizado */
-.fight-hud { 
-    display: flex; width: 100%; justify-content: space-around; 
-    position: absolute; top: 10px; z-index: 10;
-}
-.hp-box { width: 40%; background: #333; border: 2px solid #fff; border-radius: 5px; height: 20px; position: relative; }
-.hp-fill { height: 100%; background: #ef4444; width: 100%; transition: width 0.2s; }
-.hp-box span { position: absolute; top: 22px; left: 0; font-size: 0.8rem; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-/* Canvas ajustado para não vazar a tela */
-#fightCanvas { 
-    width: 100%; height: 50vh; background: rgba(0,0,0,0.2); 
-    border-bottom: 4px solid #4ade80; margin-top: 20px;
+body, html {
+    margin: 0; padding: 0;
+    font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+    background-color: var(--primary);
+    color: var(--text);
+    height: 100%; overflow: hidden;
 }
 
-/* Botões de Controle na tela */
-.mobile-controls {
-    display: flex; width: 100%; justify-content: space-between;
-    padding: 10px; position: absolute; bottom: 10px;
+#game-container {
+    width: 100vw; height: 100vh;
+    display: flex; flex-direction: column;
+    background: radial-gradient(circle, #065f46 0%, #022c22 100%);
+    position: relative;
 }
-.ctrl-btn {
-    width: 60px; height: 60px; border-radius: 50%; border: none;
-    background: rgba(255,255,255,0.2); color: white; font-weight: bold;
-    font-family: inherit; font-size: 0.7rem; margin: 2px;
-}
-.b-red { background: var(--danger); }
-.b-orange { background: #f97316; }
-.b-purple { background: #a855f7; }
 
-/* Grid de seleção menor para caber tudo */
-.dino-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.btn-card { padding: 10px; font-size: 0.8rem; }
+/* Elementos Visuais Cientistas (Pseudo-elementos) */
+.lab-overlay::before {
+    content: "🧪"; position: absolute; top: 10%; left: 5%; font-size: 3rem; opacity: 0.3;
+}
+.lab-overlay::after {
+    content: "👨‍🔬"; position: absolute; bottom: 5%; right: 5%; font-size: 4rem; opacity: 0.3;
+}
+
+.screen {
+    display: none; width: 100%; height: 100%;
+    flex-direction: column; align-items: center; justify-content: center;
+    animation: fadeIn 0.5s ease;
+}
+
+.screen.active { display: flex; }
+
+.game-title {
+    font-size: clamp(3rem, 12vw, 6rem);
+    color: var(--gold);
+    text-shadow: 4px 4px 0px #000;
+    margin: 0;
+}
+
+.btn-main {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 20px 40px;
+    font-size: 1.5rem;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 8px 0 #b45309;
+    transition: transform 0.1s;
+}
+
+.btn-main:active { transform: translateY(4px); box-shadow: 0 4px 0 #b45309; }
+
+/* Memory Grid - Responsivo para Tablet/Celular */
+.memory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 10px;
+    width: 95%; max-width: 800px;
+    height: 70vh;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.card {
+    aspect-ratio: 1/1;
+    background: var(--gold);
+    border-radius: 12px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+    cursor: pointer;
+    border: 3px solid #fff;
+}
+
+.card.flipped { transform: rotateY(180deg); }
+
+.card-front, .card-back {
+    position: absolute; width: 100%; height: 100%;
+    backface-visibility: hidden;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 8px; font-size: 2rem;
+}
+
+.card-back { background: #022c22; color: var(--gold); } /* Verso do card */
+.card-front { background: #fff; transform: rotateY(180deg); } /* Lado do herói */
+
+.hero-label {
+    font-size: 0.6rem; position: absolute; bottom: 2px;
+    color: #000; font-weight: bold; text-align: center;
+}
+
+.hud {
+    width: 100%; padding: 15px; display: flex;
+    justify-content: space-between; align-items: center;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Mobile Adaptations */
+@media (max-width: 600px) {
+    .memory-grid { grid-template-columns: repeat(4, 1fr); }
+    .card-front { font-size: 1.5rem; }
+}
