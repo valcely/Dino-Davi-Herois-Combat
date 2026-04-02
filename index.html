@@ -7,13 +7,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="scientist-bg"></div>
-
     <section id="titleScreen" class="screen active">
         <h1 class="game-title">DINO DAVI</h1>
-        <p style="color: var(--j-accent); letter-spacing: 8px; font-weight: bold;">JURASSIC EXPERIENCE</p>
-        
+        <p style="color: var(--j-accent); letter-spacing: 8px; font-weight: bold;">IMAGENS REAIS</p>
         <div style="display: flex; gap: 10px;">
             <button class="btn-main" style="width: 150px;" onclick="startFight(1)">1 JOGADOR</button>
             <button class="btn-main" style="width: 150px; background: var(--j-accent);" onclick="startFight(2)">2 PLAYERS</button>
@@ -21,7 +18,6 @@
         <button class="btn-main" onclick="initMemory()">🧩 JOGO DA MEMÓRIA</button>
         <button class="btn-main" onclick="initPuzzle()">🖼️ QUEBRA-CABEÇA</button>
     </section>
-
     <section id="fightScreen" class="screen">
         <div class="fight-hud">
             <div class="hp-bar"><div id="hp1" class="hp-fill"></div></div>
@@ -31,15 +27,13 @@
         <canvas id="fightCanvas"></canvas>
         <button class="btn-main" style="width:150px; margin-top: 30px;" onclick="location.reload()">🏠 SAIR</button>
     </section>
-
     <section id="gameScreen" class="screen">
         <div style="width: 100%; padding: 20px; display: flex; justify-content: space-between;">
             <button class="btn-main" style="width:100px; padding: 10px; font-size: 0.8rem;" onclick="location.reload()">🏠 MENU</button>
-            <h2 id="gameTitle" style="color: gold;">JOGANDO</h2>
+            <h2 id="gameTitle" style="color: gold;">CARREGANDO...</h2>
         </div>
         <div id="minigameContent"></div>
     </section>
-
     <script src="script.js"></script>
 </body>
 </html>
