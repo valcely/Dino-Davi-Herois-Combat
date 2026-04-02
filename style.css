@@ -3,56 +3,242 @@
     --j-dark: #072210;
     --j-gold: #ffcc00;
     --j-accent: #4ade80;
+    --j-red: #ff4444;
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; margin: 0; padding: 0; }
+/* Configurações Gerais */
+* { 
+    box-sizing: border-box; 
+    -webkit-tap-highlight-color: transparent; 
+    user-select: none; 
+    margin: 0; 
+    padding: 0; 
+}
 
 body { 
     font-family: 'Arial Rounded MT Bold', sans-serif; 
-    background: var(--j-dark); color: white; overflow: hidden;
-    width: 100vw; height: 100vh;
+    background: var(--j-dark); 
+    color: white; 
+    overflow: hidden;
+    width: 100vw; 
+    height: 100vh;
 }
 
-/* FUNDO TOTAL - COBRE TUDO */
+/* FUNDO DINOSSAUROS E OSSOS (TELA INTEIRA) */
 .scientist-bg {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
     background: radial-gradient(circle, var(--j-green) 0%, var(--j-dark) 100%);
-    z-index: -1; display: grid; 
-    grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(6, 1fr);
-    justify-items: center; align-items: center; opacity: 0.12; pointer-events: none;
+    z-index: -1; 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: space-around; 
+    align-content: space-around; 
+    padding: 10px; 
+    opacity: 0.15;
+    pointer-events: none;
 }
 
+.scientist-bg span {
+    font-size: 2rem;
+    animation: float 6s infinite ease-in-out;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+/* Telas */
 .screen { 
-    display: none; width: 100%; height: 100%; 
-    flex-direction: column; align-items: center; justify-content: center;
-    position: absolute; top: 0; left: 0; padding: 20px;
+    display: none; 
+    width: 100%; 
+    height: 100%; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    padding: 20px;
 }
 
-.screen.active { display: flex; animation: fadeIn 0.4s ease; }
+.screen.active { display: flex; animation: fadeIn 0.4s ease-out; }
 
-@keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+/* Título e Textos */
 .game-title { 
-    font-size: clamp(2.5rem, 10vw, 4.5rem); 
+    font-size: clamp(3rem, 12vw, 5rem); 
     background: linear-gradient(to bottom, #ffcc00, #ff9900);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    text-align: center; filter: drop-shadow(4px 4px 0px #000);
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(4px 4px 0px #000);
+    margin-bottom: 5px;
 }
 
-/* GRID DE 18 PERSONAGENS */
-#heroList {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-    max-height: 60vh; overflow-y: auto; width: 100%; padding: 10px;
+.game-subtitle { color: var(--j-accent); letter-spacing: 4px; font-weight: bold; margin-bottom: 30px; }
+
+/* Botões Universais */
+.btn-universal {
+    background: var(--j-gold); 
+    border: 4px solid #fff; 
+    border-radius: 40px;
+    padding: 18px 30px; 
+    margin: 10px; 
+    font-size: 1.2rem; 
+    font-weight: bold;
+    color: #000; 
+    cursor: pointer; 
+    box-shadow: 0 8px 0 #b8860b; 
+    width: 300px;
+    text-transform: uppercase;
+}
+
+.btn-universal:active { transform: translateY(4px); box-shadow: 0 3px 0 #b8860b; }
+
+/* Grid de Heróis (18 Slots) */
+.hero-selection-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 65vh;
+    overflow-y: auto;
+    padding: 15px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
 }
 
 .hero-card {
-    background: rgba(255,255,255,0.1); border: 3px solid var(--j-gold);
-    border-radius: 15px; padding: 10px; text-align: center; cursor: pointer;
+    background: rgba(0,0,0,0.5);
+    border: 3px solid var(--j-gold);
+    border-radius: 15px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
 }
 
-.hero-card img { width: 60px; height: 60px; object-fit: contain; }
-.hero-card p { font-size: 0.7rem; margin-top: 5px; font-weight: bold; color: var(--j-accent); }
+.hero-card img { width: 100%; height: auto; max-width: 60px; pointer-events: none; }
+.hero-card p { font-size: 0.65rem; color: #fff; margin-top: 5px; font-weight: bold; }
 
-/* CONTROLES DE LUTA */
-#fightCanvas { background: rgba(0,0,0,0.4); border-radius: 20px; width: 100%; height: 280px; }
-.hp-fill { height: 100%; background: #ff4444; width: 100%; transition: 0.3s; }
+/* Arena de Luta */
+.hud-battle { 
+    display: flex; 
+    width: 100%; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 20px; 
+}
+
+.hp-bar-outer { width: 100%; height: 25px; background: #333; border: 2px solid #fff; border-radius: 15px; overflow: hidden; }
+.hp-bar-inner { height: 100%; width: 100%; background: var(--j-accent); transition: 0.3s; }
+.hp-fill-enemy { height: 100%; width: 100%; background: var(--j-red); transition: 0.3s; }
+
+.battle-stage {
+    width: 100%;
+    height: 300px;
+    position: relative;
+    border-bottom: 8px solid var(--j-gold);
+    background: rgba(0,0,0,0.2);
+}
+
+.dino-character {
+    width: 130px;
+    height: 130px;
+    position: absolute;
+    bottom: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: 0.2s;
+}
+
+#player-dino { left: 20px; }
+#enemy-dino { right: 20px; transform: scaleX(-1); }
+
+/* Animação de Dano */
+.shake { animation: shake 0.3s; }
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* Jogo da Memória */
+.memory-layout {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 100%;
+}
+
+.card {
+    aspect-ratio: 1;
+    background: var(--j-gold);
+    border: 3px solid #fff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.card img { width: 80%; display: none; }
+.card.flipped { background: #fff; transform: rotateY(180deg); }
+.card.flipped img { display: block; }
+
+/* Quebra-Cabeça */
+.target-box {
+    width: 280px;
+    height: 280px;
+    border: 4px dashed rgba(255,255,255,0.3);
+    margin-bottom: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.3;
+}
+
+.pieces-tray {
+    display: flex;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+}
+
+.puzzle-piece {
+    width: 80px;
+    height: 80px;
+    border: 2px solid #fff;
+    background-size: cover;
+    cursor: pointer;
+}
+
+/* Botões de Ação na Luta */
+.battle-footer { display: flex; gap: 20px; margin-top: 20px; }
+.btn-action {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.5);
+}
+.btn-attack { background: var(--j-red); }
+.btn-special { background: #a855f7; }
+
+/* Botão Voltar */
+.btn-icon-back {
+    background: var(--j-gold);
+    border: 2px solid #fff;
+    border-radius: 10px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+}
