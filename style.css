@@ -1,92 +1,86 @@
 :root {
     --primary: #fbbf24;
-    --green: #4ade80;
-    --blue: #60a5fa;
-    --red: #f87171;
-    --purple: #a78bfa;
-    --dark: #1a2e1a;
+    --danger: #ef4444;
+    --safe: #22c55e;
+    --info: #3b82f6;
+    --accent: #a855f7;
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-body { 
-    margin: 0; padding: 0; 
-    font-family: 'Luckiest Guy', cursive; 
-    background: var(--dark);
-    color: white; overflow: hidden;
-    user-select: none;
+body {
+    margin: 0; background: #111; overflow: hidden;
+    font-family: 'Luckiest Guy', cursive; color: white;
+}
+
+#game-container {
+    width: 100vw; height: 100vh; position: relative;
+    background: linear-gradient(to bottom, #1a4d2e, #051005);
 }
 
 .screen {
-    position: fixed; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    background: radial-gradient(circle, #2d5a27 0%, #1a2e1a 100%);
-    transition: opacity 0.3s;
+    position: absolute; inset: 0; display: none;
+    flex-direction: column; align-items: center; padding: 20px;
+    opacity: 0; transition: opacity 0.4s;
 }
-
-.hidden { display: none !important; }
-
-/* Botão de Início */
-.play-mega-btn {
-    padding: 30px 60px; font-size: 3rem;
-    background: var(--green); border: 8px solid white;
-    border-radius: 50px; color: white; cursor: pointer;
-    box-shadow: 0 15px 0 #166534;
-    animation: pulse 1.5s infinite;
-}
+.screen.active { display: flex; opacity: 1; }
 
 /* Menu Principal */
-.logo-container { text-align: center; margin-bottom: 40px; }
-.main-title { 
-    font-size: 5rem; margin: 0; color: var(--primary);
-    text-shadow: 6px 6px 0 #b45309; letter-spacing: 4px;
+.game-title {
+    font-size: clamp(3rem, 10vw, 5rem); color: var(--primary);
+    text-shadow: 6px 6px 0 #b45309; margin: 0;
+    animation: floating 3s ease-in-out infinite;
 }
-.badge { background: #ef4444; padding: 5px 15px; border-radius: 10px; font-size: 1.2rem; }
 
 .menu-grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
-    width: 90%; max-width: 600px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 500px;
 }
 
-.card-btn {
-    aspect-ratio: 1; border-radius: 30px; border: 6px solid rgba(255,255,255,0.3);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    cursor: pointer; transition: transform 0.1s;
+.btn-card {
+    border: none; border-radius: 20px; padding: 20px;
+    display: flex; flex-direction: column; align-items: center;
+    cursor: pointer; box-shadow: 0 8px 0 rgba(0,0,0,0.3);
+    transition: transform 0.1s, box-shadow 0.1s;
 }
+.btn-card:active { transform: translateY(4px); box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
 
-.card-btn:active { transform: scale(0.9); }
-.card-btn .icon { font-size: 3.5rem; margin-bottom: 10px; }
-.card-btn span { font-size: 1.4rem; }
+.btn-card .icon { font-size: 2.5rem; }
+.btn-card .label { font-size: 1.2rem; margin-top: 10px; color: white; }
 
-.b-lutar { background: var(--green); box-shadow: 0 10px 0 #166534; }
-.b-memoria { background: var(--blue); box-shadow: 0 10px 0 #1e40af; }
-.b-cores { background: var(--purple); box-shadow: 0 10px 0 #6b21a8; }
-.b-montar { background: var(--primary); box-shadow: 0 10px 0 #92400e; }
+.b-green { background: var(--safe); border: 4px solid #16a34a; }
+.b-blue { background: var(--info); border: 4px solid #2563eb; }
+.b-purple { background: var(--accent); border: 4px solid #9333ea; }
+.b-orange { background: #f97316; border: 4px solid #ea580c; }
 
-/* HUD de Luta */
+/* HUD Luta */
 .fight-hud {
-    position: absolute; top: 20px; width: 95%;
-    display: flex; justify-content: space-between; align-items: center;
+    display: flex; justify-content: space-between; width: 90%;
+    margin-top: 40px; align-items: center;
 }
-.hp-container { width: 40%; }
-.hp-bar-outer { height: 25px; background: #333; border: 4px solid white; border-radius: 15px; overflow: hidden; }
-.hp-fill { height: 100%; width: 100%; background: #ef4444; transition: width 0.3s ease-out; }
-.vs-circle { background: white; color: black; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+.hp-container {
+    width: 120px; height: 25px; background: #333; border: 3px solid #fff;
+    border-radius: 15px; overflow: hidden;
+}
+.hp-fill { height: 100%; background: var(--danger); width: 100%; transition: width 0.3s; }
+.vs-circle { background: #fff; color: #333; padding: 10px; border-radius: 50%; }
 
-.action-btn-battle {
-    padding: 20px 50px; font-size: 2rem; border-radius: 50px;
-    background: #ef4444; color: white; border: 6px solid white;
-    box-shadow: 0 8px 0 #991b1b; cursor: pointer;
+/* Canvas Area */
+canvas { width: 100%; height: 300px; max-width: 600px; }
+
+/* Utilitários */
+.back-btn { position: absolute; top: 20px; left: 20px; font-size: 2rem; background: none; border: none; color: white; cursor: pointer; }
+.section-title { font-size: 2rem; color: var(--primary); text-shadow: 2px 2px 0 #000; }
+
+@keyframes floating {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
 }
 
-.btn-home-corner { position: absolute; top: 15px; left: 15px; font-size: 1.5rem; background: white; border: none; padding: 10px; border-radius: 12px; z-index: 100; }
-
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+/* Memória */
+.memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; max-width: 400px; }
+.card {
+    width: 70px; height: 70px; background: var(--info); border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 2rem;
+    cursor: pointer; border-bottom: 5px solid #1e40af;
 }
-
-/* Estilos de Jogos Internos */
-.memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 10px; }
-.memory-card { width: 75px; height: 75px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #000; }
+.card.flipped { background: white; }
