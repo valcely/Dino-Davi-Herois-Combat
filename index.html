@@ -11,53 +11,57 @@
     <div id="titleScreen" class="screen">
         <canvas id="forestBg"></canvas>
         <div class="content-overlay">
-            <h1 class="bounce">DINO DAVI</h1>
+            <h1 class="bounce-text">DINO DAVI</h1>
+            <h2 class="sub-title">KIDS ADVENTURE</h2>
+            
             <div class="main-menu-grid">
                 <button class="menu-btn lutar" onclick="goSelect()">🦖 LUTINHA</button>
                 <button class="menu-btn memoria" onclick="startMemoryGame()">🃏 MEMÓRIA</button>
-                <button class="menu-btn cores" onclick="startColorGame()">🎨 CORES</button>
+                <button class="menu-btn cores" onclick="startColorsGame()">🎨 CORES</button>
                 <button class="menu-btn montar" onclick="startStackGame()">🏗️ MONTAR</button>
             </div>
         </div>
     </div>
 
     <div id="selectScreen" class="screen hidden">
-        <h2 class="title-kids">ESCOLHA SEU DINO!</h2>
-        <div id="selCols" class="sel-container"></div>
-        <button class="btn-back" onclick="goTitle()">VOLTAR</button>
+        <h3 class="screen-title">ESCOLHA SEU DINO!</h3>
+        <div class="sel-cols" id="selCols"></div>
+        <div class="menu-footer">
+            <button class="btn-back" onclick="goTitle()">VOLTAR</button>
+        </div>
     </div>
 
     <div id="fightScreen" class="screen hidden">
-        <div class="hud-kids">
+        <div id="hud">
             <div id="hpL" class="hp-bar"><div></div></div>
-            <div class="vs-bubble">VS</div>
+            <div class="vs-badge">VS</div>
             <div id="hpR" class="hp-bar"><div></div></div>
         </div>
         <canvas id="gameCanvas"></canvas>
-        <div class="fight-controls">
-            <button class="btn-atk" onpointerdown="doAttack()">BATER! 🦖</button>
+        <div id="fightControls">
+            <button class="action-btn" id="btnAtk">MORDIDA! 🦖</button>
         </div>
         <button class="btn-home-corner" onclick="goTitle()">🏠</button>
     </div>
 
     <div id="memoryScreen" class="screen hidden">
         <button class="btn-home-corner" onclick="goTitle()">🏠</button>
-        <h2 class="title-kids">PARES IGUAIS</h2>
+        <h3 class="screen-title">CADÊ O PAR?</h3>
         <div id="memoryGrid" class="memory-grid"></div>
     </div>
 
-    <div id="colorScreen" class="screen hidden">
+    <div id="colorsScreen" class="screen hidden">
         <button class="btn-home-corner" onclick="goTitle()">🏠</button>
-        <h2 class="title-kids">PINTE O DINO!</h2>
-        <div id="colorTarget" class="color-target">🦖</div>
-        <div id="colorPalette" class="palette"></div>
+        <h3 class="screen-title">TOQUE NA COR!</h3>
+        <div id="colorTarget" class="color-box"></div>
+        <div id="colorOptions" class="color-options-grid"></div>
     </div>
 
     <div id="stackScreen" class="screen hidden">
         <button class="btn-home-corner" onclick="goTitle()">🏠</button>
         <div class="stack-hud">NÍVEL: <span id="stackLevel">1</span></div>
         <canvas id="stackCanvas"></canvas>
-        <button id="btnDrop" class="btn-drop" onpointerdown="dropPiece()">SOLTAR PEÇA!</button>
+        <button id="btnDrop" class="large-action-btn">SOLTAR PEÇA! 🏗️</button>
     </div>
 
     <script src="script.js"></script>
