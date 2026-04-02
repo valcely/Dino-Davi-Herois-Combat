@@ -3,34 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dino Davi & Heróis - Jurassic Lab</title>
+    <title>Dino Davi: Heroes Combat</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div id="game-container">
-    <div class="lab-overlay"></div>
-
-    <section id="titleScreen" class="screen active">
-        <div class="main-content">
-            <h1 class="game-title">DINO <span class="highlight">DAVI</span></h1>
-            <span class="game-subtitle">JURASSIC MEMORY</span>
-            <div class="menu-grid">
-                <button class="btn-main" onclick="initMemory()">JOGAR AGORA</button>
-            </div>
+    <div id="game-container">
+        <div class="lab-bg-elements">
+            <div class="scientist float-1">🧪</div>
+            <div class="scientist float-2">🧬</div>
         </div>
-    </section>
 
-    <section id="gameArea" class="screen">
-        <div class="hud">
-            <button class="back-btn" onclick="location.reload()">🏠 SAIR</button>
-            <div class="score-board">PARES: <span id="pair-count">0</span> / 18</div>
-        </div>
-        <div id="memory-grid" class="memory-grid">
+        <section id="titleScreen" class="screen active">
+            <div class="main-content">
+                <h1 class="game-title">DINO DAVI</h1>
+                <span class="game-subtitle">JURASSIC HEROES</span>
+                <div class="menu-grid">
+                    <button class="btn-main b-gold" onclick="UI.nav('select')">COMBATE</button>
+                    <button class="btn-main b-green" onclick="MemoryGame.init()">MEMÓRIA</button>
+                    <button class="btn-main b-blue" onclick="PuzzleGame.init()">QUEBRA-CABEÇA</button>
+                </div>
             </div>
-    </section>
-</div>
+        </section>
 
-<script src="script.js"></script>
+        <section id="selectScreen" class="screen">
+            <button class="back-btn" onclick="UI.nav('title')">⬅ VOLTAR</button>
+            <h2 class="section-title">ESCOLHA SEU HERÓI</h2>
+            <div id="dinoSelector" class="dino-row"></div>
+        </section>
+
+        <section id="fightScreen" class="screen">
+            <div class="fight-hud">
+                <div class="hp-box"><div id="hp-player" class="hp-fill"></div><span>HERÓI</span></div>
+                <div class="vs-badge">VS</div>
+                <div class="hp-box"><div id="hp-enemy" class="hp-fill"></div><span>VILÃO</span></div>
+            </div>
+            <canvas id="fightCanvas"></canvas>
+            <div class="mobile-controls">
+                <div class="d-pad">
+                    <button class="ctrl-btn" onpointerdown="keys.a=true" onpointerup="keys.a=false">⬅</button>
+                    <button class="ctrl-btn" onpointerdown="keys.s=true" onpointerup="keys.s=false">➡</button>
+                </div>
+                <div class="action-btns">
+                    <button class="ctrl-btn b-orange" onclick="playerJump()">PULAR</button>
+                    <button class="ctrl-btn b-purple" onclick="playerAttack('power')">PODER</button>
+                    <button class="ctrl-btn b-red" onclick="playerAttack('hit')">SOCO</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="gameArea" class="screen">
+            <button class="back-btn" onclick="UI.nav('title')">🏠 MENU</button>
+            <div id="minigameContent"></div>
+        </section>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
