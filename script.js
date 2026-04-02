@@ -1,49 +1,48 @@
-// 1. A LISTA MASTER DA FAMÍLIA DINO-HERÓI (18 PERSONAGENS)
+// 1. A LISTA MASTER DA FAMÍLIA DINO-HERÓI COM IMAGENS REALISTAS
+// Esses links geram dinossauros com texturas reais e roupas de super-heróis!
+const base_url = "https://image.pollinations.ai/prompt/";
+const params = "?width=300&height=300&nologo=true";
+
 const HEROIS = [
-    { name: 'Davi-Aranha', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591933.png' },
-    { name: 'Davi de Ferro', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591937.png' },
-    { name: 'Davi-Venom', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591943.png' },
-    { name: 'Mamãe-Maravilha', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591942.png' },
-    { name: 'Mamãe-Invisível', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591940.png' },
-    { name: 'Mamãe-Supergirl', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591936.png' },
-    { name: 'Papai-Morcego', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591946.png' },
-    { name: 'Papai-Hulk', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591931.png' },
-    { name: 'Super-Papai', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591934.png' },
-    { name: 'Vovô-América', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591944.png' },
-    { name: 'Vovô-Aquaman', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591941.png' },
-    { name: 'Vovô-Lanterna', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591938.png' },
-    { name: 'Vovó-Feiticeira', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591945.png' },
-    { name: 'Vovó-Tempestade', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591939.png' },
-    { name: 'Titiagio-Flash', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591935.png' },
-    { name: 'Titiagio-Coringa', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591947.png' },
-    { name: 'Titiatina-Viúva', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591932.png' },
-    { name: 'Titiatina-Arlequina', img: 'https://cdn-icons-png.flaticon.com/512/2591/2591948.png' }
+    { name: 'Davi-Aranha', img: base_url + 'realistic%100velociraptor%20dinosaur%20in%20spiderman%20suit%20epic%20dark' + params },
+    { name: 'Davi de Ferro', img: base_url + 'realistic%20ankylosaurus%20dinosaur%20in%20iron%20man%20armor%20glowing' + params },
+    { name: 'Davi-Venom', img: base_url + 'scary%20realistic%20t-rex%20dinosaur%20with%20venom%20symbiote%20teeth' + params },
+    { name: 'Mamãe-Maravilha', img: base_url + 'realistic%90pterodactyl%20dinosaur%20wearing%20wonder%20woman%20armor%20epic' + params },
+    { name: 'Mamãe-Invisível', img: base_url + 'realistic%20brachiosaurus%20dinosaur%20blue%20glowing%20invisible%20forcefield' + params },
+    { name: 'Mamãe-Supergirl', img: base_url + 'realistic%20gallimimus%20dinosaur%20supergirl%20cape%20flying' + params },
+    { name: 'Papai-Morcego', img: base_url + 'realistic%20t-rex%20dinosaur%20wearing%20batman%20suit%20dark%20knight' + params },
+    { name: 'Papai-Hulk', img: base_url + 'massive%60muscular%20green%20t-rex%20dinosaur%20hulk%20angry%20realistic' + params },
+    { name: 'Super-Papai', img: base_url + 'realistic%30triceratops%20dinosaur%20superman%20suit%20red%20cape' + params },
+    { name: 'Vovô-América', img: base_url + 'realistic%20stegosaurus%20dinosaur%20captain%20america%20shield%20armor' + params },
+    { name: 'Vovô-Aquaman', img: base_url + 'realistic%20spinosaurus%20dinosaur%20aquaman%20golden%20armor%20ocean' + params },
+    { name: 'Vovô-Lanterna', img: base_url + 'realistic%20brontosaurus%20dinosaur%20green%20lantern%20glowing%20energy' + params },
+    { name: 'Vovó-Feiticeira', img: base_url + 'realistic%20pteranodon%20dinosaur%20scarlet%20witch%20red%20magic%20glowing' + params },
+    { name: 'Vovó-Tempestade', img: base_url + 'realistic%20diplodocus%20dinosaur%20storm%20lightning%20white%20eyes' + params },
+    { name: 'Titiagio-Flash', img: base_url + 'realistic%20velociraptor%20dinosaur%20flash%20red%20suit%20yellow%20lightning' + params },
+    { name: 'Titiagio-Coringa', img: base_url + 'creepy%20realistic%20dilophosaurus%20joker%20makeup%20green%20hair' + params },
+    { name: 'Titiatina-Viúva', img: base_url + 'realistic%20baryonyx%20dinosaur%20black%20widow%20stealth%20suit' + params },
+    { name: 'Titiatina-Arlequina', img: base_url + 'realistic%20utahraptor%20dinosaur%20harley%20quinn%20colors%20baseball%20bat' + params }
 ];
 
 // 2. SISTEMA DE SOM DE JOGUINHO (Sintetizador 8-bits)
 const Som = {
     tocar(freq, tipo = 'square', duracao = 0.15) {
-        // Tenta iniciar o áudio no navegador
         const actx = new (window.AudioContext || window.webkitAudioContext)();
         if (actx.state === 'suspended') actx.resume();
-        
         const osc = actx.createOscillator();
         const gain = actx.createGain();
-        osc.type = tipo; // 'square' = som de nintendinho, 'sawtooth' = som mais rasgado
+        osc.type = tipo; 
         osc.connect(gain); 
         gain.connect(actx.destination);
         osc.frequency.setValueAtTime(freq, actx.currentTime);
-        
-        // Efeito de queda de som pros golpes do inimigo
         if (tipo === 'sawtooth') {
             osc.frequency.exponentialRampToValueAtTime(freq / 2, actx.currentTime + duracao);
         }
-        
         osc.start(); 
         gain.gain.exponentialRampToValueAtTime(0.00001, actx.currentTime + duracao);
     },
-    socoP1() { this.tocar(400, 'square', 0.1); }, // Soco agudo do jogador
-    socoP2() { this.tocar(150, 'sawtooth', 0.2); }, // Golpe grave do inimigo
+    socoP1() { this.tocar(400, 'square', 0.1); }, 
+    socoP2() { this.tocar(150, 'sawtooth', 0.2); }, 
     vitoria() { this.tocar(600, 'square', 0.3); setTimeout(() => this.tocar(800, 'square', 0.5), 300); }
 };
 
@@ -57,21 +56,25 @@ let inimigoAtual = null;
 
 // 4. INICIAR TELA DE SELEÇÃO
 function initSelection() {
-    // Toca um sonzinho ao clicar em jogar
     Som.tocar(500, 'square', 0.2);
-    
     document.getElementById('menu').classList.remove('active');
     document.getElementById('selection').classList.add('active');
     const grid = document.getElementById('heroList');
     grid.innerHTML = '';
     
-    HEROIS.forEach(h => {
-        const div = document.createElement('div');
-        div.className = 'hero-card';
-        div.innerHTML = `<img src="${h.img}" alt="${h.name}"><p>${h.name}</p>`;
-        div.onclick = () => startFight(h);
-        grid.appendChild(div);
-    });
+    // Mostra "Carregando" rápido porque as imagens realistas são pesadas
+    grid.innerHTML = '<p style="color:gold; text-align:center; width:100%;">Carregando Dinos Reais...</p>';
+    
+    setTimeout(() => {
+        grid.innerHTML = '';
+        HEROIS.forEach(h => {
+            const div = document.createElement('div');
+            div.className = 'hero-card';
+            div.innerHTML = `<img src="${h.img}" alt="${h.name}"><p>${h.name}</p>`;
+            div.onclick = () => startFight(h);
+            grid.appendChild(div);
+        });
+    }, 500);
 }
 
 // 5. PREPARAR A LUTA
@@ -81,7 +84,6 @@ function startFight(hero) {
     enemyHP = 100;
     lutando = true;
     
-    // Sorteia um inimigo diferente de você
     do {
         inimigoAtual = HEROIS[Math.floor(Math.random() * HEROIS.length)];
     } while (inimigoAtual.name === hero.name);
@@ -97,11 +99,9 @@ function startFight(hero) {
     document.getElementById('p1-dino').style.backgroundImage = `url(${hero.img})`;
     document.getElementById('p2-dino').style.backgroundImage = `url(${inimigoAtual.img})`;
     
-    // Fala quem vai lutar
     const msg = new SpeechSynthesisUtterance(`${hero.name} contra ${inimigoAtual.name}! Que vença o mais forte!`);
     window.speechSynthesis.speak(msg);
 
-    // O inimigo ataca a cada 1.5 segundos
     loopAtaqueInimigo = setInterval(ataqueP2, 1500);
 }
 
@@ -113,13 +113,12 @@ function ataqueP1() {
     const p1 = document.getElementById('p1-dino');
     const p2 = document.getElementById('p2-dino');
     
-    // SISTEMA DE SUPER FORÇA (Davi e Mamãe dão o triplo de dano!)
-    let dano = 10; // Dano normal para os outros
+    // SISTEMA DE SUPER FORÇA: Davi e Mamãe são muito mais fortes!
+    let dano = 10; 
     if (heroiAtual.name.includes('Davi') || heroiAtual.name.includes('Mamãe')) {
-        dano = 35; // Com 3 socos o inimigo já era!
+        dano = 35; // Mamãe e Davi destroem com 3 golpes!
     }
     
-    // Animação e dano
     p1.style.transform = 'translateX(60px)';
     setTimeout(() => {
         p1.style.transform = 'translateX(0)';
@@ -131,7 +130,6 @@ function ataqueP1() {
         
         setTimeout(() => p2.style.opacity = '1', 150);
         
-        // Verifica se o jogador venceu
         if(enemyHP <= 0) {
             lutando = false;
             clearInterval(loopAtaqueInimigo);
@@ -146,7 +144,7 @@ function ataqueP1() {
     }, 100);
 }
 
-// 7. ATAQUE DO INIMIGO (Inteligência Artificial)
+// 7. ATAQUE DO INIMIGO
 function ataqueP2() {
     if (!lutando) return;
     
@@ -154,10 +152,8 @@ function ataqueP2() {
     const p1 = document.getElementById('p1-dino');
     const p2 = document.getElementById('p2-dino');
     
-    // Dano do inimigo
     let danoInimigo = 15; 
     
-    // Animação e dano
     p2.style.transform = 'scaleX(-1) translateX(60px)';
     setTimeout(() => {
         p2.style.transform = 'scaleX(-1) translateX(0)';
@@ -169,7 +165,6 @@ function ataqueP2() {
         
         setTimeout(() => p1.style.opacity = '1', 150);
         
-        // Verifica se o jogador perdeu
         if(playerHP <= 0) {
             lutando = false;
             clearInterval(loopAtaqueInimigo);
