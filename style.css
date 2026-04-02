@@ -5,7 +5,7 @@
     --j-accent: #4ade80;
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; touch-action: none; }
 
 body { 
     margin: 0; font-family: 'Arial Rounded MT Bold', sans-serif; 
@@ -13,25 +13,19 @@ body {
     width: 100vw; height: 100vh;
 }
 
-/* Fundo Estrelas-Dino Dinâmico */
+/* FUNDO TOTAL COM DINOS E OSSOS */
 .scientist-bg {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: radial-gradient(circle, var(--j-green) 0%, var(--j-dark) 100%);
-    z-index: -1; overflow: hidden;
+    z-index: -1; display: flex; flex-wrap: wrap; justify-content: space-around;
+    align-content: space-around; padding: 20px; opacity: 0.15;
+    animation: floatBg 20s linear infinite;
 }
 
-.scientist-bg::before {
-    content: "🦖 🦕 🦴 🐾 🦖 🦕 🦴 🐾";
-    position: absolute; width: 200%; height: 200%;
-    top: -50%; left: -50%; display: flex; flex-wrap: wrap;
-    justify-content: space-around; font-size: 2rem; opacity: 0.15;
-    gap: 100px; transform: rotate(-15deg);
-    animation: starMove 40s linear infinite;
-}
-
-@keyframes starMove { 
-    from { transform: rotate(-15deg) translateY(0); } 
-    to { transform: rotate(-15deg) translateY(500px); } 
+@keyframes floatBg {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-30px); }
+    100% { transform: translateY(0); }
 }
 
 .screen { 
@@ -40,50 +34,44 @@ body {
     position: absolute; top: 0; left: 0;
 }
 
-.screen.active { display: flex; animation: fadeIn 0.5s ease; }
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.screen.active { display: flex; }
 
 .game-title { 
-    font-size: clamp(3.5rem, 15vw, 6rem); 
+    font-size: clamp(3.5rem, 15vw, 5.5rem); 
     background: linear-gradient(to bottom, #ffcc00, #ff9900);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     margin: 0; filter: drop-shadow(5px 5px 0px rgba(0,0,0,0.6));
-    animation: pulseTitle 2s infinite ease-in-out;
 }
-
-@keyframes pulseTitle { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
 .btn-main {
     background: var(--j-gold); border: 4px solid #fff; border-radius: 30px;
-    padding: 18px; margin: 12px; font-size: 1.3rem; font-weight: bold;
-    color: #000; cursor: pointer; box-shadow: 0 8px 0 #b8860b; transition: 0.1s;
-    width: 300px; text-transform: uppercase;
+    padding: 18px; margin: 10px; font-size: 1.2rem; font-weight: bold;
+    color: #000; cursor: pointer; box-shadow: 0 6px 0 #b8860b; width: 280px;
 }
 
-.btn-main:active { transform: translateY(4px); box-shadow: 0 3px 0 #b8860b; }
-
-/* HUD Combate */
-#fightCanvas { background: rgba(0,0,0,0.3); border-bottom: 5px solid var(--j-gold); width: 100%; height: 350px; }
-.fight-hud { display: flex; width: 90%; justify-content: space-between; margin-bottom: 20px; }
-.hp-bar { width: 45%; height: 30px; background: #222; border: 3px solid #fff; border-radius: 15px; overflow: hidden; }
-.hp-fill { height: 100%; width: 100%; background: #ff4444; transition: 0.4s; }
-
-/* Grid de Jogos com Imagens */
-#minigameContent { display: grid; gap: 15px; padding: 20px; width: 100%; max-width: 600px; }
-.card, .puzzle-piece { 
-    background: var(--j-gold); border-radius: 15px; border: 4px solid #fff;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: 0.3s; aspect-ratio: 1/1; 
-    overflow: hidden;
+/* ESTILO DO QUEBRA-CABEÇA */
+#puzzle-board {
+    width: 300px; height: 300px; border: 4px dashed rgba(255,255,255,0.3);
+    margin-bottom: 20px; position: relative; background: rgba(0,0,0,0.2);
 }
 
-.card img, .puzzle-piece img {
-    width: 80%; height: 80%; object-fit: contain;
-    display: none; /* Escondido até virar a carta */
+#puzzle-pieces-area {
+    display: flex; gap: 10px; padding: 10px; background: rgba(255,255,255,0.1);
+    border-radius: 15px; width: 90%; justify-content: center;
 }
 
-.card.flipped { background: #fff; transform: rotateY(180deg); }
+.puzzle-piece {
+    width: 80px; height: 80px; border: 2px solid white; cursor: grab;
+    background-size: cover; background-position: center;
+}
+
+/* JOGO DA MEMÓRIA */
+#minigameContent { display: grid; gap: 10px; padding: 10px; }
+.card { 
+    width: 75px; height: 75px; background: var(--j-gold); border-radius: 12px; 
+    border: 3px solid #fff; display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+}
+.card img { width: 80%; height: 80%; display: none; pointer-events: none; }
+.card.flipped { background: #fff; }
 .card.flipped img { display: block; }
-
-.puzzle-piece img { display: block; width: 100%; height: 100%; object-fit: cover; }
