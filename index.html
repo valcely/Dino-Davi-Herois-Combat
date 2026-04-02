@@ -1,51 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dino Davi & Heróis - Jurassic Lab</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
 <div id="game-container">
+    <div class="lab-overlay"></div>
+
     <section id="titleScreen" class="screen active">
         <div class="main-content">
-            <h1 class="game-title">DINO DAVI</h1>
-            <span class="game-subtitle">HEROES COMBAT</span>
+            <h1 class="game-title">DINO <span class="highlight">DAVI</span></h1>
+            <span class="game-subtitle">JURASSIC MEMORY</span>
             <div class="menu-grid">
-                <button class="btn-card b-green" onclick="nav('select')">1 PLAYER</button>
-                <button class="btn-card b-blue" onclick="initMemory()">MEMÓRIA</button>
-            </div>
-        </div>
-    </section>
-
-    <section id="selectScreen" class="screen">
-        <button class="back-btn" onclick="nav('title')">⬅</button>
-        <h2 class="section-title">CHOOSE YOUR HERO</h2>
-        <div id="dinoSelector" class="dino-row"></div>
-    </section>
-
-    <section id="fightScreen" class="screen">
-        <div class="fight-hud">
-            <div class="hp-box">
-                <div id="hp-player" class="hp-fill"></div>
-                <span id="p1-label">PLAYER</span>
-            </div>
-            <div class="vs-badge">VS</div>
-            <div class="hp-box">
-                <div id="hp-enemy" class="hp-fill"></div>
-                <span id="p2-label">T-REX VILLAIN</span>
-            </div>
-        </div>
-
-        <canvas id="fightCanvas"></canvas>
-
-        <div class="mobile-controls">
-            <div class="d-pad">
-                <button class="ctrl-btn" onmousedown="keys.a=true" onmouseup="keys.a=false">⬅</button>
-                <button class="ctrl-btn" onmousedown="keys.s=true" onmouseup="keys.s=false">➡</button>
-            </div>
-            <div class="action-btns">
-                <button class="ctrl-btn b-orange" onclick="playerJump()">PULAR</button>
-                <button class="ctrl-btn b-purple" onclick="playerAttack('power')">PODER(K)</button>
-                <button class="ctrl-btn b-red" onclick="playerAttack('hit')">SOCO(L)</button>
+                <button class="btn-main" onclick="initMemory()">JOGAR AGORA</button>
             </div>
         </div>
     </section>
 
     <section id="gameArea" class="screen">
-        <button class="back-btn" onclick="nav('title')">🏠</button>
-        <div id="minigameContent"></div>
+        <div class="hud">
+            <button class="back-btn" onclick="location.reload()">🏠 SAIR</button>
+            <div class="score-board">PARES: <span id="pair-count">0</span> / 18</div>
+        </div>
+        <div id="memory-grid" class="memory-grid">
+            </div>
     </section>
 </div>
+
+<script src="script.js"></script>
+</body>
+</html>
