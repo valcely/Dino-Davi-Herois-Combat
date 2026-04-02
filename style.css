@@ -1,244 +1,78 @@
 :root {
     --j-green: #1a4d2e;
-    --j-dark: #072210;
+    --j-dark: #05160b;
     --j-gold: #ffcc00;
     --j-accent: #4ade80;
-    --j-red: #ff4444;
 }
 
-/* Configurações Gerais */
-* { 
-    box-sizing: border-box; 
-    -webkit-tap-highlight-color: transparent; 
-    user-select: none; 
-    margin: 0; 
-    padding: 0; 
-}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; margin: 0; padding: 0; }
 
 body { 
     font-family: 'Arial Rounded MT Bold', sans-serif; 
     background: var(--j-dark); 
     color: white; 
-    overflow: hidden;
-    width: 100vw; 
-    height: 100vh;
+    overflow: hidden; 
+    width: 100vw; height: 100vh; 
 }
 
-/* FUNDO DINOSSAUROS E OSSOS (TELA INTEIRA) */
+/* FUNDO TOTAL - FOCO EM DINOS E OSSOS */
 .scientist-bg {
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%;
-    background: radial-gradient(circle, var(--j-green) 0%, var(--j-dark) 100%);
-    z-index: -1; 
-    display: flex; 
-    flex-wrap: wrap; 
-    justify-content: space-around; 
-    align-content: space-around; 
-    padding: 10px; 
-    opacity: 0.15;
-    pointer-events: none;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, var(--j-green), var(--j-dark));
+    z-index: -1; display: flex; flex-wrap: wrap; justify-content: space-around;
+    align-content: space-around; opacity: 0.2; pointer-events: none;
 }
 
-.scientist-bg span {
-    font-size: 2rem;
-    animation: float 6s infinite ease-in-out;
-}
-
-@keyframes float {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(10deg); }
-}
-
-/* Telas */
 .screen { 
-    display: none; 
-    width: 100%; 
-    height: 100%; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center;
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    padding: 20px;
+    display: none; width: 100%; height: 100%; 
+    flex-direction: column; align-items: center; justify-content: flex-start;
+    position: absolute; padding: 20px;
 }
+.screen.active { display: flex; animation: zoomIn 0.3s ease; }
 
-.screen.active { display: flex; animation: fadeIn 0.4s ease-out; }
+@keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-/* Título e Textos */
+/* TÍTULO GIGANTE */
 .game-title { 
-    font-size: clamp(3rem, 12vw, 5rem); 
-    background: linear-gradient(to bottom, #ffcc00, #ff9900);
-    -webkit-background-clip: text; 
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(4px 4px 0px #000);
-    margin-bottom: 5px;
+    font-size: clamp(3.5rem, 15vw, 6rem); 
+    color: var(--j-gold);
+    text-shadow: 4px 4px 0px #000, -2px -2px 0px #fff;
+    margin-top: 20px;
 }
 
-.game-subtitle { color: var(--j-accent); letter-spacing: 4px; font-weight: bold; margin-bottom: 30px; }
-
-/* Botões Universais */
-.btn-universal {
-    background: var(--j-gold); 
-    border: 4px solid #fff; 
-    border-radius: 40px;
-    padding: 18px 30px; 
-    margin: 10px; 
-    font-size: 1.2rem; 
-    font-weight: bold;
-    color: #000; 
-    cursor: pointer; 
-    box-shadow: 0 8px 0 #b8860b; 
-    width: 300px;
-    text-transform: uppercase;
-}
-
-.btn-universal:active { transform: translateY(4px); box-shadow: 0 3px 0 #b8860b; }
-
-/* Grid de Heróis (18 Slots) */
-.hero-selection-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    width: 100%;
-    max-width: 500px;
-    max-height: 65vh;
-    overflow-y: auto;
-    padding: 15px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 20px;
+/* SELEÇÃO DE DINOS - FOCO NAS IMAGENS */
+.hero-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;
+    width: 100%; max-width: 600px; height: 70vh; overflow-y: auto;
+    padding: 20px; margin-top: 20px;
 }
 
 .hero-card {
-    background: rgba(0,0,0,0.5);
-    border: 3px solid var(--j-gold);
-    border-radius: 15px;
-    padding: 10px;
-    text-align: center;
-    cursor: pointer;
+    background: rgba(255,255,255,0.1); border: 6px solid var(--j-gold);
+    border-radius: 30px; padding: 15px; display: flex; flex-direction: column;
+    align-items: center; transition: 0.2s;
 }
+.hero-card img { width: 100px; height: 100px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); }
+.hero-card p { margin-top: 10px; font-size: 1.2rem; font-weight: bold; color: #fff; }
 
-.hero-card img { width: 100%; height: auto; max-width: 60px; pointer-events: none; }
-.hero-card p { font-size: 0.65rem; color: #fff; margin-top: 5px; font-weight: bold; }
-
-/* Arena de Luta */
-.hud-battle { 
-    display: flex; 
-    width: 100%; 
-    justify-content: space-between; 
-    align-items: center; 
-    margin-bottom: 20px; 
+/* ARENA DE LUTA - DINOS GIGANTES */
+.fight-container { width: 100%; height: 60vh; position: relative; margin-top: 20px; }
+.dino-fighter { 
+    width: 180px; height: 180px; position: absolute; bottom: 20px; 
+    background-size: contain; background-repeat: no-repeat;
+    transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
+#p1-dino { left: 10px; }
+#p2-dino { right: 10px; transform: scaleX(-1); }
 
-.hp-bar-outer { width: 100%; height: 25px; background: #333; border: 2px solid #fff; border-radius: 15px; overflow: hidden; }
-.hp-bar-inner { height: 100%; width: 100%; background: var(--j-accent); transition: 0.3s; }
-.hp-fill-enemy { height: 100%; width: 100%; background: var(--j-red); transition: 0.3s; }
+/* BARRA DE VIDA GIGANTE */
+.life-bar-wrap { width: 90%; height: 40px; background: #000; border: 4px solid #fff; border-radius: 20px; overflow: hidden; margin-bottom: 10px; }
+.life-fill { height: 100%; background: linear-gradient(90deg, #ff4444, #ff0000); width: 100%; transition: 0.4s; }
 
-.battle-stage {
-    width: 100%;
-    height: 300px;
-    position: relative;
-    border-bottom: 8px solid var(--j-gold);
-    background: rgba(0,0,0,0.2);
-}
-
-.dino-character {
-    width: 130px;
-    height: 130px;
-    position: absolute;
-    bottom: 20px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    transition: 0.2s;
-}
-
-#player-dino { left: 20px; }
-#enemy-dino { right: 20px; transform: scaleX(-1); }
-
-/* Animação de Dano */
-.shake { animation: shake 0.3s; }
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-10px); }
-    75% { transform: translateX(10px); }
-}
-
-/* Jogo da Memória */
-.memory-layout {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    width: 100%;
-}
-
-.card {
-    aspect-ratio: 1;
-    background: var(--j-gold);
-    border: 3px solid #fff;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.card img { width: 80%; display: none; }
-.card.flipped { background: #fff; transform: rotateY(180deg); }
-.card.flipped img { display: block; }
-
-/* Quebra-Cabeça */
-.target-box {
-    width: 280px;
-    height: 280px;
-    border: 4px dashed rgba(255,255,255,0.3);
-    margin-bottom: 20px;
-    background-size: contain;
-    background-repeat: no-repeat;
-    opacity: 0.3;
-}
-
-.pieces-tray {
-    display: flex;
-    gap: 15px;
-    padding: 15px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 20px;
-}
-
-.puzzle-piece {
-    width: 80px;
-    height: 80px;
-    border: 2px solid #fff;
-    background-size: cover;
-    cursor: pointer;
-}
-
-/* Botões de Ação na Luta */
-.battle-footer { display: flex; gap: 20px; margin-top: 20px; }
-.btn-action {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    border: 5px solid #fff;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 5px 0 rgba(0,0,0,0.5);
-}
-.btn-attack { background: var(--j-red); }
-.btn-special { background: #a855f7; }
-
-/* Botão Voltar */
-.btn-icon-back {
-    background: var(--j-gold);
-    border: 2px solid #fff;
-    border-radius: 10px;
-    padding: 10px 15px;
-    font-size: 1rem;
-    font-weight: bold;
+/* BOTÕES DE AÇÃO */
+.action-area { display: flex; gap: 20px; margin-top: auto; padding-bottom: 40px; }
+.btn-punch { 
+    width: 100px; height: 100px; border-radius: 50%; border: 6px solid #fff;
+    background: #ff4444; font-size: 3rem; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 0 #990000;
 }
