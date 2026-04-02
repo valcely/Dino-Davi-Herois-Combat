@@ -8,25 +8,19 @@
 </head>
 <body>
     <div id="game-container">
-        <div class="lab-bg-elements">
-            <div class="scientist float-1">🧪</div>
-            <div class="scientist float-2">🧬</div>
-        </div>
-
         <section id="titleScreen" class="screen active">
-            <div class="main-content">
-                <h1 class="game-title">DINO DAVI</h1>
-                <span class="game-subtitle">JURASSIC HEROES</span>
-                <div class="menu-grid">
-                    <button class="btn-main b-gold" onclick="UI.nav('select')">COMBATE</button>
-                    <button class="btn-main b-green" onclick="MemoryGame.init()">MEMÓRIA</button>
-                    <button class="btn-main b-blue" onclick="PuzzleGame.init()">QUEBRA-CABEÇA</button>
-                </div>
+            <div class="scientist-bg"></div>
+            <h1 class="game-title">DINO DAVI</h1>
+            <span class="game-subtitle">JURASSIC HEROES</span>
+            <div class="menu-grid">
+                <button class="btn-main" onclick="nav('select')">🦖 COMBATE</button>
+                <button class="btn-main" onclick="initMemory()">🧩 MEMÓRIA</button>
+                <button class="btn-main" onclick="initPuzzle()">🖼️ QUEBRA-CABEÇA</button>
             </div>
         </section>
 
         <section id="selectScreen" class="screen">
-            <button class="back-btn" onclick="UI.nav('title')">⬅ VOLTAR</button>
+            <button class="back-btn" onclick="nav('title')">⬅ VOLTAR</button>
             <h2 class="section-title">ESCOLHA SEU HERÓI</h2>
             <div id="dinoSelector" class="dino-row"></div>
         </section>
@@ -35,13 +29,13 @@
             <div class="fight-hud">
                 <div class="hp-box"><div id="hp-player" class="hp-fill"></div><span>HERÓI</span></div>
                 <div class="vs-badge">VS</div>
-                <div class="hp-box"><div id="hp-enemy" class="hp-fill"></div><span>VILÃO</span></div>
+                <div class="hp-box"><div id="hp-enemy" class="hp-fill"></div><span id="enemy-name">VILÃO</span></div>
             </div>
             <canvas id="fightCanvas"></canvas>
             <div class="mobile-controls">
                 <div class="d-pad">
-                    <button class="ctrl-btn" onpointerdown="keys.a=true" onpointerup="keys.a=false">⬅</button>
-                    <button class="ctrl-btn" onpointerdown="keys.s=true" onpointerup="keys.s=false">➡</button>
+                    <button class="ctrl-btn move-btn" ontouchstart="keys.a=true" ontouchend="keys.a=false">◀</button>
+                    <button class="ctrl-btn move-btn" ontouchstart="keys.s=true" ontouchend="keys.s=false">▶</button>
                 </div>
                 <div class="action-btns">
                     <button class="ctrl-btn b-orange" onclick="playerJump()">PULAR</button>
@@ -52,7 +46,7 @@
         </section>
 
         <section id="gameArea" class="screen">
-            <button class="back-btn" onclick="UI.nav('title')">🏠 MENU</button>
+            <button class="back-btn" onclick="nav('title')">🏠 MENU</button>
             <div id="minigameContent"></div>
         </section>
     </div>
