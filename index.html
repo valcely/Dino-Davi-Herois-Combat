@@ -3,77 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dino Davi: Heroes Combat</title>
+    <title>Dino Davi: Jurassic World</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="game-container">
-        <div class="scientist-bg"></div>
 
-        <section id="titleScreen" class="screen active">
-            <h1 class="game-title">DINO DAVI</h1>
-            <span class="game-subtitle">JURASSIC HEROES</span>
-            
-            <div class="menu-grid" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
-                <button class="btn-main" onclick="UI.nav('select')">🦖 COMBATE</button>
-                <button class="btn-main" onclick="initMemory()">🧩 MEMÓRIA</button>
-                <button class="btn-main" onclick="initPuzzle()">🖼️ QUEBRA-CABEÇA</button>
-            </div>
-        </section>
+    <div class="scientist-bg"></div>
 
-        <section id="selectScreen" class="screen">
-            <div style="width: 100%; padding: 10px;">
-                <button class="btn-main" style="font-size: 1rem; padding: 10px;" onclick="UI.nav('title')">⬅ VOLTAR</button>
-            </div>
-            <h2 class="game-subtitle" style="color: white; letter-spacing: 1px;">ESCOLHA SEU HERÓI</h2>
-            <div id="dinoSelector" class="dino-row">
-                </div>
-        </section>
+    <section id="titleScreen" class="screen active">
+        <h1 class="game-title">DINO DAVI</h1>
+        <p style="color: var(--j-accent); letter-spacing: 8px; font-weight: bold;">JURASSIC EXPERIENCE</p>
+        
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-main" style="width: 150px;" onclick="startFight(1)">1 JOGADOR</button>
+            <button class="btn-main" style="width: 150px; background: var(--j-accent);" onclick="startFight(2)">2 PLAYERS</button>
+        </div>
+        <button class="btn-main" onclick="initMemory()">🧩 JOGO DA MEMÓRIA</button>
+        <button class="btn-main" onclick="initPuzzle()">🖼️ QUEBRA-CABEÇA</button>
+    </section>
 
-        <section id="fightScreen" class="screen">
-            <div class="fight-hud">
-                <div class="hp-box">
-                    <div id="hp-player" class="hp-fill"></div>
-                    <span>HERÓI</span>
-                </div>
-                <div class="vs-badge" style="font-weight: bold; color: var(--j-gold); font-size: 1.5rem;">VS</div>
-                <div class="hp-box">
-                    <div id="hp-enemy" class="hp-fill"></div>
-                    <span id="enemy-name">VILÃO</span>
-                </div>
-            </div>
+    <section id="fightScreen" class="screen">
+        <div class="fight-hud">
+            <div class="hp-bar"><div id="hp1" class="hp-fill"></div></div>
+            <div style="font-size: 1.5rem; font-weight: bold; color: gold;">VS</div>
+            <div class="hp-bar"><div id="hp2" class="hp-fill"></div></div>
+        </div>
+        <canvas id="fightCanvas"></canvas>
+        <button class="btn-main" style="width:150px; margin-top: 30px;" onclick="location.reload()">🏠 SAIR</button>
+    </section>
 
-            <canvas id="fightCanvas"></canvas>
-
-            <div class="mobile-controls">
-                <div class="d-pad" style="display: flex; gap: 10px;">
-                    <button class="ctrl-btn move-btn" 
-                            ontouchstart="keys.a=true" ontouchend="keys.a=false"
-                            onmousedown="keys.a=true" onmouseup="keys.a=false">◀</button>
-                    <button class="ctrl-btn move-btn" 
-                            ontouchstart="keys.s=true" ontouchend="keys.s=false"
-                            onmousedown="keys.s=true" onmouseup="keys.s=false">▶</button>
-                </div>
-                
-                <div class="action-btns" style="display: flex; gap: 10px;">
-                    <button class="ctrl-btn b-orange" onclick="playerJump()">PULAR</button>
-                    <button class="ctrl-btn b-purple" onclick="playerAttack('power')">PODER</button>
-                    <button class="ctrl-btn b-red" onclick="playerAttack('hit')">SOCO</button>
-                </div>
-            </div>
-            
-            <button class="btn-main" style="position: absolute; top: 10px; right: 10px; font-size: 0.8rem; padding: 10px; background: #555;" onclick="location.reload()">SAIR</button>
-        </section>
-
-        <section id="gameAreaScreen" class="screen">
-            <div style="width: 100%; padding: 10px; display: flex; justify-content: space-between; align-items: center;">
-                <button class="btn-main" style="font-size: 1rem; padding: 10px;" onclick="UI.nav('title')">🏠 MENU</button>
-                <span id="game-status" style="font-weight: bold; color: var(--j-gold);">DINO GAME</span>
-            </div>
-            <div id="minigameContent">
-                </div>
-        </section>
-    </div>
+    <section id="gameScreen" class="screen">
+        <div style="width: 100%; padding: 20px; display: flex; justify-content: space-between;">
+            <button class="btn-main" style="width:100px; padding: 10px; font-size: 0.8rem;" onclick="location.reload()">🏠 MENU</button>
+            <h2 id="gameTitle" style="color: gold;">JOGANDO</h2>
+        </div>
+        <div id="minigameContent"></div>
+    </section>
 
     <script src="script.js"></script>
 </body>
