@@ -1,206 +1,241 @@
-// ==========================================
-// MOTOR DE ÁUDIO (KIDS SOUNDS)
-// ==========================================
+// --- CONFIGURAÇÃO DE ÁUDIO ---
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
 function playSound(type) {
     const osc = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    osc.connect(g); g.connect(audioCtx.destination);
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
 
-    if(type === 'pop') { // Clique divertido
-        osc.frequency.setValueAtTime(400 + Math.random()*200, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(10, audioCtx.currentTime + 0.1);
-        g.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    if(type === 'click') {
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        osc.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
         osc.start(); osc.stop(audioCtx.currentTime + 0.1);
-    } else if(type === 'roar') { // Dino Bravo
+    } else if(type === 'roar') {
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(100, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.4);
-        g.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(40, audioCtx.currentTime + 0.4);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
         osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+    } else if(type === 'win') {
+        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+        osc.frequency.linearRampToValueAtTime(800, audioCtx.currentTime + 0.3);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
     }
 }
 
-// ==========================================
-// FUNDO ANIMADO (FLORESTA VIVA)
-// ==========================================
-const bgCanvas = document.getElementById('forestBg');
-const bgCtx = bgCanvas.getContext('2d');
-let bgFrame = 0;
+// --- DESENHO DOS DINOSSAUROS ---
+function drawDino(ctx, x, y, color, side, frame, action) {
+    ctx.save();
+    ctx.translate(x, y);
+    if(side === 'left') ctx.scale(-1, 1);
+    
+    let bob = Math.sin(frame * 0.1) * 5;
+    let mouth = (action === 'attack') ? Math.sin(frame * 0.5) * 15 : 0;
 
-function animateForest() {
-    bgCanvas.width = window.innerWidth;
-    bgCanvas.height = window.innerHeight;
-    bgFrame++;
+    // Corpo
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.ellipse(0, 0 + bob, 40, 25, 0, 0, Math.PI*2);
+    ctx.fill();
+
+    // Pescoço e Cabeça
+    ctx.beginPath();
+    ctx.quadraticCurveTo(-30, -40 + bob, -50, -40 + bob - mouth);
+    ctx.lineWidth = 15; ctx.strokeStyle = color; ctx.stroke();
     
-    // Grama/Fundo
-    bgCtx.fillStyle = '#061a06';
-    bgCtx.fillRect(0,0,bgCanvas.width, bgCanvas.height);
+    // Olho
+    ctx.fillStyle = "white";
+    ctx.beginPath(); ctx.arc(-50, -45 + bob - mouth, 5, 0, Math.PI*2); ctx.fill();
     
-    // Folhas caindo e balançando
+    ctx.restore();
+}
+
+// --- FUNDO ANIMADO ---
+let forestFrame = 0;
+function drawForest() {
+    const canvas = document.getElementById('forestBg');
+    if(!canvas || document.getElementById('titleScreen').classList.contains('hidden')) return;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    
+    forestFrame++;
+    ctx.fillStyle = '#0d2b14'; ctx.fillRect(0,0,canvas.width, canvas.height);
+    
     for(let i=0; i<20; i++) {
-        let x = (i * 150 + Math.sin(bgFrame*0.01 + i)*50) % bgCanvas.width;
-        let y = (bgFrame * (1 + i%3)) % bgCanvas.height;
-        bgCtx.fillStyle = '#14532d';
-        bgCtx.beginPath();
-        bgCtx.ellipse(x, y, 30, 15, Math.sin(bgFrame*0.05), 0, Math.PI*2);
-        bgCtx.fill();
+        let bx = (i * 120) % canvas.width;
+        let by = (i * 80) % canvas.height;
+        let wave = Math.sin(forestFrame * 0.03 + i) * 15;
+        ctx.fillStyle = '#166534';
+        ctx.beginPath();
+        ctx.ellipse(bx + wave, by, 50, 25, Math.PI/4, 0, Math.PI*2);
+        ctx.fill();
     }
-    
-    if(!document.getElementById('titleScreen').classList.contains('hidden')) {
-        requestAnimationFrame(animateForest);
-    }
+    requestAnimationFrame(drawForest);
 }
 
-// ==========================================
-// NAVEGAÇÃO
-// ==========================================
-function goTitle() {
-    hideAll();
-    document.getElementById('titleScreen').classList.remove('hidden');
-    animateForest();
-}
-
+// --- NAVEGAÇÃO ---
 function hideAll() {
     document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
 }
 
-// ==========================================
-// MINI JOGO: LUTINHA (DINOS RENDERIZADOS)
-// ==========================================
-let playerHp = 100, enemyHp = 100;
-function goSelect() {
-    playSound('pop');
-    hideAll();
-    document.getElementById('fightScreen').classList.remove('hidden');
-    initFight();
+function goTitle() {
+    playSound('click'); hideAll();
+    document.getElementById('titleScreen').classList.remove('hidden');
+    drawForest();
 }
 
-function initFight() {
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 350; canvas.height = 200;
+// --- MINI JOGO: MEMÓRIA ---
+function startMemoryGame() {
+    playSound('click'); hideAll();
+    document.getElementById('memoryScreen').classList.remove('hidden');
+    const grid = document.getElementById('memoryGrid');
+    grid.innerHTML = '';
+    const icons = ['🦖', '🦕', '🐊', '🦴', '🌋', '🌳', '🥚', '🌞'];
+    let deck = [...icons, ...icons].sort(() => Math.random() - 0.5);
     
-    let bite = 0;
+    let flipped = [];
+    deck.forEach((icon, idx) => {
+        const card = document.createElement('div');
+        card.className = 'memory-card';
+        card.dataset.icon = icon;
+        card.onclick = () => {
+            if(flipped.length < 2 && !card.innerText) {
+                playSound('click');
+                card.innerText = icon;
+                flipped.push(card);
+                if(flipped.length === 2) {
+                    if(flipped[0].dataset.icon === flipped[1].dataset.icon) {
+                        playSound('win'); flipped = [];
+                    } else {
+                        setTimeout(() => { flipped.forEach(c => c.innerText = ''); flipped = []; }, 1000);
+                    }
+                }
+            }
+        };
+        grid.appendChild(card);
+    });
+}
+
+// --- MINI JOGO: CORES ---
+const colors = ['#ef4444', '#3b82f6', '#22c55e', '#fbbf24', '#a855f7', '#f472b6'];
+function startColorsGame() {
+    playSound('click'); hideAll();
+    document.getElementById('colorsScreen').classList.remove('hidden');
+    const target = document.getElementById('colorTarget');
+    const options = document.getElementById('colorOptions');
+    
+    const correctColor = colors[Math.floor(Math.random() * colors.length)];
+    target.style.backgroundColor = correctColor;
+    options.innerHTML = '';
+    
+    colors.forEach(c => {
+        const btn = document.createElement('div');
+        btn.className = 'color-circle';
+        btn.style.backgroundColor = c;
+        btn.onclick = () => {
+            if(c === correctColor) { playSound('win'); startColorsGame(); }
+            else { playSound('click'); btn.style.opacity = '0.3'; }
+        };
+        options.appendChild(btn);
+    });
+}
+
+// --- MINI JOGO: MONTAR (STACKER) ---
+let stackPieces = [];
+let currentStackX = 50;
+let stackDir = 2;
+let stackLevel = 1;
+function startStackGame() {
+    playSound('click'); hideAll();
+    document.getElementById('stackScreen').classList.remove('hidden');
+    const canvas = document.getElementById('stackCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 300; canvas.height = 400;
+    stackPieces = []; stackLevel = 1;
+    
     function loop() {
-        if(document.getElementById('fightScreen').classList.contains('hidden')) return;
-        ctx.clearRect(0,0,350,200);
+        if(document.getElementById('stackScreen').classList.contains('hidden')) return;
+        ctx.clearRect(0,0,300,400);
+        ctx.fillStyle = '#333'; ctx.fillRect(0, 380, 300, 20); // Chão
         
-        // Desenha Dino Jogador (Verde)
-        drawDino(ctx, 50, 120, '#4ade80', bite);
-        // Desenha Inimigo (Vermelho)
-        drawDino(ctx, 250, 120, '#ef4444', 0, true);
+        // Peça atual se movendo
+        currentStackX += stackDir * (1 + stackLevel * 0.5);
+        if(currentStackX > 250 || currentStackX < 0) stackDir *= -1;
         
-        if(bite > 0) bite--;
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillRect(currentStackX, 50, 50, 30);
+        
+        // Peças já caídas
+        stackPieces.forEach(p => {
+            ctx.fillStyle = '#ef4444';
+            ctx.fillRect(p.x, p.y, 50, 30);
+        });
         requestAnimationFrame(loop);
     }
     loop();
 }
 
-function drawDino(ctx, x, y, color, bite, flip) {
-    ctx.save();
-    if(flip) { ctx.translate(x+60, 0); ctx.scale(-1, 1); x=0; }
-    ctx.fillStyle = color;
-    // Corpo
-    ctx.fillRect(x, y, 60, 40);
-    // Cabeça com animação de mordida
-    ctx.fillRect(x + 40, y - 20 - (bite*2), 30, 25);
-    // Mandíbula
-    ctx.fillRect(x + 40, y + 5 + (bite*2), 30, 10);
-    // Olho
-    ctx.fillStyle = 'black';
-    ctx.fillRect(x + 60, y - 15 - (bite*2), 5, 5);
-    ctx.restore();
-}
-
-function doAttack() {
+document.getElementById('btnDrop').onclick = () => {
     playSound('roar');
-    enemyHp -= 10;
-    document.querySelector('#hpR div').style.width = enemyHp + '%';
-    // Ativa animação de mordida (simulada por frames no loop)
-    if(enemyHp <= 0) { alert("Você Venceu!"); goTitle(); enemyHp=100; }
-}
+    let targetY = 380 - (stackPieces.length + 1) * 30;
+    stackPieces.push({x: currentStackX, y: targetY});
+    stackLevel++;
+    document.getElementById('stackLevel').innerText = stackLevel;
+    if(stackPieces.length > 10) { playSound('win'); stackPieces = []; stackLevel = 1; }
+};
 
-// ==========================================
-// MINI JOGO: MEMÓRIA
-// ==========================================
-function startMemoryGame() {
-    playSound('pop');
-    hideAll();
-    document.getElementById('memoryScreen').classList.remove('hidden');
-    const grid = document.getElementById('memoryGrid');
-    grid.innerHTML = '';
-    const icons = ['🦖', '🦕', '🌋', '🥚', '🦴', '🌳'];
-    const cards = [...icons, ...icons].sort(() => Math.random() - 0.5);
-    
-    cards.forEach(icon => {
-        const div = document.createElement('div');
-        div.className = 'card';
-        div.onclick = () => {
-            playSound('pop');
-            div.textContent = icon;
-            div.style.background = '#fff';
-        };
-        grid.appendChild(div);
-    });
-}
-
-// ==========================================
-// MINI JOGO: CORES
-// ==========================================
-function startColorGame() {
-    playSound('pop');
-    hideAll();
-    document.getElementById('colorScreen').classList.remove('hidden');
-    const pal = document.getElementById('colorPalette');
-    pal.innerHTML = '';
-    const colors = ['#ef4444', '#3b82f6', '#facc15', '#22c55e', '#a855f7'];
-    
-    colors.forEach(c => {
+// --- MODO LUTINHA ---
+let playerHP = 100, enemyHP = 100;
+function goSelect() {
+    playSound('click'); hideAll();
+    document.getElementById('selectScreen').classList.remove('hidden');
+    const sel = document.getElementById('selCols');
+    sel.innerHTML = '';
+    ['#22c55e', '#ef4444', '#3b82f6'].forEach(color => {
         const btn = document.createElement('div');
-        btn.className = 'color-btn';
-        btn.style.backgroundColor = c;
-        btn.onclick = () => {
-            playSound('pop');
-            document.getElementById('colorTarget').style.color = c;
-        };
-        pal.appendChild(btn);
+        btn.style.width = "80px"; btn.style.height = "80px";
+        btn.style.background = color; btn.style.borderRadius = "20px";
+        btn.onclick = () => startFight(color);
+        sel.appendChild(btn);
     });
 }
 
-// ==========================================
-// MINI JOGO: MONTAR (STACKER)
-// ==========================================
-let stackY = 320, stackLevel = 1;
-function startStackGame() {
-    playSound('pop');
-    hideAll();
-    document.getElementById('stackScreen').classList.remove('hidden');
-    const canvas = document.getElementById('stackCanvas');
-    canvas.width = 200; canvas.height = 350;
-    stackY = 320;
-    renderStack();
-}
+function startFight(pColor) {
+    playSound('click'); hideAll();
+    document.getElementById('fightScreen').classList.remove('hidden');
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = 300;
+    playerHP = 100; enemyHP = 100;
+    let frame = 0, atkTimer = 0;
 
-function renderStack() {
-    const ctx = document.getElementById('stackCanvas').getContext('2d');
-    ctx.fillStyle = '#f59e0b';
-    ctx.fillRect(50, stackY, 100, 30);
-}
+    function fightLoop() {
+        if(document.getElementById('fightScreen').classList.contains('hidden')) return;
+        frame++;
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        
+        let action = (atkTimer > 0) ? 'attack' : 'idle';
+        if(atkTimer > 0) atkTimer--;
 
-function dropPiece() {
-    if(stackY > 50) {
-        playSound('pop');
-        stackY -= 35;
-        const ctx = document.getElementById('stackCanvas').getContext('2d');
-        ctx.fillStyle = `hsl(${Math.random()*360}, 70%, 50%)`;
-        ctx.fillRect(50, stackY, 100, 30);
-    } else {
-        alert("Torre completa!");
-        goTitle();
+        drawDino(ctx, canvas.width*0.2, 200, pColor, 'right', frame, action);
+        drawDino(ctx, canvas.width*0.8, 200, '#ef4444', 'left', frame, 'idle');
+        
+        document.querySelector('#hpL div').style.width = playerHP + '%';
+        document.querySelector('#hpR div').style.width = enemyHP + '%';
+        
+        requestAnimationFrame(fightLoop);
     }
+    
+    document.getElementById('btnAtk').onclick = () => {
+        playSound('roar');
+        atkTimer = 20;
+        enemyHP -= 10;
+        if(enemyHP <= 0) { playSound('win'); goTitle(); }
+    };
+    
+    fightLoop();
 }
 
-// Inicializar
+// Iniciar
 window.onload = goTitle;
