@@ -1,54 +1,156 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dino Davi - Batalha Épica</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Dino Davi Herois Combat</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="bg"></div>
+<!-- ======================================================
+     TELA 1 -- TITULO
+====================================================== -->
 
-    <section id="menu" class="screen active">
-        <h1 class="game-title">DINO<br>DAVI</h1>
-        <button class="btn-play" onclick="initSelection()">
-            JOGAR AGORA!
-        </button>
-    </section>
+<div id="titleScreen" class="screen">
 
-    <section id="selection" class="screen">
-        <h2>QUEM É VOCÊ?</h2>
-        <div id="heroList" class="hero-grid"></div>
-    </section>
+  <!-- Particulas de fundo -->
 
-    <section id="fight" class="screen">
-        
-        <div class="hud">
-            <div class="player-hud">
-                <h3 id="p1-name">Jogador</h3>
-                <div class="life-bar-wrap"><div id="hp1" class="life-fill"></div></div>
-            </div>
-            
-            <div class="vs-label">VS</div>
+  <div class="stars-bg" id="starsBg"></div>
 
-            <div class="enemy-hud">
-                <h3 id="p2-name">Inimigo</h3>
-                <div class="life-bar-wrap"><div id="hp2" class="life-fill"></div></div>
-            </div>
-        </div>
+  <div class="title-logo">
+    <div class="title-top">DINO DAVI</div>
+    <div class="title-sub">HEROIS COMBAT</div>
+    <div class="title-tag">&#127974; EDICAO JURASSIC &mdash; 9 PERSONAGENS</div>
+  </div>
 
-        <div class="fight-container">
-            <div id="p1-dino" class="dino-fighter p1-sprite"></div>
-            <div id="p2-dino" class="dino-fighter p2-sprite"></div>
-        </div>
+  <!-- Preview dos dinos -->
 
-        <div class="action-area">
-            <button class="btn-punch" onclick="ataqueP1()">💥</button>
-            <p class="instrucao">Clica rápido!</p>
-        </div>
-    </section>
+<canvas id="titlePreview" width="440" height="110"></canvas>
 
-    <script src="script.js"></script>
+  <div class="title-btns">
+    <button id="btn1p" class="tbtn green">
+      <span class="tbtn-icon">&#127918;</span>
+      <span>1 JOGADOR vs VILAO</span>
+    </button>
+    <button id="btn2p" class="tbtn blue">
+      <span class="tbtn-icon">&#128101;</span>
+      <span>2 JOGADORES</span>
+    </button>
+  </div>
+
+  <div class="title-hint">
+    PC &mdash; P1: A/D mover &nbsp;|&nbsp; ESPACO pular &nbsp;|&nbsp; F atacar &nbsp;|&nbsp; E especial<br>
+    PC &mdash; P2: Setas &nbsp;|&nbsp; ArrowUp pular &nbsp;|&nbsp; K atacar &nbsp;|&nbsp; L especial
+  </div>
+</div>
+
+<!-- ======================================================
+     TELA 2 -- SELECAO (grade 3x3 estilo imagem)
+====================================================== -->
+
+<div id="selectScreen" class="screen hidden">
+
+  <div class="stars-bg" id="starsBg2"></div>
+
+  <h2 class="sel-title">ESCOLHA SEU DINO</h2>
+
+  <!-- Painel com scrollbar igual imagem -->
+
+  <div class="sel-panel">
+    <div class="sel-grid" id="selGrid"></div>
+  </div>
+
+  <!-- VS preview bar (aparece depois de escolher) -->
+
+  <div class="sel-vs-bar" id="selVsBar">
+    <div class="sel-vs-side">
+      <canvas id="vsC1" width="90" height="80"></canvas>
+      <div class="sel-vs-name" id="vsN1">P1</div>
+    </div>
+    <div class="sel-vs-mid">VS</div>
+    <div class="sel-vs-side">
+      <canvas id="vsC2" width="90" height="80"></canvas>
+      <div class="sel-vs-name" id="vsN2">CPU</div>
+    </div>
+  </div>
+
+  <div class="sel-bottom-btns">
+    <button id="btnBack" class="sbtn back">&#8617; VOLTAR</button>
+    <button id="btnFight" class="sbtn fight">LUTAR! &#9889;</button>
+  </div>
+</div>
+
+<!-- ======================================================
+     TELA 3 -- BATALHA
+====================================================== -->
+
+<div id="fightScreen" class="screen hidden">
+
+  <!-- HUD: barras de vida -->
+
+  <div id="hud">
+    <div class="hp-group" id="hudL"></div>
+    <div id="hudVS">VS</div>
+    <div class="hp-group" id="hudR"></div>
+  </div>
+
+  <!-- Barras de especial -->
+
+  <div id="spbars">
+    <div class="sp-strip" id="sp1"></div>
+    <div class="sp-strip right" id="sp2"></div>
+  </div>
+
+  <!-- Canvas do jogo -->
+
+<canvas id="gameCanvas"></canvas>
+
+  <!-- Controles touch -->
+
+  <div id="controls">
+    <div class="ctrl-side" id="ctrlL"></div>
+    <div class="ctrl-mid" id="ctrlMid">CPU</div>
+    <div class="ctrl-side right" id="ctrlR"></div>
+  </div>
+
+</div>
+
+<!-- ======================================================
+     TELA 4 -- RESULTADO
+====================================================== -->
+
+<div id="resultScreen" class="screen hidden">
+
+  <!-- Raios de fundo animados -->
+
+<canvas id="beams"></canvas>
+
+  <div id="rCard">
+    <div class="r-masthead" id="rMast">
+      <span>DINO DAVI COMBAT</span>
+      <span>VITORIA!</span>
+    </div>
+    <div class="r-role"  id="rRole"></div>
+    <div class="r-name"  id="rName"></div>
+    <div class="r-day"   id="rDay">O HEROI DO DIA!</div>
+    <canvas id="rDinoCanvas" width="140" height="120"></canvas>
+    <div class="r-plate" id="rPlate">
+      <div class="dn" id="rDN"></div>
+      <div class="dd" id="rDD"></div>
+    </div>
+    <div class="r-stars">&#11088;&#11088;&#11088;&#11088;&#11088;</div>
+    <button id="btnAgain">&#9889; JOGAR NOVAMENTE</button>
+    <div class="r-row">
+      <button id="btnNewChar">NOVO DINO</button>
+      <button id="btnHome">INICIO</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
+
 </body>
 </html>
