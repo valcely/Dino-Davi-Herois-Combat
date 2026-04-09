@@ -24,23 +24,35 @@
 /* =========================================================
    RESET E BASE
 ========================================================= */
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html { height: 100%; }
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+html {
+  height: 100%;
+  /* Permite scroll global para acessibilidade em telas pequenas */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
 body {
-  width: 100%; height: 100%;
+  min-height: 100%;
   background: var(--dark);
   font-family: var(--font-body);
   color: #fff;
   touch-action: manipulation;
   user-select: none;
   -webkit-user-select: none;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* =========================================================
    CANVAS DE ESTRELAS
 ========================================================= */
-#starCanvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+#starCanvas {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+}
 
 /* =========================================================
    SISTEMA DE TELAS
@@ -106,7 +118,8 @@ body {
   font-family: var(--font-head);
   font-size: clamp(40px, 11vw, 88px);
   background: linear-gradient(135deg, #00e676, #ffd740, #ff5252, #29b6f6);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
   line-height: 1; letter-spacing: 3px;
 }
 .logo-line2 {
@@ -126,7 +139,6 @@ body {
   display: flex; flex-direction: column; gap: 12px;
   width: min(340px, 90vw); margin-top: 6px;
 }
-
 .menu-btn {
   display: flex; align-items: center; gap: 14px;
   padding: 15px 22px; border-radius: 18px; border: 2px solid;
@@ -147,7 +159,6 @@ body {
   background: radial-gradient(ellipse at 50% 0%, #081a08 0%, #07080f 70%);
   padding-top: 0;
 }
-
 .sel-header {
   width: 100%; background: rgba(0,0,0,0.92);
   padding: 10px 16px 8px; text-align: center;
@@ -170,23 +181,34 @@ body {
   letter-spacing: 1px; cursor: pointer; transition: all .15s;
   background: transparent; color: #aaa;
 }
-.mode-tab.active { background: var(--green); border-color: var(--green); color: #000; }
+.mode-tab.active {
+  background: var(--green); border-color: var(--green); color: #000;
+}
 
 .sel-vs-preview {
   display: flex; align-items: flex-end; justify-content: center; gap: 20px;
   padding: 10px; background: rgba(0,0,0,0.4);
-  border-bottom: 1px solid var(--border); width: 100%; flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+  width: 100%; flex-shrink: 0;
 }
 .vs-slot { text-align: center; }
 .vs-slot canvas { display: block; margin: 0 auto; }
-.vs-slot-name { font-size: 9px; font-family: monospace; margin-top: 2px; color: rgba(255,255,255,0.55); }
-.vs-mid { font-family: var(--font-head); font-size: 28px; color: var(--red); text-shadow: 0 0 14px var(--red); }
+.vs-slot-name {
+  font-size: 9px; font-family: monospace;
+  margin-top: 2px; color: rgba(255,255,255,0.55);
+}
+.vs-mid {
+  font-family: var(--font-head); font-size: 28px;
+  color: var(--red); text-shadow: 0 0 14px var(--red);
+}
 
 .char-grid {
   display: grid; grid-template-columns: repeat(3, 1fr);
   gap: 10px; padding: 12px; width: 100%; max-width: 720px;
 }
-@media (max-width: 360px) { .char-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 360px) {
+  .char-grid { grid-template-columns: repeat(2, 1fr); }
+}
 
 .char-card {
   background: rgba(255,255,255,0.05);
@@ -197,10 +219,16 @@ body {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
 }
 .char-card:active { transform: scale(0.93); }
-.char-card.p1sel { border-color: var(--green); box-shadow: 0 0 18px #00e67655; }
-.char-card.p2sel { border-color: var(--blue);  box-shadow: 0 0 18px #29b6f655; }
+.char-card.p1sel {
+  border-color: var(--green); box-shadow: 0 0 18px #00e67655;
+}
+.char-card.p2sel {
+  border-color: var(--blue); box-shadow: 0 0 18px #29b6f655;
+}
 .char-card.villain-card { border-color: rgba(255,82,82,0.3); }
-.char-card.villain-card.p2sel { border-color: var(--red); box-shadow: 0 0 18px #ff525255; }
+.char-card.villain-card.p2sel {
+  border-color: var(--red); box-shadow: 0 0 18px #ff525255;
+}
 
 .card-role {
   font-size: 7px; letter-spacing: 1.5px;
@@ -214,10 +242,12 @@ body {
   display: flex; align-items: center; justify-content: center;
   border: 2px solid rgba(255,255,255,0.1);
   margin-top: 14px; overflow: hidden;
-  background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.07), rgba(0,0,0,0.5));
+  background: radial-gradient(circle at 35% 35%,
+    rgba(255,255,255,0.07), rgba(0,0,0,0.5));
   flex-shrink: 0;
 }
 .dino-circle canvas { display: block; }
+
 .card-name {
   font-size: clamp(8px, 2vw, 11px); font-weight: 900;
   letter-spacing: 0.5px; line-height: 1.2;
@@ -244,7 +274,10 @@ body {
 }
 .sel-btn:active { transform: scale(0.95); }
 .btn-back  { background: transparent; color: #6b7280; border-color: #374151; }
-.btn-fight { background: linear-gradient(135deg, #b91c1c, #7f1d1d); color: #fff; border-color: var(--red); box-shadow: 0 0 18px #ff525255; }
+.btn-fight {
+  background: linear-gradient(135deg, #b91c1c, #7f1d1d);
+  color: #fff; border-color: var(--red); box-shadow: 0 0 18px #ff525255;
+}
 
 /* =========================================================
    TELA DE BATALHA
@@ -263,13 +296,26 @@ body {
   border-bottom: 1px solid rgba(0,230,118,0.12);
 }
 .hpg { flex: 1; }
-.hpname { font-size: 9px; font-family: monospace; letter-spacing: 1px; margin-bottom: 2px; }
+.hpname {
+  font-size: 9px; font-family: monospace;
+  letter-spacing: 1px; margin-bottom: 2px;
+}
 .hpname.r { text-align: right; }
-.hpbg { height: 13px; background: #111; border-radius: 6px; border: 2px solid #222; overflow: hidden; }
-.hpfill { height: 100%; border-radius: 6px; transition: width .12s, background .3s; }
+.hpbg {
+  height: 13px; background: #111;
+  border-radius: 6px; border: 2px solid #222; overflow: hidden;
+}
+.hpfill {
+  height: 100%; border-radius: 6px;
+  transition: width .12s, background .3s;
+}
 .hpval { font-size: 8px; color: #4b5563; margin-top: 1px; font-family: monospace; }
 .hpval.r { text-align: right; }
-#hudVS { min-width: 32px; text-align: center; font-family: var(--font-head); font-size: 16px; color: var(--red); text-shadow: 0 0 10px var(--red); }
+#hudVS {
+  min-width: 32px; text-align: center;
+  font-family: var(--font-head); font-size: 16px;
+  color: var(--red); text-shadow: 0 0 10px var(--red);
+}
 
 #spBars {
   width: 100%; flex-shrink: 0; background: rgba(0,0,0,0.7);
@@ -284,45 +330,64 @@ body {
 
 #gameCanvas { flex: 1; display: block; width: 100%; min-height: 0; }
 
-/* Controles Touch */
+/* =========================================================
+   CONTROLES TOUCH — espaçamento aumentado entre botões
+========================================================= */
 #touchCtrl {
   width: 100%; flex-shrink: 0;
   background: rgba(0,0,0,0.95);
   border-top: 1px solid rgba(0,230,118,0.1);
-  padding: 6px 8px;
+  padding: 8px 10px;
   display: flex; justify-content: space-between; align-items: center;
+  gap: 6px;
 }
-.cside { display: flex; gap: 5px; align-items: center; }
+.cside { display: flex; gap: 8px; align-items: center; }
 .cside.cr { flex-direction: row-reverse; }
 
 .joystick {
-  width: 76px; height: 76px; border-radius: 50%;
+  width: 82px; height: 82px; border-radius: 50%;
   background: rgba(255,255,255,0.06);
   border: 2.5px solid rgba(255,255,255,0.15);
   position: relative; flex-shrink: 0; touch-action: none;
 }
 .joystick-thumb {
-  position: absolute; width: 32px; height: 32px; border-radius: 50%;
+  position: absolute; width: 34px; height: 34px; border-radius: 50%;
   background: rgba(255,255,255,0.25);
   border: 3px solid rgba(255,255,255,0.45);
   top: 50%; left: 50%; transform: translate(-50%,-50%);
   transition: 0.08s; pointer-events: none;
 }
 
-.actbtns { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; max-width: 150px; }
+/* Botões de ação — espaçamento maior, tamanhos preservados */
+.actbtns {
+  display: flex;
+  gap: 10px;              /* ← aumentado de 5px para 10px */
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 180px;       /* ← aumentado para acomodar o gap maior */
+  justify-content: center;
+}
 .actbtn {
   border-radius: 50%; border: none;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
   cursor: pointer; touch-action: none;
   font-family: var(--font-head); transition: 0.1s; color: #fff; gap: 1px;
 }
 .actbtn:active { transform: scale(0.85); }
+
+/* Tamanhos originais preservados */
 .btnJ  { width: 48px; height: 48px; font-size: 13px; }
-.btnA  { width: 58px; height: 58px; font-size: 12px; }
-.btnA2 { width: 52px; height: 52px; font-size: 11px; }
-.btnS  { width: 58px; height: 58px; font-size: 11px; text-align: center; line-height: 1.15; }
+.btnA  { width: 60px; height: 60px; font-size: 12px; }
+.btnA2 { width: 54px; height: 54px; font-size: 11px; }
+.btnS  { width: 60px; height: 60px; font-size: 11px; text-align: center; line-height: 1.15; }
 .btnlbl { font-size: 6.5px; letter-spacing: 0.5px; }
-.cmid { font-size: 8px; font-family: monospace; color: #374151; text-align: center; min-width: 16px; line-height: 1.6; }
+
+.cmid {
+  font-size: 8px; font-family: monospace;
+  color: #374151; text-align: center;
+  min-width: 16px; line-height: 1.6;
+}
 
 /* =========================================================
    TELA DE RESULTADO
@@ -346,19 +411,32 @@ body {
   border-radius: 16px 16px 0 0;
   display: flex; justify-content: space-between; align-items: center;
 }
-.rmast span { font-size: 9px; color: rgba(0,0,0,0.8); letter-spacing: 2px; font-weight: 700; font-family: monospace; }
-.rrole { font-size: 10px; letter-spacing: 3px; margin-bottom: 3px; font-family: monospace; opacity: 0.7; }
-.rname { font-size: clamp(22px,7vw,38px); line-height: 1; letter-spacing: 2px; margin-bottom: 4px; font-family: var(--font-head); }
-.rday  { font-size: clamp(14px,4vw,20px); letter-spacing: 2px; margin-bottom: 10px; font-family: var(--font-head); }
+.rmast span {
+  font-size: 9px; color: rgba(0,0,0,0.8);
+  letter-spacing: 2px; font-weight: 700; font-family: monospace;
+}
+.rrole {
+  font-size: 10px; letter-spacing: 3px;
+  margin-bottom: 3px; font-family: monospace; opacity: 0.7;
+}
+.rname {
+  font-size: clamp(22px,7vw,38px); line-height: 1;
+  letter-spacing: 2px; margin-bottom: 4px; font-family: var(--font-head);
+}
+.rday {
+  font-size: clamp(14px,4vw,20px); letter-spacing: 2px;
+  margin-bottom: 10px; font-family: var(--font-head);
+}
 #rDinoCanvas { display: block; margin: 0 auto 10px; }
 .rplate { border-radius: 8px; padding: 6px 12px; margin-bottom: 10px; }
 .rplate .dn { font-size: 15px; font-family: var(--font-head); }
 .rplate .dd { font-size: 9px; color: #6b7280; }
 .rstars { font-size: 22px; margin-bottom: 13px; letter-spacing: 4px; }
 #btnAgain {
-  width: 100%; margin-bottom: 9px; border: none; border-radius: 12px; padding: 15px;
-  color: #fff; font-size: clamp(14px,4vw,18px); letter-spacing: 2px; cursor: pointer;
-  font-family: var(--font-head); transition: 0.15s;
+  width: 100%; margin-bottom: 9px; border: none;
+  border-radius: 12px; padding: 15px;
+  color: #fff; font-size: clamp(14px,4vw,18px); letter-spacing: 2px;
+  cursor: pointer; font-family: var(--font-head); transition: 0.15s;
 }
 #btnAgain:active { transform: scale(0.96); }
 .rrow { display: flex; gap: 9px; }
@@ -369,7 +447,6 @@ body {
   cursor: pointer; font-family: var(--font-head); transition: 0.15s;
 }
 .rrow button:active { transform: scale(0.96); }
-
 /* =========================================================
    JOGO DA MEMÓRIA
 ========================================================= */
@@ -385,17 +462,21 @@ body {
   display: flex; align-items: center; justify-content: space-between;
   border-bottom: 1px solid var(--border); flex-shrink: 0;
   position: sticky; top: 0; z-index: 10;
+  backdrop-filter: blur(6px);
 }
-.mem-title { font-family: var(--font-head); font-size: clamp(18px,5vw,26px); color: var(--blue); letter-spacing: 2px; }
+.mem-title {
+  font-family: var(--font-head);
+  font-size: clamp(18px,5vw,26px);
+  color: var(--blue); letter-spacing: 2px;
+}
 .mem-stats { display: flex; gap: 14px; font-family: var(--font-head); font-size: 14px; }
-.mem-stat { display: flex; flex-direction: column; align-items: center; }
+.mem-stat  { display: flex; flex-direction: column; align-items: center; }
 .mem-stat-val { font-size: 18px; color: var(--yellow); }
 .mem-stat-lbl { font-size: 9px; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
 
 .mem-controls {
   display: flex; gap: 8px; padding: 10px 12px;
-  flex-shrink: 0; width: 100%; max-width: 560px;
-  align-self: center;
+  flex-shrink: 0; width: 100%; max-width: 560px; align-self: center;
 }
 .mem-btn {
   flex: 1; padding: 12px; border-radius: 12px; border: 2px solid;
@@ -403,9 +484,9 @@ body {
   letter-spacing: 1px; cursor: pointer; transition: all .15s;
 }
 .mem-btn:active { transform: scale(0.95); }
-.mem-new      { background: rgba(41,182,246,0.15); border-color: var(--blue); color: var(--blue); }
-.mem-back-btn { background: rgba(255,255,255,0.05); border-color: #374151; color: #6b7280; }
-.mem-diff     { background: rgba(255,215,64,0.1); border-color: var(--yellow); color: var(--yellow); }
+.mem-new      { background: rgba(41,182,246,0.15); border-color: var(--blue);   color: var(--blue); }
+.mem-back-btn { background: rgba(255,255,255,0.05); border-color: #374151;      color: #6b7280; }
+.mem-diff     { background: rgba(255,215,64,0.1);   border-color: var(--yellow); color: var(--yellow); }
 
 .mem-grid {
   display: grid; gap: 8px; padding: 12px;
@@ -422,6 +503,7 @@ body {
 }
 .mem-card.flipped { transform: rotateY(180deg); }
 .mem-card.matched { transform: rotateY(180deg); opacity: 0.72; }
+
 .mem-face, .mem-back {
   position: absolute; inset: 0; border-radius: 12px;
   backface-visibility: hidden;
@@ -429,7 +511,8 @@ body {
 }
 .mem-back {
   background: linear-gradient(135deg, #0d2a4a, #0a1a2a);
-  border: 2px solid rgba(41,182,246,0.3); font-size: clamp(22px,6vw,36px);
+  border: 2px solid rgba(41,182,246,0.3);
+  font-size: clamp(22px,6vw,36px);
 }
 .mem-back-inner {
   font-family: var(--font-head); font-size: clamp(12px,3vw,18px);
@@ -441,11 +524,15 @@ body {
   transform: rotateY(180deg); overflow: hidden;
 }
 .mem-face canvas { display: block; }
-.mem-face.match-glow { border-color: var(--green); box-shadow: 0 0 20px #00e67655; }
-.mem-face.wrong-flash { border-color: var(--red); animation: wrongFlash 0.35s; }
+.mem-face.match-glow {
+  border-color: var(--green); box-shadow: 0 0 20px #00e67655;
+}
+.mem-face.wrong-flash {
+  border-color: var(--red); animation: wrongFlash 0.35s;
+}
 @keyframes wrongFlash {
   0%,100% { background: rgba(0,0,0,0.6); }
-  50% { background: rgba(255,82,82,0.25); }
+  50%      { background: rgba(255,82,82,0.25); }
 }
 
 .mem-win {
@@ -456,9 +543,13 @@ body {
 .mem-win.hidden { display: none; }
 .mem-win-card {
   background: rgba(10,30,10,0.97); border: 4px solid var(--green);
-  border-radius: 20px; padding: 30px 36px; text-align: center; max-width: 320px; width: 90%;
+  border-radius: 20px; padding: 30px 36px;
+  text-align: center; max-width: 320px; width: 90%;
 }
-.mem-win-title { font-family: var(--font-head); font-size: 32px; color: var(--green); letter-spacing: 2px; margin-bottom: 8px; }
+.mem-win-title {
+  font-family: var(--font-head); font-size: 32px;
+  color: var(--green); letter-spacing: 2px; margin-bottom: 8px;
+}
 .mem-win-score { font-size: 16px; color: rgba(255,255,255,0.7); margin-bottom: 20px; }
 .mem-win-btn {
   padding: 13px 30px; border-radius: 12px; border: none;
@@ -467,99 +558,256 @@ body {
 }
 
 /* =========================================================
-   PINTURA DE DINOS
+   PINTURA — BARRA FIXA NO TOPO (nunca se move)
 ========================================================= */
 #paintScreen {
   background: radial-gradient(ellipse at 50% 0%, #1a0a2a, #07080f);
-  overflow-y: auto; justify-content: flex-start;
+  overflow-y: auto;
+  justify-content: flex-start;
   -webkit-overflow-scrolling: touch;
 }
 
-.paint-header {
-  width: 100%; background: rgba(0,0,0,0.92);
-  padding: 8px 12px;
-  display: flex; align-items: center; gap: 8px;
-  border-bottom: 1px solid var(--border); flex-shrink: 0;
-  flex-wrap: wrap; row-gap: 6px;
-  position: sticky; top: 0; z-index: 10;
+/* Topbar de pintura: sticky, travada no topo */
+.paint-topbar {
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(10, 6, 22, 0.97);
+  border-bottom: 2px solid rgba(206,147,216,0.3);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex-shrink: 0;
 }
-.paint-title { font-family: var(--font-head); font-size: clamp(15px,4vw,20px); color: var(--purple); letter-spacing: 2px; flex-shrink: 0; }
 
-.paint-palette-row {
-  display: flex; flex-wrap: wrap; gap: 5px; flex: 1; justify-content: center; align-items: center;
+/* Linha 1: título + ferramentas + tamanho + ações */
+.paint-toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  flex-wrap: wrap;
+  row-gap: 5px;
+  border-bottom: 1px solid rgba(206,147,216,0.15);
 }
+
+.paint-title {
+  font-family: var(--font-head);
+  font-size: clamp(14px, 3.5vw, 18px);
+  color: var(--purple); letter-spacing: 2px; flex-shrink: 0;
+}
+
+.paint-tools { display: flex; gap: 5px; flex-shrink: 0; }
+.ptool {
+  padding: 5px 10px; border-radius: 9px;
+  border: 1.5px solid var(--border);
+  font-family: var(--font-head); font-size: 14px;
+  cursor: pointer; transition: all .15s; color: #fff;
+  background: rgba(255,255,255,0.06); line-height: 1;
+}
+.ptool:active { transform: scale(0.92); }
+.ptool.active { border-color: var(--purple); background: rgba(206,147,216,0.18); }
+
+.brush-row { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.brush-row label {
+  font-size: 10px; color: rgba(255,255,255,0.45);
+  font-family: monospace; white-space: nowrap;
+}
+.brush-slider { width: 80px; accent-color: var(--purple); cursor: pointer; }
+
+/* Botões de ação rápida (limpar, salvar, voltar) */
+.paint-action-btns { display: flex; gap: 5px; flex-shrink: 0; margin-left: auto; }
+.paint-action-btns button {
+  padding: 6px 11px; border-radius: 9px; border: 1.5px solid;
+  font-size: 15px; cursor: pointer; transition: all .15s;
+  background: rgba(255,255,255,0.06); color: #fff;
+  font-family: var(--font-head); line-height: 1;
+}
+.paint-action-btns button:active { transform: scale(0.91); }
+.p-clear { border-color: var(--red)    !important; }
+.p-save  { border-color: var(--green)  !important; }
+.p-back  { border-color: #374151      !important; color: #9ca3af !important; }
+
+/* Linha 2: paleta de cores FIXA — nunca desce, nunca cobre o canvas */
+.paint-palette-fixed {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 6px 12px;
+  justify-content: flex-start;
+  align-items: center;
+  border-bottom: 1px solid rgba(206,147,216,0.15);
+  /* força todas as tintas na mesma área */
+  max-height: 80px;
+  overflow-y: auto;
+}
+
 .pcolor {
-  width: 28px; height: 28px; border-radius: 50%;
+  width: 26px; height: 26px; border-radius: 50%;
   cursor: pointer; border: 3px solid transparent;
   transition: all .15s; flex-shrink: 0;
 }
-.pcolor:active { transform: scale(0.86); }
-.pcolor.active { border-color: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.55); transform: scale(1.15); }
-
-.paint-tools { display: flex; gap: 6px; flex-shrink: 0; }
-.ptool {
-  padding: 6px 11px; border-radius: 10px;
-  border: 1.5px solid var(--border);
-  font-family: var(--font-head); font-size: 13px;
-  cursor: pointer; transition: all .15s; color: #fff;
-  background: rgba(255,255,255,0.06);
-}
-.ptool:active { transform: scale(0.93); }
-.ptool.active { border-color: var(--purple); background: rgba(206,147,216,0.15); }
-
-.brush-row { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
-.brush-row label { font-size: 11px; color: rgba(255,255,255,0.5); font-family: monospace; }
-.brush-slider { width: 90px; accent-color: var(--purple); cursor: pointer; }
-
-.paint-body {
-  display: flex; flex-direction: column; align-items: center;
-  padding: 10px 12px; gap: 10px; width: 100%;
+.pcolor:active { transform: scale(0.84); }
+.pcolor.active {
+  border-color: #fff;
+  box-shadow: 0 0 10px rgba(255,255,255,0.6);
+  transform: scale(1.18);
 }
 
-.paint-dinosel {
-  display: flex; gap: 7px; flex-wrap: wrap; justify-content: center;
+/* Linha 3: seletor de tema */
+.paint-theme-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
-.pdinoopt {
-  padding: 5px 13px; border-radius: 20px;
-  border: 2px solid rgba(255,255,255,0.15);
+.paint-theme-row::-webkit-scrollbar { display: none; }
+
+.paint-theme-label {
+  font-size: 10px; font-family: monospace;
+  color: rgba(255,255,255,0.4); white-space: nowrap; flex-shrink: 0;
+}
+.paint-theme-btns {
+  display: flex; gap: 6px; flex-wrap: nowrap;
+}
+.paint-theme-btn {
+  padding: 4px 12px; border-radius: 16px;
+  border: 1.5px solid rgba(206,147,216,0.3);
   font-family: var(--font-head); font-size: 11px;
-  cursor: pointer; transition: all .15s; color: #aaa; background: transparent;
-}
-.pdinoopt.active { border-color: var(--purple); color: var(--purple); background: rgba(206,147,216,0.1); }
-.pdinoopt:active { transform: scale(0.93); }
-
-#paintCanvas {
-  border-radius: 16px; border: 2px solid rgba(206,147,216,0.3);
-  background: #fff; cursor: crosshair; touch-action: none;
-  max-width: 100%; display: block;
-  box-shadow: 0 0 30px rgba(206,147,216,0.2);
-}
-
-.paint-footer {
-  display: flex; gap: 8px; padding: 10px 12px;
-  width: 100%; justify-content: center; flex-wrap: wrap;
-  border-top: 1px solid var(--border); flex-shrink: 0;
-}
-.paint-footer button {
-  padding: 11px 18px; border-radius: 12px; border: 2px solid;
-  font-family: var(--font-head); font-size: 13px;
   cursor: pointer; transition: all .15s;
+  background: transparent; color: #aaa;
+  white-space: nowrap; flex-shrink: 0;
 }
-.paint-footer button:active { transform: scale(0.95); }
-.p-clear { background: rgba(255,82,82,0.1); border-color: var(--red); color: var(--red); }
-.p-save  { background: rgba(0,230,118,0.1); border-color: var(--green); color: var(--green); }
-.p-back  { background: rgba(255,255,255,0.05); border-color: #374151; color: #6b7280; }
+.paint-theme-btn:active { transform: scale(0.92); }
+.paint-theme-btn.active {
+  background: rgba(206,147,216,0.18);
+  border-color: var(--purple); color: var(--purple);
+}
 
 /* =========================================================
-   RESPONSIVO
+   ÁREA DE PINTURA — ocupa toda a largura, retangular
+========================================================= */
+.paint-canvas-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 0;
+  flex: 1;
+}
+
+/* Seletor de dino (só emoji, sem nomes) */
+.paint-dinosel {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 6px 10px;
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+}
+.pdinoopt {
+  padding: 4px 10px; border-radius: 16px;
+  border: 2px solid rgba(255,255,255,0.12);
+  font-family: var(--font-head); font-size: 18px; /* emoji grande */
+  cursor: pointer; transition: all .15s;
+  color: #ccc; background: transparent; line-height: 1;
+}
+.pdinoopt.active {
+  border-color: var(--purple); color: var(--purple);
+  background: rgba(206,147,216,0.12);
+}
+.pdinoopt:active { transform: scale(0.9); }
+
+/* Linha de seleção de imagens do tema */
+.paint-img-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 6px 10px;
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+}
+.paint-img-btn {
+  padding: 5px 14px; border-radius: 16px;
+  border: 1.5px solid rgba(255,255,255,0.15);
+  font-family: var(--font-head); font-size: 12px;
+  cursor: pointer; transition: all .15s;
+  color: #aaa; background: transparent; white-space: nowrap;
+}
+.paint-img-btn.active {
+  border-color: var(--blue); color: var(--blue);
+  background: rgba(41,182,246,0.1);
+}
+.paint-img-btn:active { transform: scale(0.92); }
+
+/* Canvas de pintura — 100% largura, retangular grande */
+#paintCanvas {
+  display: block;
+  width: 100% !important;
+  /* altura definida pelo JS, mas garante mínimo razoável */
+  min-height: 300px;
+  cursor: crosshair;
+  touch-action: none;
+  background: #fff;
+  /* sem border-radius para parecer área de desenho profissional */
+  border-radius: 0;
+  border-top: 2px solid rgba(206,147,216,0.2);
+  box-shadow: 0 0 30px rgba(206,147,216,0.15);
+}
+
+/* =========================================================
+   RESPONSIVO GERAL
 ========================================================= */
 @media (max-height: 600px) {
-  .home-content { padding-top: 52px; gap: 5px; }
-  .home-menu { gap: 8px; }
-  .menu-btn { padding: 11px 18px; }
+  .home-content    { padding-top: 52px; gap: 5px; }
+  .home-menu       { gap: 8px; }
+  .menu-btn        { padding: 11px 18px; }
   .mem-grid.pairs-8  { grid-template-columns: repeat(5, 1fr); }
   .mem-grid.pairs-10 { grid-template-columns: repeat(6, 1fr); }
+  .paint-palette-fixed { max-height: 60px; }
+  .actbtns         { gap: 7px; }
 }
+
 @media (max-width: 400px) {
   .char-grid { grid-template-columns: repeat(2, 1fr); }
+  .actbtns   { gap: 7px; max-width: 160px; }
+  .btnA  { width: 54px; height: 54px; }
+  .btnA2 { width: 48px; height: 48px; }
+  .btnS  { width: 54px; height: 54px; }
+}
+
+@media (min-width: 768px) {
+  /* iPad e tablets: botões maiores e mais espaçados */
+  .actbtns { gap: 14px; max-width: 220px; }
+  .btnJ    { width: 56px; height: 56px; font-size: 15px; }
+  .btnA    { width: 68px; height: 68px; font-size: 14px; }
+  .btnA2   { width: 62px; height: 62px; font-size: 13px; }
+  .btnS    { width: 68px; height: 68px; font-size: 13px; }
+  .joystick { width: 92px; height: 92px; }
+  .joystick-thumb { width: 40px; height: 40px; }
+  .pcolor  { width: 30px; height: 30px; }
+  .paint-palette-fixed { max-height: 100px; gap: 6px; }
+}
+
+@media (min-width: 1024px) {
+  .actbtns { gap: 16px; max-width: 260px; }
+  .btnA    { width: 74px; height: 74px; }
+  .btnA2   { width: 68px; height: 68px; }
+  .btnS    { width: 74px; height: 74px; }
+}
+
+/* Scroll suave global */
+* { scroll-behavior: smooth; }
+
+/* Seleção de texto desabilitada em elementos de jogo */
+canvas, button, .menu-btn, .char-card, .mem-card, .actbtn, .ptool, .pcolor {
+  user-select: none;
+  -webkit-user-select: none;
 }
