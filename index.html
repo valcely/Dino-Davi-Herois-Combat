@@ -2,68 +2,57 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#07080f">
 <title>Davi Dino Heróis ⚡</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- ══════════════════════════════════════
-     ESTRELAS DE FUNDO (canvas fixo)
-══════════════════════════════════════ -->
+<!-- ╔══════════════════════════════════════════════╗ -->
+<!-- ║  CANVAS DE ESTRELAS (fundo animado)          ║ -->
+<!-- ╚══════════════════════════════════════════════╝ -->
 <canvas id="starCanvas"></canvas>
 
-<!-- ══════════════════════════════════════
-     TELA 1 — INÍCIO
-══════════════════════════════════════ -->
+<!-- ╔══════════════════════════════════════════════╗ -->
+<!-- ║  TELA 1 — INÍCIO                            ║ -->
+<!-- ╚══════════════════════════════════════════════╝ -->
 <div id="homeScreen" class="screen">
 
   <div class="topbar">
     <div class="topbar-clock" id="clockEl">00:00:00</div>
     <div class="topbar-logo">🦕 DAVI DINO</div>
-    <div class="topbar-date"  id="dateEl">--/--/----</div>
+    <div class="topbar-date" id="dateEl">--/--/----</div>
   </div>
 
   <div class="home-content">
-
     <div class="home-logo">
       <div class="logo-line1">DAVI DINO</div>
       <div class="logo-line2">HERÓIS ⚡</div>
       <div class="logo-sub">✦ EDIÇÃO JURÁSSICA ✦ 13 PERSONAGENS ✦</div>
     </div>
 
-    <!-- preview dos dinos animados -->
-    <canvas id="homePreview" width="400" height="115"></canvas>
+    <canvas id="homePreview" width="400" height="110"></canvas>
 
     <div class="home-menu">
-      <button class="menu-btn fight"  onclick="gotoSelect()">
+      <button class="menu-btn fight" onclick="gotoSelect()">
         <span class="mico">⚔️</span><span>BATALHA DE DINOS</span>
       </button>
       <button class="menu-btn memory" onclick="gotoMemory()">
         <span class="mico">🧠</span><span>JOGO DA MEMÓRIA</span>
       </button>
-      <button class="menu-btn paint"  onclick="gotoPaint()">
+      <button class="menu-btn paint" onclick="gotoPaint()">
         <span class="mico">🎨</span><span>PINTURA DE DINOS</span>
       </button>
     </div>
-
-    <div class="home-hint">
-      PC — P1: A/D mover &nbsp;|&nbsp; ESPAÇO pular &nbsp;|&nbsp; F ataque &nbsp;|&nbsp; G físico &nbsp;|&nbsp; E especial<br>
-      PC — P2: Setas mover &nbsp;|&nbsp; ↑ pular &nbsp;|&nbsp; K ataque &nbsp;|&nbsp; J físico &nbsp;|&nbsp; L especial
-    </div>
-
   </div>
+
 </div>
 
-<!-- ══════════════════════════════════════
-     TELA 2 — SELEÇÃO DE PERSONAGEM
-══════════════════════════════════════ -->
+<!-- ╔══════════════════════════════════════════════╗ -->
+<!-- ║  TELA 2 — SELEÇÃO DE PERSONAGEM             ║ -->
+<!-- ╚══════════════════════════════════════════════╝ -->
 <div id="selectScreen" class="screen hidden">
 
   <div class="sel-header">
@@ -74,20 +63,18 @@
     </div>
   </div>
 
-  <!-- preview VS -->
   <div class="sel-vs-preview">
     <div class="vs-slot">
-      <canvas id="vsC1" width="84" height="76"></canvas>
+      <canvas id="vsC1" width="80" height="72"></canvas>
       <div class="vs-slot-name" id="vsN1" style="color:var(--green)">P1</div>
     </div>
     <div class="vs-mid">VS</div>
     <div class="vs-slot">
-      <canvas id="vsC2" width="84" height="76"></canvas>
+      <canvas id="vsC2" width="80" height="72"></canvas>
       <div class="vs-slot-name" id="vsN2" style="color:var(--blue)">CPU</div>
     </div>
   </div>
 
-  <!-- grade de personagens (gerada pelo JS) -->
   <div class="char-grid" id="charGrid"></div>
 
   <div class="sel-bottom">
@@ -97,9 +84,9 @@
 
 </div>
 
-<!-- ══════════════════════════════════════
-     TELA 3 — BATALHA
-══════════════════════════════════════ -->
+<!-- ╔══════════════════════════════════════════════╗ -->
+<!-- ║  TELA 3 — BATALHA                           ║ -->
+<!-- ╚══════════════════════════════════════════════╝ -->
 <div id="fightScreen" class="screen hidden">
 
   <!-- HUD: barras de vida -->
@@ -115,10 +102,10 @@
     <div class="spstrip r" id="sp2"></div>
   </div>
 
-  <!-- Canvas principal do jogo -->
+  <!-- Canvas do jogo -->
   <canvas id="gameCanvas"></canvas>
 
-  <!-- Controles touch -->
+  <!-- Controles touch — 4 botões de ataque + joystick -->
   <div id="touchCtrl">
     <div class="cside"    id="ctrlL"></div>
     <div class="cmid"     id="ctrlMid">AI</div>
@@ -127,9 +114,9 @@
 
 </div>
 
-<!-- ══════════════════════════════════════
-     TELA 4 — RESULTADO
-══════════════════════════════════════ -->
+<!-- ╔══════════════════════════════════════════════╗ -->
+<!-- ║  TELA 4 — RESULTADO                         ║ -->
+<!-- ╚══════════════════════════════════════════════╝ -->
 <div id="resultScreen" class="screen hidden">
 
   <canvas id="resultBeams"></canvas>
@@ -142,7 +129,7 @@
     <div class="rrole" id="rRole"></div>
     <div class="rname" id="rName"></div>
     <div class="rday"  id="rDay">O HERÓI DO DIA!</div>
-    <canvas id="rDinoCanvas" width="140" height="124"></canvas>
+    <canvas id="rDinoCanvas" width="140" height="120"></canvas>
     <div class="rplate" id="rPlate">
       <div class="dn" id="rDN"></div>
       <div class="dd" id="rDD"></div>
@@ -157,9 +144,9 @@
 
 </div>
 
-<!-- ══════════════════════════════════════
-     TELA 5 — JOGO DA MEMÓRIA
-══════════════════════════════════════ -->
+<!-- ╔══════════════════════════════════════════════╗ -->
+<!-- ║  TELA 5 — JOGO DA MEMÓRIA                   ║ -->
+<!-- ╚══════════════════════════════════════════════╝ -->
 <div id="memoryScreen" class="screen hidden">
 
   <div class="mem-header">
@@ -188,7 +175,7 @@
 
   <div class="mem-grid pairs-8" id="memGrid"></div>
 
-  <!-- overlay de vitória -->
+  <!-- Overlay de vitória -->
   <div class="mem-win hidden" id="memWin">
     <div class="mem-win-card">
       <div class="mem-win-title">🎉 PARABÉNS!</div>
@@ -199,37 +186,62 @@
 
 </div>
 
-<!-- ══════════════════════════════════════
-     TELA 6 — PINTURA DE DINOS
-══════════════════════════════════════ -->
+<!-- ╔══════════════════════════════════════════════╗ -->
+<!-- ║  TELA 6 — PINTURA DE DINOS (REDESENHADA)    ║ -->
+<!-- ╚══════════════════════════════════════════════╝ -->
 <div id="paintScreen" class="screen hidden">
 
-  <div class="paint-header">
-    <div class="paint-title">🎨 PINTURA</div>
-    <!-- paleta gerada pelo JS -->
-    <div class="paint-palette-row" id="paintPalette"></div>
-    <div class="paint-tools">
-      <button class="ptool active" id="toolBrush" onclick="setTool('brush')">🖌️</button>
-      <button class="ptool"        id="toolErase" onclick="setTool('erase')">🧹</button>
-    </div>
-    <div class="brush-row">
-      <label>TAM</label>
-      <input type="range" class="brush-slider" id="brushSize" min="3" max="50" value="14">
-    </div>
-  </div>
+  <!-- BARRA FIXA NO TOPO — Tintas nunca se movem -->
+  <div class="paint-topbar" id="paintTopbar">
 
-  <div class="paint-body">
-    <div class="paint-dinosel" id="paintDinoSel"></div>
+    <!-- Linha 1: título + ferramentas + tamanho -->
+    <div class="paint-toolbar-row">
+      <div class="paint-title">🎨 PINTURA</div>
+
+      <div class="paint-tools">
+        <button class="ptool active" id="toolBrush" onclick="setTool('brush')" title="Pincel">🖌️</button>
+        <button class="ptool"        id="toolErase" onclick="setTool('erase')" title="Borracha">🧹</button>
+        <button class="ptool"        id="toolFill"  onclick="setTool('fill')"  title="Balde">🪣</button>
+      </div>
+
+      <div class="brush-row">
+        <label>TAM</label>
+        <input type="range" class="brush-slider" id="brushSize" min="3" max="45" value="14">
+      </div>
+
+      <div class="paint-action-btns">
+        <button class="p-clear" onclick="clearPaint()" title="Limpar">🗑️</button>
+        <button class="p-save"  onclick="savePaint()"  title="Salvar">💾</button>
+        <button class="p-back"  onclick="gotoHome()"   title="Voltar">🏠</button>
+      </div>
+    </div>
+
+    <!-- Linha 2: paleta de cores FIXA -->
+    <div class="paint-palette-fixed" id="paintPalette"></div>
+
+    <!-- Linha 3: seletor de tema/imagem para colorir -->
+    <div class="paint-theme-row" id="paintThemeRow">
+      <span class="paint-theme-label">TEMA:</span>
+      <div class="paint-theme-btns" id="paintThemeBtns"></div>
+    </div>
+
+  </div><!-- fim paint-topbar -->
+
+  <!-- ÁREA DE PINTURA — ocupa toda a largura restante -->
+  <div class="paint-canvas-area">
     <canvas id="paintCanvas"></canvas>
   </div>
 
-  <div class="paint-footer">
-    <button class="p-back"  onclick="gotoHome()">← VOLTAR</button>
-    <button class="p-clear" onclick="clearPaint()">🗑️ LIMPAR</button>
-    <button class="p-save"  onclick="savePaint()">💾 SALVAR</button>
-  </div>
+</div><!-- fim paintScreen -->
 
-</div>
+<!-- ╔══════════════════════════════════════════════╗ -->
+<!-- ║  CONTROLES DE TECLADO (legenda PC)          ║ -->
+<!-- ╚══════════════════════════════════════════════╝ -->
+<!--
+  BATALHA — TECLADO PC:
+  P1: A/D = mover | ESPAÇO = pular | F = ATK projétil | G = ATK físico | E = especial
+  P2: Setas = mover | ArrowUp = pular | K = ATK projétil | J = ATK físico | L = especial
+-->
 
 <script src="script.js"></script>
 </body>
