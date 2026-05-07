@@ -2,247 +2,367 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-
+scalable=yes, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Davi Dino Heróis ⚡</title>
+<meta name="theme-color" content="#07080f">
+<title>Davi Dino Heróis - Jogo de Dinossauros</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?
+family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<!-- ╔══════════════════════════════════════════════╗ -->
-<!-- ║  CANVAS DE ESTRELAS (fundo animado)          ║ -->
-<!-- ╚══════════════════════════════════════════════╝ -->
 <canvas id="starCanvas"></canvas>
-
-<!-- ╔══════════════════════════════════════════════╗ -->
-<!-- ║  TELA 1 — INÍCIO                            ║ -->
-<!-- ╚══════════════════════════════════════════════╝ -->
+<div class="global-header">
+<div class="global-time" id="globalTime">00:00:00</div>
+<div class="global-date" id="globalDate">--/--/----</div>
+<div class="global-playtime" id="globalPlaytime">Tempo Total: 00:00:00</div>
+</div>
 <div id="homeScreen" class="screen">
-
-  <div class="topbar">
-    <div class="topbar-clock" id="clockEl">00:00:00</div>
-    <div class="topbar-logo">🦕 DAVI DINO</div>
-    <div class="topbar-date" id="dateEl">--/--/----</div>
-  </div>
-
-  <div class="home-content">
-    <div class="home-logo">
-      <div class="logo-line1">DAVI DINO</div>
-      <div class="logo-line2">HERÓIS ⚡</div>
-      <div class="logo-sub">✦ EDIÇÃO JURÁSSICA ✦ 13 PERSONAGENS ✦</div>
-    </div>
-
-    <canvas id="homePreview" width="400" height="110"></canvas>
-
-    <div class="home-menu">
-      <button class="menu-btn fight" onclick="gotoSelect()">
-        <span class="mico">⚔️</span><span>BATALHA DE DINOS</span>
-      </button>
-      <button class="menu-btn memory" onclick="gotoMemory()">
-        <span class="mico">🧠</span><span>JOGO DA MEMÓRIA</span>
-      </button>
-      <button class="menu-btn paint" onclick="gotoPaint()">
-        <span class="mico">🎨</span><span>PINTURA DE DINOS</span>
-      </button>
-    </div>
-  </div>
-
+<div class="topbar">
+<div class="topbar-logo"> DAVI DINO</div>
+<div class="topbar-title">HERÓIS </div>
+<div class="topbar-version">v1.0</div>
 </div>
-
-<!-- ╔══════════════════════════════════════════════╗ -->
-<!-- ║  TELA 2 — SELEÇÃO DE PERSONAGEM             ║ -->
-<!-- ╚══════════════════════════════════════════════╝ -->
+<div class="home-container">
+<div class="home-content">
+<div class="home-logo">
+<div class="logo-line1">DAVI DINO</div>
+<div class="logo-line2">HERÓIS </div>
+<div class="logo-subtitle">AVENTURA JURÁSSICA</div>
+</div>
+<div class="home-preview-container">
+<canvas id="homePreviewCanvas" width="320" height="120"></canvas>
+</div>
+<div class="home-menu">
+<button class="menu-button menu-fight" onclick="goToBattle()">
+<span class="menu-icon"> </span>
+<span class="menu-label">BATALHA DE DINOS</span>
+<span class="menu-arrow">→</span>
+</button>
+<button class="menu-button menu-memory" onclick="goToMemory()">
+<span class="menu-icon"> </span>
+<span class="menu-label">JOGO DA MEMÓRIA</span>
+<span class="menu-arrow">→</span>
+</button>
+<button class="menu-button menu-paint" onclick="goToPaint()">
+<span class="menu-icon"> </span>
+<span class="menu-label">PINTURA DE DINOS</span>
+<span class="menu-arrow">→</span>
+</button>
+<button class="menu-button menu-settings" onclick="goToSettings()">
+<span class="menu-icon"> </span>
+<span class="menu-label">CONFIGURAÇÕES</span>
+<span class="menu-arrow">→</span>
+</button>
+</div>
+<div class="home-footer">
+<p class="footer-text"> Criado com por Dra. Valcely Ferreira</p>
+<p class="footer-version">Versão 1.0 | 2026</p>
+</div>
+</div>
+</div>
+</div>
 <div id="selectScreen" class="screen hidden">
-
-  <div class="sel-header">
-    <h2>🦕 ESCOLHA SEU DINO</h2>
-    <div class="sel-mode-tabs">
-      <button class="mode-tab active" id="tab1p" onclick="setMode('1p')">👤 1 JOGADOR</button>
-      <button class="mode-tab"        id="tab2p" onclick="setMode('2p')">👥 2 JOGADORES</button>
-    </div>
-  </div>
-
-  <div class="sel-vs-preview">
-    <div class="vs-slot">
-      <canvas id="vsC1" width="80" height="72"></canvas>
-      <div class="vs-slot-name" id="vsN1" style="color:var(--green)">P1</div>
-    </div>
-    <div class="vs-mid">VS</div>
-    <div class="vs-slot">
-      <canvas id="vsC2" width="80" height="72"></canvas>
-      <div class="vs-slot-name" id="vsN2" style="color:var(--blue)">CPU</div>
-    </div>
-  </div>
-
-  <div class="char-grid" id="charGrid"></div>
-
-  <div class="sel-bottom">
-    <button class="sel-btn btn-back"  onclick="gotoHome()">← VOLTAR</button>
-    <button class="sel-btn btn-fight" onclick="startFight()">LUTAR! ⚡</button>
-  </div>
-
+<div class="select-header">
+<button class="select-back-btn" onclick="goToHome()">← VOLTAR</button>
+<h2 class="select-title">ESCOLHA SEU DINOSSAURO</h2>
+<div class="select-mode">
+<button class="mode-tab active" onclick="switchMode('1p')">1
+Jogador</button>
+<button class="mode-tab" onclick="switchMode('2p')">2 Jogadores</button>
 </div>
-
-<!-- ╔══════════════════════════════════════════════╗ -->
-<!-- ║  TELA 3 — BATALHA                           ║ -->
-<!-- ╚══════════════════════════════════════════════╝ -->
-<div id="fightScreen" class="screen hidden">
-
-  <!-- HUD: barras de vida -->
-  <div id="fightHUD">
-    <div class="hpg" id="hudL"></div>
-    <div id="hudVS">VS</div>
-    <div class="hpg" id="hudR"></div>
-  </div>
-
-  <!-- Barras de especial -->
-  <div id="spBars">
-    <div class="spstrip"   id="sp1"></div>
-    <div class="spstrip r" id="sp2"></div>
-  </div>
-
-  <!-- Canvas do jogo -->
-  <canvas id="gameCanvas"></canvas>
-
-  <!-- Controles touch — 4 botões de ataque + joystick -->
-  <div id="touchCtrl">
-    <div class="cside"    id="ctrlL"></div>
-    <div class="cmid"     id="ctrlMid">AI</div>
-    <div class="cside cr" id="ctrlR"></div>
-  </div>
-
 </div>
-
-<!-- ╔══════════════════════════════════════════════╗ -->
-<!-- ║  TELA 4 — RESULTADO                         ║ -->
-<!-- ╚══════════════════════════════════════════════╝ -->
+<div class="vs-preview">
+<div class="vs-slot">
+<canvas id="vsPlayerCanvas" width="80" height="80"></canvas>
+<p class="vs-label">Jogador 1</p>
+</div>
+<div class="vs-middle">VS</div>
+<div class="vs-slot">
+<canvas id="vsOpponentCanvas" width="80" height="80"></canvas>
+<p class="vs-label">Oponente</p>
+</div>
+</div>
+<div class="character-grid">
+</div>
+<div class="select-actions">
+<button class="select-btn cancel" onclick="goToHome()"> CANCELAR</button>
+<button class="select-btn confirm" id="confirmSelectBtn"
+onclick="confirmSelection()" disabled> LUTAR</button>
+</div>
+</div>
+<div id="battleScreen" class="screen hidden">
+<canvas id="battleBackgroundCanvas"></canvas>
+<div class="battle-hud">
+<div class="hud-player">
+<div class="hud-name" id="battlePlayer1Name">Jogador 1</div>
+<div class="hud-health-bar">
+<div class="health-fill" id="player1HealthFill" style="width: 100%">
+</div>
+</div>
+<div class="hud-health-text">
+<span id="player1Health">100</span> / 100
+</div>
+</div>
+<div class="hud-versus">VS</div>
+<div class="hud-opponent">
+<div class="hud-name" id="battlePlayer2Name">Oponente</div>
+<div class="hud-health-bar">
+<div class="health-fill" id="player2HealthFill" style="width: 100%">
+</div>
+</div>
+<div class="hud-health-text">
+<span id="player2Health">100</span> / 100
+</div>
+</div>
+</div>
+<div class="battle-special-bars">
+<div class="special-bar-group">
+<span class="special-label">ESPECIAL</span>
+<div class="special-bar">
+<div class="special-fill" id="player1SpecialFill" style="width: 0%">
+</div>
+</div>
+</div>
+<div class="special-bar-group right">
+<div class="special-bar">
+<div class="special-fill" id="player2SpecialFill" style="width: 0%">
+</div>
+</div>
+<span class="special-label">ESPECIAL</span>
+</div>
+</div>
+<canvas id="battleCanvas"></canvas>
+<div class="battle-controls">
+<div class="control-left">
+<div class="joystick" id="joystick"></div>
+</div>
+<div class="control-buttons">
+<button class="action-btn jump-btn" id="jumpBtn"
+ontouchstart="handleActionStart('jump')" ontouchend="handleActionEnd()">
+<span class="btn-label">PULAR</span>
+</button>
+<button class="action-btn attack-btn" id="attackBtn"
+ontouchstart="handleActionStart('attack')" ontouchend="handleActionEnd()">
+<span class="btn-label">ATACAR</span>
+</button>
+<button class="action-btn attack2-btn" id="attack2Btn"
+ontouchstart="handleActionStart('attack2')" ontouchend="handleActionEnd()">
+<span class="btn-label">ATK 2</span>
+</button>
+<button class="action-btn special-btn" id="specialBtn"
+ontouchstart="handleActionStart('special')" ontouchend="handleActionEnd()">
+<span class="btn-label">ESPECIAL</span>
+</button>
+</div>
+<div class="control-right">
+<button class="menu-btn" onclick="goToHome()"> HOME</button>
+</div>
+</div>
+<div class="battle-log-container">
+<div class="battle-log" id="battleLog"></div>
+</div>
+</div>
 <div id="resultScreen" class="screen hidden">
-
-  <canvas id="resultBeams"></canvas>
-
-  <div id="rCard">
-    <div class="rmast" id="rMast">
-      <span>DAVI DINO HERÓIS</span>
-      <span>VITÓRIA! 🏆</span>
-    </div>
-    <div class="rrole" id="rRole"></div>
-    <div class="rname" id="rName"></div>
-    <div class="rday"  id="rDay">O HERÓI DO DIA!</div>
-    <canvas id="rDinoCanvas" width="140" height="120"></canvas>
-    <div class="rplate" id="rPlate">
-      <div class="dn" id="rDN"></div>
-      <div class="dd" id="rDD"></div>
-    </div>
-    <div class="rstars">⭐⭐⭐⭐⭐</div>
-    <button id="btnAgain">⚡ JOGAR NOVAMENTE</button>
-    <div class="rrow">
-      <button onclick="gotoSelect()">NOVO DINO</button>
-      <button onclick="gotoHome()">INÍCIO</button>
-    </div>
-  </div>
-
+<canvas id="resultBeamsCanvas"></canvas>
+<div class="result-card">
+<div class="result-header">
+<span class="result-status" id="resultStatus">VITÓRIA!</span>
 </div>
-
-<!-- ╔══════════════════════════════════════════════╗ -->
-<!-- ║  TELA 5 — JOGO DA MEMÓRIA                   ║ -->
-<!-- ╚══════════════════════════════════════════════╝ -->
+<div class="result-content">
+<div class="result-name" id="resultWinnerName">Dino Vencedor</div>
+<canvas id="resultCharacterCanvas" width="100" height="100"></canvas>
+<div class="result-message" id="resultMessage">Parabéns pela vitória!
+</div>
+<div class="result-stars" id="resultStars"> </div>
+<div class="result-stats">
+<div class="stat-item">
+<span class="stat-label">TEMPO</span>
+<span class="stat-value" id="resultTime">2:34</span>
+</div>
+<div class="stat-item">
+<span class="stat-label">ERROS</span>
+<span class="stat-value" id="resultErrors">3</span>
+</div>
+<div class="stat-item">
+<span class="stat-label">PONTOS</span>
+<span class="stat-value" id="resultPoints">1250</span>
+</div>
+</div>
+</div>
+<div class="result-buttons">
+<button class="result-btn play-again" onclick="goToBattle()"> JOGAR
+NOVAMENTE</button>
+<button class="result-btn home" onclick="goToHome()"> VOLTAR AO
+MENU</button>
+</div>
+</div>
+</div>
 <div id="memoryScreen" class="screen hidden">
-
-  <div class="mem-header">
-    <div class="mem-title">🧠 MEMÓRIA</div>
-    <div class="mem-stats">
-      <div class="mem-stat">
-        <div class="mem-stat-val" id="memMoves">0</div>
-        <div class="mem-stat-lbl">JOGADAS</div>
-      </div>
-      <div class="mem-stat">
-        <div class="mem-stat-val" id="memPairs">0</div>
-        <div class="mem-stat-lbl">PARES</div>
-      </div>
-      <div class="mem-stat">
-        <div class="mem-stat-val" id="memTime">0s</div>
-        <div class="mem-stat-lbl">TEMPO</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="mem-controls">
-    <button class="mem-btn mem-back-btn" onclick="gotoHome()">← VOLTAR</button>
-    <button class="mem-btn mem-diff"     id="memDiffBtn" onclick="cycleMemDiff()">MÉDIO</button>
-    <button class="mem-btn mem-new"      onclick="initMemory()">🔄 NOVO JOGO</button>
-  </div>
-
-  <div class="mem-grid pairs-8" id="memGrid"></div>
-
-  <!-- Overlay de vitória -->
-  <div class="mem-win hidden" id="memWin">
-    <div class="mem-win-card">
-      <div class="mem-win-title">🎉 PARABÉNS!</div>
-      <div class="mem-win-score" id="memWinScore"></div>
-      <button class="mem-win-btn" onclick="initMemory()">JOGAR DE NOVO!</button>
-    </div>
-  </div>
-
+<div class="memory-header">
+<button class="memory-back-btn" onclick="goToHome()">← VOLTAR</button>
+<h2 class="memory-title"> JOGO DA MEMÓRIA</h2>
+<div class="memory-stats">
+<div class="stat">
+<span class="stat-icon"> </span>
+<span class="stat-value" id="memoryMoves">0</span>
+<span class="stat-label">Jogadas</span>
 </div>
-
-<!-- ╔══════════════════════════════════════════════╗ -->
-<!-- ║  TELA 6 — PINTURA DE DINOS (REDESENHADA)    ║ -->
-<!-- ╚══════════════════════════════════════════════╝ -->
+<div class="stat">
+<span class="stat-icon">✓</span>
+<span class="stat-value" id="memoryPairs">0</span>
+<span class="stat-label">Pares</span>
+</div>
+<div class="stat">
+<span class="stat-icon"> </span>
+<span class="stat-value" id="memoryTime">00:00</span>
+<span class="stat-label">Tempo</span>
+</div>
+</div>
+</div>
+<div class="memory-controls">
+<button class="memory-btn difficulty-btn"
+onclick="switchMemoryDifficulty()"> DIFICULDADE</button>
+<button class="memory-btn restart-btn" onclick="restartMemory()">
+REINICIAR</button>
+</div>
+<div class="memory-board">
+</div>
+<div class="memory-win-overlay hidden" id="memoryWinOverlay">
+<div class="memory-win-card">
+<h3 class="win-title"> PARABÉNS!</h3>
+<p class="win-message">Você completou o jogo!</p>
+<div class="win-stats">
+<p>Tempo: <span id="winTime">00:00</span></p>
+<p>Jogadas: <span id="winMoves">0</span></p>
+<p>Pontos: <span id="winPoints">0</span></p>
+</div>
+<button class="win-btn" onclick="restartMemory()">Jogar Novamente</button>
+</div>
+</div>
+</div>
 <div id="paintScreen" class="screen hidden">
-
-  <!-- BARRA FIXA NO TOPO — Tintas nunca se movem -->
-  <div class="paint-topbar" id="paintTopbar">
-
-    <!-- Linha 1: título + ferramentas + tamanho -->
-    <div class="paint-toolbar-row">
-      <div class="paint-title">🎨 PINTURA</div>
-
-      <div class="paint-tools">
-        <button class="ptool active" id="toolBrush" onclick="setTool('brush')" title="Pincel">🖌️</button>
-        <button class="ptool"        id="toolErase" onclick="setTool('erase')" title="Borracha">🧹</button>
-        <button class="ptool"        id="toolFill"  onclick="setTool('fill')"  title="Balde">🪣</button>
-      </div>
-
-      <div class="brush-row">
-        <label>TAM</label>
-        <input type="range" class="brush-slider" id="brushSize" min="3" max="45" value="14">
-      </div>
-
-      <div class="paint-action-btns">
-        <button class="p-clear" onclick="clearPaint()" title="Limpar">🗑️</button>
-        <button class="p-save"  onclick="savePaint()"  title="Salvar">💾</button>
-        <button class="p-back"  onclick="gotoHome()"   title="Voltar">🏠</button>
-      </div>
-    </div>
-
-    <!-- Linha 2: paleta de cores FIXA -->
-    <div class="paint-palette-fixed" id="paintPalette"></div>
-
-    <!-- Linha 3: seletor de tema/imagem para colorir -->
-    <div class="paint-theme-row" id="paintThemeRow">
-      <span class="paint-theme-label">TEMA:</span>
-      <div class="paint-theme-btns" id="paintThemeBtns"></div>
-    </div>
-
-  </div><!-- fim paint-topbar -->
-
-  <!-- ÁREA DE PINTURA — ocupa toda a largura restante -->
-  <div class="paint-canvas-area">
-    <canvas id="paintCanvas"></canvas>
-  </div>
-
-</div><!-- fim paintScreen -->
-
-<!-- ╔══════════════════════════════════════════════╗ -->
-<!-- ║  CONTROLES DE TECLADO (legenda PC)          ║ -->
-<!-- ╚══════════════════════════════════════════════╝ -->
-<!--
-  BATALHA — TECLADO PC:
-  P1: A/D = mover | ESPAÇO = pular | F = ATK projétil | G = ATK físico | E = especial
-  P2: Setas = mover | ArrowUp = pular | K = ATK projétil | J = ATK físico | L = especial
--->
-
+<div class="paint-topbar">
+<div class="paint-toolbar">
+<button class="paint-back-btn" onclick="goToHome()">← VOLTAR</button>
+<h2 class="paint-title"> PINTURA LIVRE</h2>
+</div>
+<div class="paint-tools-row">
+<div class="paint-tools">
+<button class="paint-tool active" id="toolBrush"
+onclick="selectPaintTool('brush')">
+<span class="tool-icon"> </span>
+<span class="tool-name">Pincel</span>
+</button>
+<button class="paint-tool" id="toolBucket"
+onclick="selectPaintTool('bucket')">
+<span class="tool-icon"> </span>
+<span class="tool-name">Balde</span>
+</button>
+<button class="paint-tool" id="toolEraser"
+onclick="selectPaintTool('eraser')">
+<span class="tool-icon"> </span>
+<span class="tool-name">Borracha</span>
+</button>
+</div>
+<div class="brush-size-control">
+<label for="brushSize">Tamanho:</label>
+<input type="range" id="brushSize" min="2" max="50" value="10"
+oninput="updateBrushSize(this.value)">
+<span id="brushSizeLabel">10px</span>
+</div>
+<div class="paint-actions">
+<button class="paint-action clear" onclick="clearPaintCanvas()">
+LIMPAR</button>
+<button class="paint-action save" onclick="savePaintCanvas()">
+SALVAR</button>
+<button class="paint-action undo" onclick="undoPaint()">↶
+DESFAZER</button>
+</div>
+</div>
+<div class="paint-palette-row">
+<label class="palette-label">Cor:</label>
+<div class="paint-palette" id="paintPalette">
+</div>
+<input type="color" id="customColorPicker"
+oninput="selectCustomColor(this.value)" title="Cor Personalizada">
+</div>
+<div class="paint-dino-selector">
+<label class="selector-label">Dinossauro:</label>
+<div class="dino-options" id="dinoOptions">
+</div>
+</div>
+</div>
+<div class="paint-canvas-container">
+<canvas id="paintCanvas"></canvas>
+</div>
+</div>
+<div id="settingsScreen" class="screen hidden">
+<div class="settings-container">
+<div class="settings-header">
+<button class="settings-back-btn" onclick="goToHome()">← VOLTAR</button>
+<h2 class="settings-title"> CONFIGURAÇÕES</h2>
+</div>
+<div class="settings-content">
+<div class="setting-item">
+<label class="setting-label"> Som</label>
+<div class="setting-control">
+<input type="checkbox" id="soundToggle" checked>
+<span class="toggle-label" id="soundLabel">ATIVADO</span>
+</div>
+</div>
+<div class="setting-item">
+<label class="setting-label"> Música</label>
+<div class="setting-control">
+<input type="checkbox" id="musicToggle" checked>
+<span class="toggle-label" id="musicLabel">ATIVADA</span>
+</div>
+</div>
+<div class="setting-item">
+<label class="setting-label"> Vibração</label>
+<div class="setting-control">
+<input type="checkbox" id="vibrationToggle" checked>
+<span class="toggle-label" id="vibrationLabel">ATIVADA</span>
+</div>
+</div>
+<div class="setting-item">
+<label class="setting-label"> Brilho</label>
+<div class="setting-control">
+<input type="range" id="brightnessSlider" min="0.5" max="1" step="0.1"
+value="1" oninput="changeBrightness(this.value)">
+<span class="value-label" id="brightnessValue">100%</span>
+</div>
+</div>
+<div class="setting-item">
+<label class="setting-label"> Idioma</label>
+<div class="setting-control">
+<select id="languageSelect" onchange="changeLanguage(this.value)">
+<option value="pt-BR">Português (Brasil)</option>
+<option value="en">English</option>
+<option value="es">Español</option>
+</select>
+</div>
+</div>
+<div class="setting-item danger">
+<label class="setting-label"> Resetar Tudo</label>
+<button class="reset-btn" onclick="resetGameData()">LIMPAR
+DADOS</button>
+</div>
+<div class="setting-item info">
+<p class="info-text">Davi Dino Heróis v1.0</p>
+<p class="info-text">Desenvolvido por Dra. Valcely Ferreira</p>
+<p class="info-text">© 2026 Todos os direitos reservados</p>
+</div>
+</div>
+<div class="settings-footer">
+<button class="settings-close-btn" onclick="goToHome()">FECHAR</button>
+</div>
+</div>
+</div>
 <script src="script.js"></script>
 </body>
 </html>
