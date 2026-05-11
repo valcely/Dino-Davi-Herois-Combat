@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DINO DAVI HERÓIS COMBAT</title>
+  <title>🦖 DINO DAVI HERÓIS COMBAT - Batalhas Épicas de Dinossauros Superheroicos</title>
   <link rel="stylesheet" href="style.css">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -18,94 +18,158 @@
 <!-- MENU PRINCIPAL -->
 <div id="menuScreen" class="overlay">
   <div class="menu-box">
-    <h1 class="game-title">DINO DAVI</h1>
+    <h1 class="game-title">🦖 DINO DAVI</h1>
     <h2 class="game-subtitle">HERÓIS COMBAT</h2>
-    <button class="btn btn-start" onclick="goToHeroSelect()">INICIAR</button>
-    <button class="btn btn-info" onclick="goToHowTo()">COMO JOGAR</button>
-    <p class="menu-credits">v1.0</p>
+    <p class="menu-desc">Escolha seu dinossauro superheroico e desafie 9 supervilões épicos!</p>
+    <button class="btn btn-start" onclick="goToHeroSelect()">▶ INICIAR EPICAMENTE</button>
+    <button class="btn btn-info" onclick="goToHowTo()">? COMO JOGAR</button>
+    <p class="menu-credits">v1.0 - Família Dino em Ação 💚</p>
   </div>
 </div>
 
 <!-- SELEÇÃO DE HERÓI -->
 <div id="heroSelectScreen" class="overlay hidden">
   <div class="header">
-    <button class="back-btn" onclick="goToMenu()">VOLTAR</button>
-    <h2>ESCOLHA SEU HERÓI</h2>
+    <button class="back-btn" onclick="goToMenu()">← VOLTAR</button>
+    <h2>⚔️ 9 HERÓIS SUPERHEROICOS ⚔️</h2>
+    <p class="header-desc">Escolha seu dinossauro protetor - Cada um com Poderes Épicos Únicos!</p>
   </div>
-  <div class="hero-grid" id="heroGrid"></div>
+  <div class="hero-grid" id="heroGrid">
+    <!-- Gerado pelo JS -->
+  </div>
 </div>
 
-<!-- SELEÇÃO DE INIMIGO -->
-<div id="enemySelectScreen" class="overlay hidden">
+<!-- SELEÇÃO DE VILÃO -->
+<div id="villainSelectScreen" class="overlay hidden">
   <div class="header">
-    <button class="back-btn" onclick="goToHeroSelect()">VOLTAR</button>
-    <h2>ESCOLHA SEU INIMIGO</h2>
+    <button class="back-btn" onclick="goToHeroSelect()">← VOLTAR</button>
+    <h2>👿 9 SUPERVILÕES ÉPICOS 👿</h2>
+    <p class="header-desc">Escolha seu inimigo - Nenhum é destrancado, todos disponíveis! Cada um mais perigoso que o anterior!</p>
   </div>
-  <div class="enemy-grid" id="enemyGrid"></div>
+  <div class="villain-grid" id="villainGrid">
+    <!-- Gerado pelo JS -->
+  </div>
 </div>
 
 <!-- TELA DE JOGO -->
 <div id="gameScreen" class="overlay hidden">
   <div id="gameHUD" class="hud">
     <div class="hud-hero">
-      <span id="heroName" class="hud-label">HEROI</span>
-      <div id="heroHPBar" class="hp-bar">
-        <div id="heroHPFill" class="hp-fill"></div>
+      <span class="hud-emoji" id="heroEmoji">👑</span>
+      <div class="hud-info">
+        <span id="heroName" class="hud-label">HERÓI</span>
+        <div id="heroHPBar" class="hp-bar">
+          <div id="heroHPFill" class="hp-fill"></div>
+        </div>
+        <span id="heroHP" class="hud-value">100/100</span>
       </div>
-      <span id="heroHP" class="hud-value">100/100</span>
     </div>
+
     <div class="hud-center">
-      <span id="distance" class="hud-value">0m</span>
-      <span id="score" class="hud-value">0 PTS</span>
-    </div>
-    <div class="hud-enemy">
-      <span id="enemyName" class="hud-label">INIMIGO</span>
-      <div id="enemyHPBar" class="hp-bar">
-        <div id="enemyHPFill" class="hp-fill"></div>
+      <div class="hud-stat">
+        <span class="hud-stat-label">DISTÂNCIA</span>
+        <span id="distance" class="hud-stat-value">0m</span>
       </div>
-      <span id="enemyHP" class="hud-value">100/100</span>
+      <div class="hud-stat">
+        <span class="hud-stat-label">PONTOS</span>
+        <span id="score" class="hud-stat-value">0</span>
+      </div>
+      <div class="hud-stat">
+        <span class="hud-stat-label">COMBO</span>
+        <span id="combo" class="hud-stat-value">0x</span>
+      </div>
+    </div>
+
+    <div class="hud-enemy">
+      <span class="hud-emoji" id="villainEmoji">🤡</span>
+      <div class="hud-info">
+        <span id="villainName" class="hud-label">VILÃO</span>
+        <div id="villainHPBar" class="hp-bar">
+          <div id="villainHPFill" class="hp-fill"></div>
+        </div>
+        <span id="villainHP" class="hud-value">100/100</span>
+      </div>
     </div>
   </div>
+
   <div id="gameControls" class="controls">
-    <button id="jumpBtn" class="control-btn jump" onmousedown="jumpPlayer()" ontouchstart="jumpPlayer()">PULAR</button>
-    <button id="attackBtn" class="control-btn attack" onmousedown="attackPlayer()" ontouchstart="attackPlayer()">ATACAR</button>
+    <button id="jumpBtn" class="control-btn jump" onmousedown="jumpPlayer()" ontouchstart="jumpPlayer()">⬆️ PULAR</button>
+    <button id="attackBtn" class="control-btn attack" onmousedown="attackPlayer()" ontouchstart="attackPlayer()">⚡ ATACAR</button>
   </div>
 </div>
 
 <!-- TELA DE VITÓRIA -->
 <div id="winScreen" class="overlay hidden">
   <div class="result-box win">
-    <h2>VITÓRIA!</h2>
-    <p id="winStats"></p>
-    <button class="btn btn-large" onclick="goToHeroSelect()">PROXIMA BATALHA</button>
+    <h2>⭐ VITÓRIA ÉPICA! ⭐</h2>
+    <div class="result-details">
+      <p id="winStats"></p>
+      <div class="result-rewards">
+        <p class="reward-title">RECOMPENSAS:</p>
+        <p id="winReward"></p>
+      </div>
+    </div>
+    <button class="btn btn-large" onclick="goToHeroSelect()">⚔️ PRÓXIMA BATALHA</button>
+    <button class="btn btn-large" style="background: linear-gradient(135deg, #0066ff, #0033ff); border-color: #44aaff;" onclick="goToMenu()">🏠 VOLTAR AO MENU</button>
   </div>
 </div>
 
 <!-- TELA DE DERROTA -->
 <div id="loseScreen" class="overlay hidden">
   <div class="result-box lose">
-    <h2>DERROTA</h2>
-    <p id="loseStats"></p>
-    <button class="btn btn-large" onclick="goToHeroSelect()">TENTAR NOVAMENTE</button>
+    <h2>💔 DERROTA 💔</h2>
+    <div class="result-details">
+      <p id="loseStats"></p>
+      <p class="lose-message">O vilão foi mais forte desta vez... Tente novamente!</p>
+    </div>
+    <button class="btn btn-large" onclick="goToHeroSelect()">🔄 TENTAR NOVAMENTE</button>
+    <button class="btn btn-large" style="background: linear-gradient(135deg, #0066ff, #0033ff); border-color: #44aaff;" onclick="goToMenu()">🏠 VOLTAR AO MENU</button>
   </div>
 </div>
 
 <!-- TELA COMO JOGAR -->
 <div id="howToScreen" class="overlay hidden">
   <div class="info-box">
-    <h2>COMO JOGAR</h2>
+    <button class="back-btn" onclick="goToMenu()">← VOLTAR</button>
+    <h2>📖 COMO JOGAR</h2>
     <div class="info-content">
-      <p><strong>OBJETIVO:</strong> Derrote o dinossauro!</p>
-      <p><strong>PULAR:</strong> ESPACO / W / SETA CIMA</p>
-      <p><strong>ATACAR:</strong> Z / X</p>
-      <p><strong>9 HEROIS:</strong> Escolha 1</p>
-      <p><strong>9 INIMIGOS:</strong> Escolha seu oponente</p>
+      <h3>OBJETIVO</h3>
+      <p>Escolha um de 9 heróis dinossauro superheroicos e DERROTE um de 9 supervilões épicos em batalhas intensas! Nenhum vilão precisa ser destrancado - escolha qualquer um!</p>
+
+      <h3>CONTROLES</h3>
+      <p><strong>PULAR:</strong> ESPAÇO / W / SETA CIMA / Toque<br><strong>ATACAR:</strong> Z / X / Toque</p>
+
+      <h3>9 HERÓIS (Cores Exatas)</h3>
+      <p style="color: #00dd00;"><strong>DINO DAVI (Verde #00dd00)</strong> - Mais Forte ⭐⭐⭐⭐⭐</p>
+      <p style="color: #ff1177;"><strong>DINO MAMÃE (Rosa #ff1177)</strong> - Mais Forte ⭐⭐⭐⭐⭐</p>
+      <p style="color: #bb44ff;"><strong>DINO VOVÓ (Roxo #bb44ff)</strong> - 2º Mais Forte ⭐⭐⭐</p>
+      <p style="color: #ff2200;"><strong>DINO PAPAI (Vermelho #ff2200)</strong> - 4º Mais Forte ⭐⭐⭐⭐</p>
+      <p style="color: #0066ff;"><strong>DINO VOVÔ (Azul #0066ff)</strong> - 3º Mais Forte ⭐⭐⭐</p>
+      <p style="color: #ffdd00;"><strong>TITIA TINA (Amarelo #ffdd00)</strong> ⭐⭐⭐</p>
+      <p style="color: #00dddd;"><strong>TITIA GIO (Azul Bebê #00dddd)</strong> ⭐⭐⭐</p>
+      <p style="color: #ffffff; text-shadow: 1px 1px 3px #000;"><strong>TOBBY (Branco #ffffff)</strong> ⭐⭐⭐</p>
+      <p style="color: #cc8844;"><strong>ATENA (Caramelo #cc8844)</strong> ⭐⭐⭐</p>
+
+      <h3>9 VILÕES (SEM Destravamento!)</h3>
+      <p style="color: #b366ff;"><strong>🤡 CORINGA CAÓTICO</strong> (HP 120 | DMG 15) - Caos puro com fogo roxo</p>
+      <p style="color: #00ff88;"><strong>👽 CONQUISTADOR GALÁXICO</strong> (HP 180 | DMG 18) - Armadura gigante cósmica</p>
+      <p style="color: #ffff44;"><strong>🤖 SENHOR TECNOLÓGICO</strong> (HP 140 | DMG 16) - Lasers e eletricidade</p>
+      <p style="color: #000000; text-shadow: 1px 1px 3px #aaa;"><strong>⚫ LÂMINA SOMBRIA</strong> (HP 130 | DMG 17) - Espada energética negra</p>
+      <p style="color: #ff6600;"><strong>👹 TITÃ MONSTRUOSO</strong> (HP 220 | DMG 19) - Criatura colossal e destruidora</p>
+      <p style="color: #4444ff;"><strong>🧠 MESTRE MENTAL</strong> (HP 125 | DMG 14) - Poderes psíquicos e ilusões</p>
+      <p style="color: #00cc00;"><strong>🧬 CIENTISTA MUTANTE</strong> (HP 135 | DMG 16) - Toxinas e mutações</p>
+      <p style="color: #ffaa00;"><strong>👑 REI SOMBRIO</strong> (HP 160 | DMG 17) - Monarca das trevas</p>
+      <p style="color: #ff0000;"><strong>☠️ DESTRUIDOR UNIVERSAL</strong> (HP 300 | DMG 22) - BOSS FINAL LENDÁRIO</p>
+
+      <h3>MECÂNICAS</h3>
+      <p>✅ Barras de Vida (HP) visuais<br>✅ Sistema de Combos<br>✅ Pontuação dinâmica<br>✅ Sons em TUDO<br>✅ Todos vilões disponíveis<br>✅ Efeitos cinematográficos</p>
+
+      <h3>DICAS</h3>
+      <p>💡 Dino Davi e Mamãe são os mais fortes<br>💡 Destruidor Universal é o teste final<br>💡 Cada vilão tem ataque diferente<br>💡 Crie combos para pontuação máxima!</p>
     </div>
-    <button class="btn btn-large" onclick="goToMenu()">VOLTAR</button>
   </div>
 </div>
 
-<!-- TOAST -->
 <div id="toast" class="toast hidden"></div>
 ```
 
