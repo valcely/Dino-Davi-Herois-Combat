@@ -1,5 +1,3 @@
-/* DINO DAVI HERÓIS COMBAT - Script Completo */
-
 const canvas = document.getElementById(‘gameCanvas’);
 const ctx = canvas.getContext(‘2d’);
 ctx.imageSmoothingEnabled = false;
@@ -7,7 +5,6 @@ ctx.imageSmoothingEnabled = false;
 let W = canvas.width = window.innerWidth;
 let H = canvas.height = window.innerHeight;
 
-/* DADOS DE HERÓIS */
 const HEROES = {
 davi: {
 name: ‘DINO DAVI’,
@@ -101,7 +98,6 @@ power: ‘Caramelo Cosmos’
 }
 };
 
-/* DADOS DE INIMIGOS */
 const ENEMIES = {
 caos: {
 name: ‘CORINGA CAOTICO’,
@@ -177,7 +173,6 @@ dmg: 22
 }
 };
 
-/* ESTADO GLOBAL */
 let gameState = ‘menu’;
 let selectedHero = null;
 let selectedEnemy = null;
@@ -216,7 +211,6 @@ let score = 0;
 let combo = 0;
 let audioContext = null;
 
-/* AUDIO */
 function initAudio() {
 if (!audioContext) {
 audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -288,12 +282,10 @@ toast.textContent = text;
 toast.classList.remove(‘hidden’);
 setTimeout(() => toast.classList.add(‘hidden’), 2000);
 }
-
-/* NAVEGACAO */
 function hideAllScreens() {
 document.getElementById(‘menuScreen’).classList.add(‘hidden’);
 document.getElementById(‘heroSelectScreen’).classList.add(‘hidden’);
-document.getElementById(‘enemySelectScreen’).classList.add(‘hidden’);
+document.getElementById(‘villainSelectScreen’).classList.add(‘hidden’);
 document.getElementById(‘gameScreen’).classList.add(‘hidden’);
 document.getElementById(‘winScreen’).classList.add(‘hidden’);
 document.getElementById(‘loseScreen’).classList.add(‘hidden’);
@@ -324,9 +316,9 @@ player.hp = h.hp;
 player.dmg = h.dmg;
 
 hideAllScreens();
-gameState = ‘enemySelect’;
-document.getElementById(‘enemySelectScreen’).classList.remove(‘hidden’);
-buildEnemyGrid();
+gameState = ‘villainSelect’;
+document.getElementById(‘villainSelectScreen’).classList.remove(‘hidden’);
+buildVillainGrid();
 }
 
 function selectEnemy(enemyId) {
@@ -347,7 +339,6 @@ gameState = ‘howTo’;
 document.getElementById(‘howToScreen’).classList.remove(‘hidden’);
 }
 
-/* CONSTRUIR GRIDS */
 function buildHeroGrid() {
 const grid = document.getElementById(‘heroGrid’);
 grid.innerHTML = ‘’;
@@ -356,14 +347,14 @@ Object.entries(HEROES).forEach(([id, hero]) => {
 const card = document.createElement(‘div’);
 card.className = ‘hero-card’;
 card.style.borderColor = hero.accent;
-card.innerHTML = `<div class="card-emoji">${hero.emoji}</div> <div class="card-name">${hero.name}</div> <div class="card-stats">HP: ${hero.hp}</div>`;
+card.innerHTML = `<div class="card-emoji">${hero.emoji}</div> <div class="card-name">${hero.name}</div> <div class="card-stats">HP: ${hero.hp} | DMG: ${hero.dmg}</div>`;
 card.onclick = () => selectHero(id);
 grid.appendChild(card);
 });
 }
 
-function buildEnemyGrid() {
-const grid = document.getElementById(‘enemyGrid’);
+function buildVillainGrid() {
+const grid = document.getElementById(‘villainGrid’);
 grid.innerHTML = ‘’;
 
 Object.entries(ENEMIES).forEach(([id, enemy]) => {
@@ -375,10 +366,8 @@ card.onclick = () => selectEnemy(id);
 grid.appendChild(card);
 });
 }
-
-/* INICIALIZAR JOGO */
 function initGame() {
-playSound(‘levelup’, 0.2);
+playSound(‘select’, 0.2);
 
 const h = HEROES[selectedHero];
 const e = ENEMIES[selectedEnemy];
@@ -415,7 +404,6 @@ document.getElementById(‘gameScreen’).classList.remove(‘hidden’);
 updateHUD();
 }
 
-/* UPDATE */
 function updateGame() {
 if (!gameRunning) return;
 
@@ -423,7 +411,6 @@ gameFrame++;
 player.frame++;
 enemy.frame++;
 
-/* FÍSICA */
 player.vy += 0.6;
 player.y += player.vy;
 
@@ -445,7 +432,6 @@ if (player.x > W - 40) player.x = W - 40;
 
 if (player.invuln > 0) player.invuln–;
 
-/* IA INIMIGO */
 const dist = Math.abs(player.x - enemy.x);
 
 if (enemy.attackCooldown > 0) {
@@ -468,12 +454,10 @@ enemy.attackCooldown = 120;
 }
 }
 
-/* COLISAO */
 if (dist < 40 && player.invuln === 0) {
 hitPlayer(5);
 }
 
-/* VITÓRIA/DERROTA */
 if (enemy.hp <= 0) {
 gameRunning = false;
 playSound(‘win’, 0.3);
@@ -541,11 +525,12 @@ document.getElementById(‘heroHP’).textContent = Math.max(0, player.hp) + ‘
 document.getElementById(‘heroHPFill’).style.width = Math.max(0, player.hp / player.maxHp * 100) + ‘%’;
 
 document.getElementById(‘enemyName’).textContent = e.name;
-document.getElementById(‘enemyHP’).textContent = Math.max(0, enemy.hp) + ‘/’ + enemy.maxHp;
-document.getElementById(‘enemyHPFill’).style.width = Math.max(0, enemy.hp / enemy.maxHp * 100) + ‘%’;
+document.getElementById(‘villainHP’).textContent = Math.max(0, enemy.hp) + ‘/’ + enemy.maxHp;
+document.getElementById(‘villainHPFill’).style.width = Math.max(0, enemy.hp / enemy.maxHp * 100) + ‘%’;
 
 document.getElementById(‘distance’).textContent = Math.floor(distance) + ‘m’;
 document.getElementById(‘score’).textContent = Math.floor(score) + ’ pts’;
+document.getElementById(‘combo’).textContent = combo + ‘x’;
 }
 
 function showVictory() {
@@ -553,6 +538,7 @@ hideAllScreens();
 gameState = ‘win’;
 document.getElementById(‘winScreen’).classList.remove(‘hidden’);
 document.getElementById(‘winStats’).innerHTML = `VITORIA!<br> ${Math.floor(distance)}m | ${Math.floor(score)} pts | ${combo} combo`;
+document.getElementById(‘winReward’).innerHTML = `+${Math.floor(score)} Pontos!`;
 }
 
 function showDefeat() {
@@ -561,8 +547,6 @@ gameState = ‘lose’;
 document.getElementById(‘loseScreen’).classList.remove(‘hidden’);
 document.getElementById(‘loseStats’).innerHTML = `DERROTA<br> ${Math.floor(distance)}m | ${Math.floor(score)} pts`;
 }
-
-/* RENDER */
 function drawPixelHero(x, y, heroId) {
 const h = HEROES[heroId];
 if (!h) return;
@@ -670,7 +654,6 @@ ctx.strokeRect(enemy.x - hpBarWidth / 2, enemy.y - 50, hpBarWidth, 8);
 }
 }
 
-/* CONTROLES */
 document.addEventListener(‘keydown’, (e) => {
 if (gameState !== ‘game’) return;
 if (e.code === ‘Space’ || e.code === ‘ArrowUp’ || e.code === ‘KeyW’) {
@@ -682,7 +665,6 @@ attackPlayer();
 }
 });
 
-/* GAME LOOP */
 function gameLoop() {
 if (gameState === ‘game’ && gameRunning) {
 updateGame();
@@ -693,13 +675,11 @@ render();
 requestAnimationFrame(gameLoop);
 }
 
-/* RESIZE */
 window.addEventListener(‘resize’, () => {
 W = canvas.width = window.innerWidth;
 H = canvas.height = window.innerHeight;
 });
 
-/* INICIAR */
 document.addEventListener(‘click’, initAudio);
 document.addEventListener(‘touchstart’, initAudio);
 
